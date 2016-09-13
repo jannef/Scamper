@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace fi.tamk.game.theone
 {
-    public class BasicUpAndDownBox : Interactable
+    public class BasicUpDownBox : Interactable
     {
-
-        public BasicUpAndDownBox(BoxMovement master) : base(master)
+        public BasicUpDownBox(BoxMovement master) : base(master)
         {
 
         }
@@ -22,13 +22,12 @@ namespace fi.tamk.game.theone
 
         public override void OnBelowColl(Collision2D col)
         {
-            BoxMovement collider = col.collider.gameObject.GetComponent<BoxMovement>(); 
+            GameBlock collider = SceneManager.Instance.ColliderMap[col.collider];
 
-            if (collider != null && collider.speed != 0)
+            if (collider != null && !collider.IsStationary())
             {
                 _speed *= -1;
-            }
-            else
+            } else
             {
                 _speed = 0;
             }
@@ -42,10 +41,7 @@ namespace fi.tamk.game.theone
                 if (t.CompareTag("Movable") && t.transform.position.y - _master.transform.position.y > 0) return;
             }
 
-            if (_speed == 0)
-            {
-                _speed = 2;
-            }
+            if (_speed == 0) _speed = _maxSpeed;
         }
     }
 }

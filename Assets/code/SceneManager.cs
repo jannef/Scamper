@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace fi.tamk.game.theone
 {
@@ -12,6 +13,8 @@ namespace fi.tamk.game.theone
          *  other objects.
          */
         public bool Pause = false;
+
+        public Dictionary<Collider2D, GameBlock> ColliderMap;
 
         /**
          *  Contains Time.deltaTime or 0 depending if the game is paused.
@@ -30,7 +33,7 @@ namespace fi.tamk.game.theone
          */
         private SceneManager()
         {
-
+            ColliderMap = new Dictionary<Collider2D, GameBlock>();
         }
 
         // TODO: Here for testing purposes only!! REMOVE/MOVE AT SOME POINT!!

@@ -5,7 +5,8 @@ namespace fi.tamk.game.theone
     abstract public class Interactable
     {
         public Transform _transform;
-        public float _speed = 2.0f;
+        public float _speed;
+        public float _maxSpeed;
         protected BoxMovement _master;
         protected Collider2D _collider;
 
@@ -47,6 +48,17 @@ namespace fi.tamk.game.theone
 
         public virtual void OnBoxClicked()
         {
+        }
+
+        public virtual bool InRestState()
+        {
+            if (_speed != 0f) return false;
+
+            foreach (var t in _master.touchList)
+            {
+                if (t.CompareTag("Floor")) return true;
+            }
+            return false;
         }
     }
 }
