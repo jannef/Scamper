@@ -12,7 +12,7 @@ namespace fi.tamk.game.theone
 
         public override void MoveBlock()
         {
-            _transform.Translate(0, _speed * Time.deltaTime, 0);
+            _transform.Translate(0, _speed * SceneManager.Instance.DeltaTime, 0);
         }
 
         public override void OnTopColl(Collision2D col)
