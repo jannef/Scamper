@@ -13,8 +13,9 @@ namespace fi.tamk.game.theone
          *  other objects.
          */
         public bool Pause = false;
+        public float GlobalGravity = -2f;
 
-        public Dictionary<Collider2D, GameBlock> ColliderMap;
+        public Dictionary<GameObject, GameBlock> ColliderMap;
 
         /**
          *  Contains Time.deltaTime or 0 depending if the game is paused.
@@ -33,7 +34,7 @@ namespace fi.tamk.game.theone
          */
         private SceneManager()
         {
-            ColliderMap = new Dictionary<Collider2D, GameBlock>();
+            ColliderMap = new Dictionary<GameObject, GameBlock>();
         }
 
         // TODO: Here for testing purposes only!! REMOVE/MOVE AT SOME POINT!!

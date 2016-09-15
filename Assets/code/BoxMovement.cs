@@ -18,7 +18,6 @@ namespace fi.tamk.game.theone
                 _movementClass._maxSpeed = value;
             }
         }
-        [HideInInspector] public List<GameObject> touchList;
 
         public BoxType TypeOfBox = BoxType.Basic;
         [SerializeField] protected float _maxSpeedConfig = 2f;
@@ -42,14 +41,12 @@ namespace fi.tamk.game.theone
                     break;
             }
 
-            touchList = new List<GameObject>();
             speed = _maxSpeedConfig;
             _movementClass._speed = _initialSpeedConfig;
         }
 
-        void OnCollisionEnter2D(Collision2D col)
+        override protected void CollisionBegin(Collision2D col)
         {
-            touchList.Add(col.collider.gameObject);
             var colYLoc = _movementClass._transform.position.y - col.transform.position.y;
 
             if (colYLoc > 0)
@@ -59,11 +56,6 @@ namespace fi.tamk.game.theone
             {
                 _movementClass.OnTopColl(col);
             }
-        }
-
-        void OnCollisionExit2D(Collision2D col)
-        {
-            touchList.Remove(col.collider.gameObject);
         }
 
         void Update()
@@ -79,11 +71,6 @@ namespace fi.tamk.game.theone
         public override bool IsStationary()
         {
             return _movementClass.InRestState();
-        }
-
-        public void OnDestroy()
-        {
-            SceneManager.Instance.ColliderMap.Remove(GetComponent<Collider2D>());
         }
 
         public enum BoxType { Basic, Accelerating }

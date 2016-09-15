@@ -54,9 +54,16 @@ namespace fi.tamk.game.theone
         {
             if (_speed != 0f) return false;
 
+            // Invoke recursive search on blocks below to find possible connection to ground
             foreach (var t in _master.touchList)
             {
-                if (t.CompareTag("Floor")) return true;
+                if (t.transform.position.y >= _transform.transform.position.y)
+                {
+                    continue;
+                } else
+                {
+                    if (SceneManager.Instance.ColliderMap[t].IsStationary()) return true;
+                }
             }
             return false;
         }

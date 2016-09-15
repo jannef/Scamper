@@ -22,7 +22,7 @@ namespace fi.tamk.game.theone
 
         public override void OnBelowColl(Collision2D col)
         {
-            GameBlock collider = SceneManager.Instance.ColliderMap[col.collider];
+            GameBlock collider = SceneManager.Instance.ColliderMap[col.collider.gameObject];
 
             if (collider != null && !collider.IsStationary())
             {
