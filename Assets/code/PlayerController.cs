@@ -8,8 +8,8 @@ namespace fi.tamk.game.theone
         [SerializeField] protected Vector2 _speed = new Vector2(0, 0);
         [SerializeField] protected float _targetSpeed = 2.1f;
         [SerializeField] protected float _acceleration = 1f;
-        protected bool _stationary = true;
-        protected bool _falling = true;
+        [SerializeField] protected bool _stationary = true;
+        [SerializeField] protected bool _falling = true;
         protected Transform _transform;
 
         protected Vector3 _lastCheckpoint;
@@ -64,7 +64,9 @@ namespace fi.tamk.game.theone
             {
                 _transform.position = _lastCheckpoint;
                 _stationary = true;
+                _falling = true;
                 _speed = Vector2.zero;
+                SceneManager.Instance.PlayerDeathReset();
             }
         }
 

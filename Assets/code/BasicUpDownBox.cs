@@ -17,16 +17,17 @@ namespace fi.tamk.game.theone
 
         public override void OnTopColl(Collision2D col)
         {
-            _speed *= -1;
+            _speed *= -Mathf.Abs(_speed);
         }
 
         public override void OnBelowColl(Collision2D col)
         {
             GameBlock collider = SceneManager.Instance.ColliderMap[col.collider.gameObject];
+            if (collider.gameObject.CompareTag("Player")) return;
 
             if (collider != null && !collider.IsStationary())
             {
-                _speed *= -1;
+                _speed = Mathf.Abs(_speed);
             } else
             {
                 _speed = 0;

@@ -13,7 +13,7 @@ namespace fi.tamk.game.theone
          *  other objects.
          */
         public bool Pause = false;
-        public float GlobalGravity = -2f;
+        public float GlobalGravity = -0.2f;
 
         public Dictionary<GameObject, GameBlock> ColliderMap;
 
@@ -43,6 +43,14 @@ namespace fi.tamk.game.theone
             if (Input.GetButtonDown("Jump"))
             {
                 Pause = !Pause;
+            }
+        }
+
+        public void PlayerDeathReset()
+        {
+            foreach(KeyValuePair<GameObject, GameBlock> t in ColliderMap)
+            {
+                if (t.Key.CompareTag("Movable")) t.Value.Reset();
             }
         }
     }

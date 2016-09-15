@@ -58,7 +58,7 @@ namespace fi.tamk.game.theone
             }
         }
 
-        void Update()
+        void LateUpdate()
         {
             _movementClass.MoveBlock();
         }
@@ -71,6 +71,11 @@ namespace fi.tamk.game.theone
         public override bool IsStationary()
         {
             return _movementClass.InRestState();
+        }
+
+        protected override void OnReset()
+        {
+            _movementClass._speed = _initialSpeedConfig;
         }
 
         public enum BoxType { Basic, Accelerating }

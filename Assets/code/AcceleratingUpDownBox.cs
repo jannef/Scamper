@@ -12,7 +12,6 @@ namespace fi.tamk.game.theone
         {
             AccelerationDown = aDown;
             AccelerationUp = aUp;
-            _speed = 0.1f;
         }
 
         public override void MoveBlock()

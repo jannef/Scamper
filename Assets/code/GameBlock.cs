@@ -7,11 +7,14 @@ namespace fi.tamk.game.theone
     public class GameBlock : MonoBehaviour
     {
         [HideInInspector] public List<GameObject> touchList;
+        private Vector3 _resetPosition;
 
         public void Awake()
         {
             touchList = new List<GameObject>();
             SceneManager.Instance.ColliderMap.Add(gameObject, this);
+
+            _resetPosition = transform.position;
         }
 
         public virtual bool IsStationary()
@@ -53,6 +56,17 @@ namespace fi.tamk.game.theone
         }
 
         protected virtual void CollisionEnd(Collision2D col)
+        {
+
+        }
+
+        public void Reset()
+        {
+            transform.position = _resetPosition;
+            OnReset();
+        }
+
+        protected virtual void OnReset()
         {
 
         }
