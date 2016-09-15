@@ -59,13 +59,15 @@ namespace fi.tamk.game.theone
             {
                 if (t.transform.position.y >= _transform.transform.position.y)
                 {
+                    // We do not want to go back up the tree!
                     continue;
                 } else
                 {
+                    // Ask if one of the boxes below is in rest state
                     if (SceneManager.Instance.ColliderMap[t].IsStationary()) return true;
                 }
             }
-            return false;
+            return false; // none of the touching boxes were in rest state, so can't be in rest state self
         }
     }
 }

@@ -26,6 +26,7 @@ namespace fi.tamk.game.theone
         {
             _speed.x = 0;
             _stationary = true;
+            _lastCheckpoint = c.Spawn.position;
         }
 
         private void OnMouseDown()
