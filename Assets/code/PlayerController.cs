@@ -14,6 +14,12 @@ namespace fi.tamk.game.theone
 
         protected Vector3 _lastCheckpoint;
 
+        public void Jump(float power)
+        {
+                _falling = true;
+                _speed.y += power;
+        }
+
         new public void Awake()
         {
             base.Awake();

@@ -13,7 +13,8 @@ namespace fi.tamk.game.theone
          *  other objects.
          */
         public bool Pause = false;
-        public float GlobalGravity = -0.2f;
+        public float GlobalGravity = -10f;
+        private float _deltaTime = 0f;
 
         public Dictionary<GameObject, GameBlock> ColliderMap;
 
@@ -25,7 +26,7 @@ namespace fi.tamk.game.theone
             get
             {
                 if (Pause) return 0f;
-                return Time.deltaTime;
+                return _deltaTime;
             }
         }
 
@@ -40,6 +41,8 @@ namespace fi.tamk.game.theone
         // TODO: Here for testing purposes only!! REMOVE/MOVE AT SOME POINT!!
         void Update()
         {
+            _deltaTime = Time.deltaTime;
+
             if (Input.GetButtonDown("Jump"))
             {
                 Pause = !Pause;

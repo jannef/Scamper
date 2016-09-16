@@ -58,7 +58,7 @@ namespace fi.tamk.game.theone
             }
         }
 
-        void LateUpdate()
+        void Update()
         {
             _movementClass.MoveBlock();
         }
