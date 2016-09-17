@@ -11,7 +11,7 @@ namespace fi.tamk.game.theone
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                other.GetComponent<PlayerController>().Jump(JumpPower);
+                other.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, JumpPower), ForceMode2D.Impulse);
             }
         }
     }

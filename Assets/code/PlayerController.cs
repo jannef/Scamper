@@ -42,11 +42,6 @@ namespace fi.tamk.game.theone
 
         void Update()
         {
-            if (_falling)
-            {
-                _speed.y += SceneManager.Instance.GlobalGravity * SceneManager.Instance.DeltaTime;
-            }
-
             if (!_stationary)
             {
                 _speed.x = Mathf.Min(_speed.x + _acceleration * SceneManager.Instance.DeltaTime, _targetSpeed);
@@ -65,7 +60,6 @@ namespace fi.tamk.game.theone
             if (SceneManager.Instance.ColliderMap[col.collider.gameObject].CompareTag("Floor"))
             {
                 _falling = false;
-                _speed.y = 0f;
             } else if (SceneManager.Instance.ColliderMap[col.collider.gameObject].CompareTag("Movable"))
             {
                 _transform.position = _lastCheckpoint;
