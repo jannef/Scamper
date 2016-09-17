@@ -11,6 +11,7 @@ namespace fi.tamk.game.theone.phys
         public bool Pause = false;
 
         public Dictionary<GameObject, PGameBlock> GameObjectMap;
+        public float _timescale = 1f;
 
         private float _deltaTime = 0f;
         /**
@@ -36,7 +37,7 @@ namespace fi.tamk.game.theone.phys
         // TODO: Here for testing purposes only!! REMOVE/MOVE AT SOME POINT!!
         void Update()
         {
-            _deltaTime = Time.deltaTime;
+            _deltaTime = Time.deltaTime * _timescale;
 
             if (Input.GetButtonDown("Jump"))
             {

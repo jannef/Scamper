@@ -6,20 +6,25 @@ namespace fi.tamk.game.theone.phys
     [RequireComponent(typeof(Rigidbody2D))]
     public class PGameBlock : MonoBehaviour
     {
+        struct Touch
+        {
+            GameObject collider;
+        }
+
         public Vector2 ForceOnClick = new Vector2(0, 7.8f);
+        public bool DampenInertia = true;
 
         protected Vector3 _startLocation;
         protected Transform _transform;
         protected Rigidbody2D _rb;
 
-        protected List<GameObject> _touchList;
+        protected Dictionary<GameObject, Collision2D> _touchList;
 
         void OnCollisionEnter2D(Collision2D col)
         {
-            var go = col.collider.gameObject;
-            _touchList.Add(go);
+            _touchList.Add(col.collider.gameObject, col);
 
-            if (IsResting())
+            if (DampenInertia && IsResting())
             {
                 _rb.velocity = Vector2.zero;
             }
@@ -29,10 +34,10 @@ namespace fi.tamk.game.theone.phys
         {
             foreach (var t in _touchList)
             {
-                if (t.transform.position.y < _transform.position.y)
+                if (t.Value.contacts[0].point.y < _transform.position.y)
                 {
                     // found solid ground or somethign in touch with ground below
-                    if (SceneManager.Instance.GameObjectMap[t].IsResting()) return true;
+                    if (SceneManager.Instance.GameObjectMap[t.Key].IsResting()) return true;
                 }
             }
 
@@ -44,7 +49,7 @@ namespace fi.tamk.game.theone.phys
         {
             foreach (var t in _touchList)
             {
-                if (t.transform.position.y > _transform.position.y)
+                if (t.Value.contacts[0].point.y > _transform.position.y)
                 {
                     return false;
                 }
@@ -55,15 +60,14 @@ namespace fi.tamk.game.theone.phys
 
         void OnCollisionExit2D(Collision2D col)
         {
-            var go = col.collider.gameObject;
-            _touchList.Remove(go);
+            _touchList.Remove(col.collider.gameObject);
         }
 
         void Start()
         {
             SceneManager.Instance.GameObjectMap.Add(gameObject, this);
 
-            _touchList = new List<GameObject>();
+            _touchList = new Dictionary<GameObject, Collision2D>();
             _transform = transform;
             _startLocation = _transform.position;
             _rb = GetComponent<Rigidbody2D>();
