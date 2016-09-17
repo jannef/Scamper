@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace fi.tamk.game.theone
+namespace fi.tamk.game.theone.phys
 {
     public class Checkpoint : MonoBehaviour
     {
@@ -15,6 +15,7 @@ namespace fi.tamk.game.theone
 
         private Transform _cameraTransform;
         private Transform _playerTransform;
+
         private Vector3 _cameraBeginPosition;
         private Vector3 _playerBeginPosition;
         private Vector3 _playerTargetPosition;
@@ -26,16 +27,16 @@ namespace fi.tamk.game.theone
 
         void OnTriggerEnter2D(Collider2D other)
         {
-            if (!_hasFired && SceneManager.Instance.ColliderMap[other.gameObject].CompareTag("Player"))
+            if (!_hasFired && other.gameObject.CompareTag("Player"))
             {
                 _activeTransition = true;
                 _hasFired = true;
                 _cameraBeginPosition = _cameraTransform.position;
-
-                ((PlayerController)SceneManager.Instance.ColliderMap[other.gameObject]).Checkpoint(this);
-                _playerTransform = SceneManager.Instance.ColliderMap[other.gameObject].transform;
+                _playerTransform = other.gameObject.transform;
                 _playerBeginPosition = _playerTransform.position;
                 _playerTargetPosition = new Vector3(Spawn.transform.position.x, _playerBeginPosition.y, _playerBeginPosition.z);
+
+                ((PPlayerBlock)SceneManager.Instance.GameObjectMap[other.gameObject]).Checkpoint(this);
             }
         }
 

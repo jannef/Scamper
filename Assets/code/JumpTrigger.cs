@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace fi.tamk.game.theone
+namespace fi.tamk.game.theone.phys
 {
     public class JumpTrigger : MonoBehaviour
     {

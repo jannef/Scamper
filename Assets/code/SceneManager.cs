@@ -1,23 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace fi.tamk.game.theone
+namespace fi.tamk.game.theone.phys
 {
     public class SceneManager : Singleton<SceneManager>
     {
         /**
          *  Flag for pausing the game.
-         *
-         *  Game should probably not be paused in the middle of an update cycle... some objects might
-         *  get to move 0-2 times extra depending on when the flow is interrupted/resumed compared to
-         *  other objects.
          */
         public bool Pause = false;
-        public float GlobalGravity = -10f;
+
+        public Dictionary<GameObject, PGameBlock> GameObjectMap;
+
         private float _deltaTime = 0f;
-
-        public Dictionary<GameObject, GameBlock> ColliderMap;
-
         /**
          *  Contains Time.deltaTime or 0 depending if the game is paused.
          */
@@ -35,7 +30,7 @@ namespace fi.tamk.game.theone
          */
         private SceneManager()
         {
-            ColliderMap = new Dictionary<GameObject, GameBlock>();
+            GameObjectMap = new Dictionary<GameObject, PGameBlock>();
         }
 
         // TODO: Here for testing purposes only!! REMOVE/MOVE AT SOME POINT!!
@@ -51,9 +46,9 @@ namespace fi.tamk.game.theone
 
         public void PlayerDeathReset()
         {
-            foreach(KeyValuePair<GameObject, GameBlock> t in ColliderMap)
+            foreach (var t in GameObjectMap)
             {
-                if (t.Key.CompareTag("Movable")) t.Value.Reset();
+                t.Value.ResetBlock();
             }
         }
     }
