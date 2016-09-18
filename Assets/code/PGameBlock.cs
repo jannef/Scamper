@@ -6,13 +6,18 @@ namespace fi.tamk.game.theone.phys
     [RequireComponent(typeof(Rigidbody2D))]
     public class PGameBlock : MonoBehaviour
     {
+        public enum OnBoxClickAction { Impulse, ReverseGravity }
+
         struct Touch
         {
             GameObject collider;
         }
 
+        public bool LockAfterUse = false;
+        public OnBoxClickAction OnClickAction = OnBoxClickAction.Impulse;
         public Vector2 ForceOnClick = new Vector2(0, 7.8f);
         public bool DampenInertia = true;
+        public bool LockedFromPlayer = false;
 
         protected Vector3 _startLocation;
         protected Transform _transform;
@@ -32,12 +37,25 @@ namespace fi.tamk.game.theone.phys
 
         virtual public bool IsResting()
         {
-            foreach (var t in _touchList)
+            if (_rb.gravityScale >= 0)
             {
-                if (t.Value.contacts[0].point.y < _transform.position.y)
+                foreach (var t in _touchList)
                 {
-                    // found solid ground or somethign in touch with ground below
-                    if (SceneManager.Instance.GameObjectMap[t.Key].IsResting()) return true;
+                    if (t.Value.contacts[0].point.y < _transform.position.y)
+                    {
+                        // found solid ground or somethign in touch with ground below
+                        if (SceneManager.Instance.GameObjectMap[t.Key].IsResting()) return true;
+                    }
+                }
+            } else
+            {
+                foreach (var t in _touchList)
+                {
+                    if (t.Value.contacts[0].point.y > _transform.position.y)
+                    {
+                        // found solid ground or somethign in touch with ground below
+                        if (SceneManager.Instance.GameObjectMap[t.Key].IsResting()) return true;
+                    }
                 }
             }
 
@@ -47,11 +65,23 @@ namespace fi.tamk.game.theone.phys
 
         public bool IsTopmost()
         {
-            foreach (var t in _touchList)
+            if (_rb.gravityScale >= 0)
             {
-                if (t.Value.contacts[0].point.y > _transform.position.y)
+                foreach (var t in _touchList)
                 {
-                    return false;
+                    if (t.Value.contacts[0].point.y > _transform.position.y)
+                    {
+                        return false;
+                    }
+                }
+            } else
+            {
+                foreach (var t in _touchList)
+                {
+                    if (t.Value.contacts[0].point.y < _transform.position.y)
+                    {
+                        return false;
+                    }
                 }
             }
 
@@ -71,6 +101,13 @@ namespace fi.tamk.game.theone.phys
             _transform = transform;
             _startLocation = _transform.position;
             _rb = GetComponent<Rigidbody2D>();
+
+            OnStart();
+        }
+
+        virtual protected void OnStart()
+        {
+
         }
 
         virtual public void ResetBlock()
@@ -79,11 +116,25 @@ namespace fi.tamk.game.theone.phys
             _transform.position = _startLocation;
         }
 
+        public void SetGravity(float newGravity)
+        {
+            _rb.gravityScale = newGravity;
+        }
+
         void OnMouseDown()
         {
-            if (IsResting() && IsTopmost())
+            if (!LockedFromPlayer && IsResting() && IsTopmost())
             {
-                _rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
+                if (LockAfterUse) LockedFromPlayer = true;
+                switch (OnClickAction) {
+                    case OnBoxClickAction.ReverseGravity:
+                        _rb.gravityScale *= -1f;
+                        break;
+                    case OnBoxClickAction.Impulse:
+                    default:
+                        _rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
+                        break;
+                }
             }
         }
     }

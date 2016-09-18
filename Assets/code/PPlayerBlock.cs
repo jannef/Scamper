@@ -6,7 +6,7 @@ namespace fi.tamk.game.theone.phys
     public class PPlayerBlock : PGameBlock
     {
         protected Vector2 _playerSpeed = new Vector2(2.2f, 0);
-        protected float _playerAcceleration = 1.1f;
+        // protected float _playerAcceleration = 1.1f;
         private bool _moving = false;
 
         void OnCollisionEnter2D(Collision2D col)
