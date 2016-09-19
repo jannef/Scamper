@@ -30,11 +30,25 @@ namespace fi.tamk.game.theone.phys
         {
             _touchList.Add(col.collider.gameObject, col);
 
-            if (DampenInertia && IsResting())
+            if (IsResting())
             {
-                _rb.velocity = Vector2.zero;
+                if (DampenInertia) _rb.velocity = Vector2.zero;
+            }
+            else
+            {
+                if (SceneManager.Instance.GameObjectMap[col.gameObject].GravityUp() != GravityUp())
+                {
+                    _rb.gravityScale = 1f;
+                }
             }
         }
+
+        private bool GravityUp()
+        {
+            if (_rb.gravityScale >= 0) return true;
+            return false;
+        }
+
 
         virtual public bool IsResting()
         {
@@ -44,16 +58,35 @@ namespace fi.tamk.game.theone.phys
                 {
                     if (t.Value.contacts[0].point.y < _transform.position.y)
                     {
+                        // eliminates a race condition that happens when collision happens on same
+                        // frame as click...
+                        if (SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable")
+                            && gameObject.CompareTag("Movable")
+                            && (SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp()))
+                        {
+                            _rb.gravityScale = 1f;
+                        }
+
                         // found solid ground or somethign in touch with ground below
                         if (SceneManager.Instance.GameObjectMap[t.Key].IsResting()) return true;
                     }
                 }
-            } else
+            }
+            else
             {
                 foreach (var t in _touchList)
                 {
                     if (t.Value.contacts[0].point.y > _transform.position.y)
                     {
+                        // eliminates a race condition that happens when collision happens on same
+                        // frame as click...
+                        if (SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable")
+                            && gameObject.CompareTag("Movable")
+                            && (SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp()))
+                        {
+                            _rb.gravityScale = 1f;
+                        }
+
                         // found solid ground or somethign in touch with ground below
                         if (SceneManager.Instance.GameObjectMap[t.Key].IsResting()) return true;
                     }
@@ -74,14 +107,29 @@ namespace fi.tamk.game.theone.phys
                     {
                         return false;
                     }
+                    else
+                    {
+                        if (SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp())
+                        {
+                            return false;
+                        }
+                    }
                 }
-            } else
+            }
+            else
             {
                 foreach (var t in _touchList)
                 {
                     if (t.Value.contacts[0].point.y < _transform.position.y)
                     {
                         return false;
+                    }
+                    else
+                    {
+                        if (SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp())
+                        {
+                            return false;
+                        }
                     }
                 }
             }
@@ -129,7 +177,8 @@ namespace fi.tamk.game.theone.phys
             if (!LockedFromPlayer && IsResting() && IsTopmost())
             {
                 if (LockAfterUse) LockedFromPlayer = true;
-                switch (OnClickAction) {
+                switch (OnClickAction)
+                {
                     case OnBoxClickAction.ReverseGravity:
                         _rb.gravityScale *= -1f;
                         break;
