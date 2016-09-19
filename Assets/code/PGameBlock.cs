@@ -22,6 +22,7 @@ namespace fi.tamk.game.theone.phys
         protected Vector3 _startLocation;
         protected Transform _transform;
         protected Rigidbody2D _rb;
+        protected float _originalGravity;
 
         protected Dictionary<GameObject, Collision2D> _touchList;
 
@@ -101,6 +102,7 @@ namespace fi.tamk.game.theone.phys
             _transform = transform;
             _startLocation = _transform.position;
             _rb = GetComponent<Rigidbody2D>();
+            _originalGravity = _rb.gravityScale;
 
             OnStart();
         }
@@ -112,6 +114,7 @@ namespace fi.tamk.game.theone.phys
 
         virtual public void ResetBlock()
         {
+            _rb.gravityScale = _originalGravity;
             _rb.velocity = Vector2.zero;
             _transform.position = _startLocation;
         }

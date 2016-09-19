@@ -8,13 +8,16 @@ namespace fi.tamk.game.theone.phys
         public Transform CameraPosition;
         public Transform Spawn;
         public float CameraTransitionTime = 2f;
+        public float NewWieportSize = 5f;
 
         private bool _activeTransition = false;
         private bool _hasFired = false;
         private float _transitionTimer = 0f;
+        private float _oldSize;
 
         private Transform _cameraTransform;
         private Transform _playerTransform;
+        private Camera _camera;
 
         private Vector3 _cameraBeginPosition;
         private Vector3 _playerBeginPosition;
@@ -23,12 +26,14 @@ namespace fi.tamk.game.theone.phys
         void Awake()
         {
             _cameraTransform = Camera.main.gameObject.transform;
+            _camera = Camera.main;
         }
 
         void OnTriggerEnter2D(Collider2D other)
         {
             if (!_hasFired && other.gameObject.CompareTag("Player"))
             {
+                _oldSize =_camera.orthographicSize;
                 _activeTransition = true;
                 _hasFired = true;
                 _cameraBeginPosition = _cameraTransform.position;
@@ -49,6 +54,7 @@ namespace fi.tamk.game.theone.phys
 
                 _cameraTransform.position = Vector3.Lerp(_cameraBeginPosition, CameraPosition.position, lerpRatio);
                 _playerTransform.position = Vector3.Lerp(_playerBeginPosition, _playerTargetPosition, lerpRatio);
+                _camera.orthographicSize = Mathf.Lerp(_oldSize, NewWieportSize/2f, lerpRatio);
 
                 if (_transitionTimer >= CameraTransitionTime) _activeTransition = false;
             }
