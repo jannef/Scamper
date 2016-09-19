@@ -109,7 +109,8 @@ namespace fi.tamk.game.theone.phys
                     }
                     else
                     {
-                        if (SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp())
+                        if (SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable")
+                            && SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp())
                         {
                             return false;
                         }
@@ -126,7 +127,8 @@ namespace fi.tamk.game.theone.phys
                     }
                     else
                     {
-                        if (SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp())
+                        if (SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable")
+                            && SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp())
                         {
                             return false;
                         }
@@ -174,6 +176,8 @@ namespace fi.tamk.game.theone.phys
 
         void OnMouseDown()
         {
+            Debug.Log(LockedFromPlayer + " " + IsResting() + " " + IsTopmost());
+
             if (!LockedFromPlayer && IsResting() && IsTopmost())
             {
                 if (LockAfterUse) LockedFromPlayer = true;

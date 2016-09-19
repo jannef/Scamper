@@ -29,12 +29,7 @@ namespace fi.tamk.game.theone.phys
             if (LocomotionActive)
             {
                 _transform.Translate(Locomotion * SceneManager.Instance.DeltaTime, Space.World);
-            }
-
-            if (_rb.velocity.y < 0 && _rb.gravityScale < 0 || _rb.velocity.y > 0 && _rb.gravityScale > 0)
-            {
-                SetGravity(1f);
-            }
+            }            
         }
 
         new public void ResetBlock()
