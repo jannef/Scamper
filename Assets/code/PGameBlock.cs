@@ -34,13 +34,6 @@ namespace fi.tamk.game.theone.phys
             {
                 if (DampenInertia) _rb.velocity = Vector2.zero;
             }
-            else
-            {
-                if (SceneManager.Instance.GameObjectMap[col.gameObject].GravityUp() != GravityUp())
-                {
-                    _rb.gravityScale = 1f;
-                }
-            }
         }
 
         private bool GravityUp()
@@ -176,9 +169,7 @@ namespace fi.tamk.game.theone.phys
 
         void OnMouseDown()
         {
-            Debug.Log(LockedFromPlayer + " " + IsResting() + " " + IsTopmost());
-
-            if (!LockedFromPlayer && IsResting() && IsTopmost())
+            if (!LockedFromPlayer && !SceneManager.Instance.Pause && IsResting() && IsTopmost())
             {
                 if (LockAfterUse) LockedFromPlayer = true;
                 switch (OnClickAction)

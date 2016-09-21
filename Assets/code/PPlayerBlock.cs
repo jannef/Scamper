@@ -8,6 +8,7 @@ namespace fi.tamk.game.theone.phys
         protected Vector2 _playerSpeed = new Vector2(2.2f, 0);
         // protected float _playerAcceleration = 1.1f;
         private bool _moving = false;
+        private Checkpoint _activeCheckpoint = null;
 
         void OnCollisionEnter2D(Collision2D col)
         {
@@ -26,13 +27,13 @@ namespace fi.tamk.game.theone.phys
         {
             if (_moving)
             {
-                _transform.Translate(_playerSpeed * SceneManager.Instance.DeltaTime);
+                _transform.Translate(_playerSpeed * SceneManager.Instance.DeltaTime, Space.World);
             }
         }
 
         void OnMouseDown()
         {
-            if (!_moving)
+            if (!_moving && _activeCheckpoint == null && !SceneManager.Instance.Pause)
             {
                 _moving = true;
             }
@@ -48,6 +49,12 @@ namespace fi.tamk.game.theone.phys
         {
             _startLocation = c.Spawn.position;
             _moving = false;
+            _activeCheckpoint = c;
+        }
+
+        public void CheckpointRelease()
+        {
+            _activeCheckpoint = null;
         }
     }
 }

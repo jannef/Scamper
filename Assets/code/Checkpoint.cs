@@ -23,6 +23,8 @@ namespace fi.tamk.game.theone.phys
         private Vector3 _playerBeginPosition;
         private Vector3 _playerTargetPosition;
 
+        private PPlayerBlock _player;
+
         void Awake()
         {
             _cameraTransform = Camera.main.gameObject.transform;
@@ -41,7 +43,8 @@ namespace fi.tamk.game.theone.phys
                 _playerBeginPosition = _playerTransform.position;
                 _playerTargetPosition = new Vector3(Spawn.transform.position.x, _playerBeginPosition.y, _playerBeginPosition.z);
 
-                ((PPlayerBlock)SceneManager.Instance.GameObjectMap[other.gameObject]).Checkpoint(this);
+                _player = ((PPlayerBlock)SceneManager.Instance.GameObjectMap[other.gameObject]);
+                _player.Checkpoint(this);
             }
         }
 
@@ -56,7 +59,11 @@ namespace fi.tamk.game.theone.phys
                 _playerTransform.position = Vector3.Lerp(_playerBeginPosition, _playerTargetPosition, lerpRatio);
                 _camera.orthographicSize = Mathf.Lerp(_oldSize, NewWieportSize/2f, lerpRatio);
 
-                if (_transitionTimer >= CameraTransitionTime) _activeTransition = false;
+                if (_transitionTimer >= CameraTransitionTime)
+                {
+                    _activeTransition = false;
+                    _player.CheckpointRelease();
+                }
             }
         }
     }
