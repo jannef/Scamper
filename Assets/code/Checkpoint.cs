@@ -5,11 +5,35 @@ namespace fi.tamk.game.theone.phys
 {
     public class Checkpoint : MonoBehaviour
     {
+        /**
+         * Position to move camera into.
+         * 
+         * Checkpoint prefab has one automatically set, but if doing stuff manually,
+         * make sure to set one in game editor.
+         */
         public Transform CameraPosition;
+
+        /**
+         * Position to spawn player into, if he dies before reachign another checkpoint.
+         * 
+         * Checkpoint prefab has one automatically set, but if doing stuff manually,
+         * make sure to set one in game editor.
+         */
         public Transform Spawn;
+
+        /**
+         * How long should the transition of panning camera and player take.
+         * 
+         * Player is moved to same location he would respawn into while camera in panned.
+         */
         public float CameraTransitionTime = 2f;
+
+        /**
+         * How large should the camera wievport be for this checkpoints "level".
+         */
         public float NewWieportSize = 5f;
 
+        #region TransitioHelperVariables
         private bool _activeTransition = false;
         private bool _hasFired = false;
         private float _transitionTimer = 0f;
@@ -24,6 +48,7 @@ namespace fi.tamk.game.theone.phys
         private Vector3 _playerTargetPosition;
 
         private PPlayerBlock _player;
+        #endregion
 
         void Awake()
         {

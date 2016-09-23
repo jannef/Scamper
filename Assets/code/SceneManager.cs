@@ -5,12 +5,10 @@ namespace fi.tamk.game.theone.phys
 {
     public class SceneManager : Singleton<SceneManager>
     {
+        #region PauseAndTime
         /**
          *  Flag for pausing the game.
          */
-
-        public int numero { get; private set; }
-
         public bool Pause
         {
             set
@@ -33,7 +31,6 @@ namespace fi.tamk.game.theone.phys
         }
         private bool _pause = false;
 
-        public Dictionary<GameObject, PGameBlock> GameObjectMap;
         public float TimeScale
         {
             get
@@ -54,7 +51,6 @@ namespace fi.tamk.game.theone.phys
             }
         }
         private float _timeScaleSaved = 1f;
-
         private float _deltaTime = 0f;
         /**
          *  Contains Time.deltaTime or 0 depending if the game is paused.
@@ -67,6 +63,12 @@ namespace fi.tamk.game.theone.phys
                 return _deltaTime;
             }
         }
+        #endregion
+
+        /**
+         * Map to get (c#)object when we know gameObject, to avoid runtime reflections
+         */
+        public Dictionary<GameObject, PGameBlock> GameObjectMap;
 
         /**
          *  Is private to keep this solely a singleton class.

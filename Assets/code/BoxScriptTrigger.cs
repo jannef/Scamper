@@ -9,8 +9,6 @@ namespace fi.tamk.game.theone.phys
 
         public bool SetNewLocomotion = false;
         public Vector2 NewLocomotion = Vector2.zero;
-        //public bool SetNewAcceleration = false;
-        //public float NewAcceleration = 0f;
         public bool ChangeLocomotionActiveStatus = false;
         public bool NewLocomotionActive = false;
         public bool SetNewGravityScale = false;
@@ -38,7 +36,6 @@ namespace fi.tamk.game.theone.phys
                 if (StopBoxOnEnter) _box.StopBox();
 
                 if (SetNewLocomotion) _box.Locomotion = NewLocomotion;
-                //if (SetNewAcceleration) _box.LocomotionAcceleration = NewAcceleration;
                 if (ChangeLocomotionActiveStatus) _box.LocomotionActive = NewLocomotionActive;
                 if (SetNewGravityScale) _box.SetGravity(NewGravityScale);
                 if (SetNewLockedStatus) _box.LockedFromPlayer = NewLockedStatus;

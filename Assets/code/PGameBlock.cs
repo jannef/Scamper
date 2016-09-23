@@ -8,41 +8,48 @@ namespace fi.tamk.game.theone.phys
     {
         public enum OnBoxClickAction { Impulse, ReverseGravity }
 
-        struct Touch
-        {
-            GameObject collider;
-        }
+        /**
+         * List of bodies and collision data
+         */
+        protected Dictionary<GameObject, Collision2D> _touchList;
 
+        #region States
+        /**
+         *  Object is only usable once, before unlocking from some event.
+         */
         public bool LockAfterUse = false;
-        public OnBoxClickAction OnClickAction = OnBoxClickAction.Impulse;
-        public Vector2 ForceOnClick = new Vector2(0, 7.8f);
-        public bool DampenInertia = true;
-        public bool LockedFromPlayer = false;
 
+        /**
+         * Action taken when clicked.
+         */
+        public OnBoxClickAction OnClickAction = OnBoxClickAction.Impulse;
+
+        /**
+         * Force on click, if OnBoxClickAction.Impulsion
+         */
+        public Vector2 ForceOnClick = new Vector2(0, 7.8f);
+
+        /**
+         * Should inertia be dampened when colliding with ground.
+         * 
+         * Buggy as fuck.
+         */
+        public bool DampenInertia = false;
+
+        /**
+         * Player temporarily can't interact with this object.
+         */
+        public bool LockedFromPlayer = false;
+        #endregion
+
+        #region ResetPositionValues
         protected Vector3 _startLocation;
         protected Transform _transform;
         protected Rigidbody2D _rb;
         protected float _originalGravity;
+        #endregion
 
-        protected Dictionary<GameObject, Collision2D> _touchList;
-
-        void OnCollisionEnter2D(Collision2D col)
-        {
-            _touchList.Add(col.collider.gameObject, col);
-
-            if (IsResting())
-            {
-                if (DampenInertia) _rb.velocity = Vector2.zero;
-            }
-        }
-
-        private bool GravityUp()
-        {
-            if (_rb.gravityScale >= 0) return true;
-            return false;
-        }
-
-
+        #region InteractableChecking
         virtual public bool IsResting()
         {
             if (_rb.gravityScale >= 0)
@@ -131,12 +138,9 @@ namespace fi.tamk.game.theone.phys
 
             return true;
         }
+        #endregion
 
-        void OnCollisionExit2D(Collision2D col)
-        {
-            _touchList.Remove(col.collider.gameObject);
-        }
-
+        #region MonoBehaviourMethods
         void Start()
         {
             SceneManager.Instance.GameObjectMap.Add(gameObject, this);
@@ -148,23 +152,6 @@ namespace fi.tamk.game.theone.phys
             _originalGravity = _rb.gravityScale;
 
             OnStart();
-        }
-
-        virtual protected void OnStart()
-        {
-
-        }
-
-        virtual public void ResetBlock()
-        {
-            _rb.gravityScale = _originalGravity;
-            _rb.velocity = Vector2.zero;
-            _transform.position = _startLocation;
-        }
-
-        public void SetGravity(float newGravity)
-        {
-            _rb.gravityScale = newGravity;
         }
 
         void OnMouseDown()
@@ -183,6 +170,65 @@ namespace fi.tamk.game.theone.phys
                         break;
                 }
             }
+        }
+        #endregion
+
+        /**
+         * Adds colliding object and the collision _touchList
+         */
+        void OnCollisionEnter2D(Collision2D col)
+        {
+            _touchList.Add(col.collider.gameObject, col);
+
+            if (IsResting())
+            {
+                if (DampenInertia) _rb.velocity = Vector2.zero;
+            }
+        }
+
+        /**
+         * Returns true if local gravity is towards top.
+         */
+        private bool GravityUp()
+        {
+            if (_rb.gravityScale >= 0) return true;
+            return false;
+        }
+
+        /**
+         * Removes exiting collider from _touchList
+         */
+        void OnCollisionExit2D(Collision2D col)
+        {
+            _touchList.Remove(col.collider.gameObject);
+        }
+
+        /**
+         * Called from Start(). For inheriting types to use so they don't accidentally left out
+         * important stuff in PGameBlock.Start().
+         */
+        virtual protected void OnStart()
+        {
+
+        }
+
+        /**
+         * Returns block to its initial position, speed and rotation etc. Inherited types should
+         * reset all behaviour to start values.
+         */
+        virtual public void ResetBlock()
+        {
+            _rb.gravityScale = _originalGravity;
+            _rb.velocity = Vector2.zero;
+            _transform.position = _startLocation;
+        }
+
+        /**
+         * Sets gravity scale of related rigidbody2d.
+         */
+        public void SetGravity(float newGravity)
+        {
+            _rb.gravityScale = newGravity;
         }
     }
 }

@@ -5,11 +5,19 @@ namespace fi.tamk.game.theone.phys
 {
     public class PPlayerBlock : PGameBlock
     {
-        protected Vector2 _playerSpeed = new Vector2(2.2f, 0);
-        // protected float _playerAcceleration = 1.1f;
+        [SerializeField] protected Vector2 _playerSpeed = new Vector2(2.2f, 0);
+
+        #region States
         private bool _moving = false;
         private Checkpoint _activeCheckpoint = null;
+        #endregion
 
+        #region MonoBehaviourMethods
+        /**
+         * Kills player when he collides with a block.
+         * 
+         * This also hides default behaviour so no touchlist is generated, this is intented for now.
+         */
         void OnCollisionEnter2D(Collision2D col)
         {
             if (col.collider.gameObject.CompareTag("Movable"))
@@ -18,11 +26,17 @@ namespace fi.tamk.game.theone.phys
             }
         }
 
+        /**
+         * Hides default behaviour, because player has no reason to manage touchlist.
+         */
         void OnCollisionExit2D(Collision2D col)
         {
 
         }
 
+        /**
+         * Moves player in the world.
+         */
         void Update()
         {
             if (_moving)
@@ -31,6 +45,9 @@ namespace fi.tamk.game.theone.phys
             }
         }
 
+        /**
+         * Overrides default behaviour that is used for "NPC" block to simply enable movement.
+         */
         void OnMouseDown()
         {
             if (!_moving && _activeCheckpoint == null && !SceneManager.Instance.Pause)
@@ -38,7 +55,11 @@ namespace fi.tamk.game.theone.phys
                 _moving = true;
             }
         }
+        #endregion
 
+        /**
+         * Sets state of the block to default values.
+         */
         override public void ResetBlock()
         {
             base.ResetBlock();
