@@ -18,6 +18,10 @@ namespace fi.tamk.game.theone.phys
         public bool SetNewLockedStatus = false;
         public bool NewLockedStatus = false;
 
+        public bool SetNewRotation = false;
+        public float RotationDuration = 0.75f;
+        public float NewRotation = 0f;
+
         [SerializeField] protected GameObject WhichBox;
 
         private PGameBlockMovable _box;
@@ -38,6 +42,7 @@ namespace fi.tamk.game.theone.phys
                 if (ChangeLocomotionActiveStatus) _box.LocomotionActive = NewLocomotionActive;
                 if (SetNewGravityScale) _box.SetGravity(NewGravityScale);
                 if (SetNewLockedStatus) _box.LockedFromPlayer = NewLockedStatus;
+                if (SetNewRotation) _box.SetRotation(RotationDuration, NewRotation);
             }
         }
     }

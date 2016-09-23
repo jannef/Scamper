@@ -16,6 +16,12 @@ namespace fi.tamk.game.theone.phys
         private float _initialAcceleration;
         private bool _initialLocomotionActive;
 
+        private bool _inRotation = false;
+        private float _startRotation;
+        private float _rotationTimer;
+        private float _rotationEndTime;
+        private float _rotationTarget;
+
         override protected void OnStart()
         {        
             // Store initial settings
@@ -24,12 +30,35 @@ namespace fi.tamk.game.theone.phys
             _initialLocomotionActive = LocomotionActive;
         }
 
+        public void SetRotation(float duration, float rotation)
+        {
+            if (duration <= 0)
+            {
+                _rb.rotation = rotation;
+            }
+            else
+            {
+                _inRotation = true;
+                _rotationTimer = 0f;
+                _rotationEndTime = duration;
+                _startRotation = _rb.rotation;
+            }
+        }
+
         void Update()
         {
             if (LocomotionActive)
             {
                 _transform.Translate(Locomotion * SceneManager.Instance.DeltaTime, Space.World);
-            }            
+            }
+            
+            if (_inRotation)
+            {
+                _rotationTimer += SceneManager.Instance.DeltaTime;
+                _rb.rotation = Mathf.Lerp(_startRotation, _rotationTarget, Mathf.Min(_rotationTimer / _rotationEndTime));
+
+                if (_rotationTimer >= _rotationEndTime) _inRotation = false;
+            }  
         }
 
         new public void ResetBlock()
