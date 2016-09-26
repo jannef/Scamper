@@ -31,6 +31,15 @@ namespace fi.tamk.game.theone.phys
         }
         private bool _pause = false;
 
+        public GameObject PlayerGameObject;
+
+        public float TimerPhase
+        {
+            get { return _timer; }
+        }
+
+        private float _timer = 0f;
+
         public float TimeScale
         {
             get
@@ -78,10 +87,16 @@ namespace fi.tamk.game.theone.phys
             GameObjectMap = new Dictionary<GameObject, PGameBlock>();
         }
 
+        void Awake()
+        {
+            PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
+        }
+
         // TODO: Here for testing purposes only!! REMOVE/MOVE AT SOME POINT!!
         void Update()
         {
             _deltaTime = Time.deltaTime;
+            _timer = (Mathf.Sin(Time.timeSinceLevelLoad * 2f) + 1)/6;
 
             if (Input.GetButtonDown("Jump"))
             {
