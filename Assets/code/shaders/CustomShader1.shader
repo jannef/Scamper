@@ -1,10 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-Shader "Sprites/Custom-Jannef-1"
+﻿Shader "Sprites/Custom-Jannef-1"
 {
 	Properties
 	{
@@ -70,7 +64,7 @@ Shader "Sprites/Custom-Jannef-1"
 				OUT.vertex = mul(UNITY_MATRIX_MVP, IN.vertex);
 				OUT.color = IN.color * _Color;
 				OUT.texcoord = IN.texcoord;
-				OUT.worldpos = mul(unity_ObjectToWorld, IN.vertex).xy;
+				OUT.worldpos = mul(_Object2World, IN.vertex).xy;
 
 				#ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap(OUT.vertex);
@@ -85,10 +79,19 @@ Shader "Sprites/Custom-Jannef-1"
 			{
 				fixed4 c = tex2D(_MainTex, IN.texcoord) * IN.color;
 				c.rgb *= c.a;
-				fixed4 black = { 0,0,0,0 };
 
 				float2 l = { _WorldX, _WorldY };
-				c.rgb = lerp(c.rgb, black.xyz, pow((distance(IN.worldpos, l) / 8), 2));
+				float dist = distance(IN.worldpos, l) / 6;
+				float dist_norm = min(dist, 1);
+				
+				c.rgb -= (dist / 4);
+
+				float L = (0.3 * c.r) + (0.6 * c.g) + (0.1 * c.b);
+				c.r += dist_norm * (L - c.r);
+				c.g += dist_norm * (L - c.r);
+				c.b += dist_norm * (L - c.r);
+				
+				//c.rgb = lerp(c.rgb, monochrome.xyz, pow((distance(IN.worldpos, l) / 8), 2));
 
 				return c;
 			}
