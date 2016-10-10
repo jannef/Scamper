@@ -3,8 +3,20 @@ using System.Collections;
 
 namespace fi.tamk.game.theone.phys
 {
+    public enum CameraTransitionInterpolations
+    {
+        Linear,
+        EaseOut,
+        EaseIn,
+        Exponential,
+        Smoothstep,
+        Smootherstep
+    }
+
     public class Checkpoint : MonoBehaviour
     {
+        public CameraTransitionInterpolations TransitionInterpolation = CameraTransitionInterpolations.Linear;
+
         /**
          * Position to move camera into.
          * 
@@ -79,6 +91,28 @@ namespace fi.tamk.game.theone.phys
             {
                 _transitionTimer = Mathf.Min(_transitionTimer + SceneManager.Instance.DeltaTime, CameraTransitionTime);
                 var lerpRatio = _transitionTimer / CameraTransitionTime;
+
+                switch (TransitionInterpolation)
+                {
+                    case CameraTransitionInterpolations.EaseIn:
+                        lerpRatio = Mathf.Cos(lerpRatio * Mathf.PI * 0.5f);
+                        break;
+                    case CameraTransitionInterpolations.EaseOut:
+                        lerpRatio = Mathf.Sin(lerpRatio * Mathf.PI * 0.5f);
+                        break;
+                    case CameraTransitionInterpolations.Exponential:
+                        lerpRatio = Mathf.Pow(lerpRatio, 2f);
+                        break;
+                    case CameraTransitionInterpolations.Smoothstep:
+                        lerpRatio = Mathf.Pow(lerpRatio, 2f) * (3f - (2f * lerpRatio));
+                        break;
+                    case CameraTransitionInterpolations.Smootherstep:
+                        lerpRatio = Mathf.Pow(lerpRatio, 3f) * (lerpRatio * (6f * lerpRatio - 15f) + 10f);
+                        break;
+                    default:
+                        break;
+
+                }
 
                 _cameraTransform.position = Vector3.Lerp(_cameraBeginPosition, CameraPosition.position, lerpRatio);
                 _playerTransform.position = Vector3.Lerp(_playerBeginPosition, _playerTargetPosition, lerpRatio);
