@@ -50,7 +50,9 @@ namespace fi.tamk.game.theone.phys
          */
         void OnMouseDown()
         {
-            if (!_moving && _activeCheckpoint == null && !SceneManager.Instance.Pause)
+            if (!LockedFromPlayer
+                && !_moving && _activeCheckpoint == null
+                && !SceneManager.Instance.Pause)
             {
                 _moving = true;
             }

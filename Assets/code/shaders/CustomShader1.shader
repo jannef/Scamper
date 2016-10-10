@@ -1,4 +1,6 @@
-﻿Shader "Sprites/Custom-Jannef-1"
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Sprites/Custom-Jannef-1"
 {
 	Properties
 	{
@@ -6,7 +8,6 @@
 		_Color("Tint", Color) = (1, 1, 1, 1)
 		[MaterialToggle] PixelSnap("Pixel snap", Float) = 0
 		_Fade("Fade", Float) = 1
-		_FadeColor("Fade Tint", Color) = (1, 1, 1, 1)
 		_WorldX("World X", Float) = 0
 		_WorldY("World Y", Float) = 0
 	}
@@ -53,7 +54,6 @@
 			};
 
 			fixed4 _Color;
-			fixed4 _FadeColor;
 			fixed _Fade;
 			float _WorldX;
 			float _WorldY;
@@ -64,7 +64,7 @@
 				OUT.vertex = mul(UNITY_MATRIX_MVP, IN.vertex);
 				OUT.color = IN.color * _Color;
 				OUT.texcoord = IN.texcoord;
-				OUT.worldpos = mul(_Object2World, IN.vertex).xy;
+				OUT.worldpos = mul(unity_ObjectToWorld, IN.vertex).xy;
 
 				#ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap(OUT.vertex);
@@ -79,6 +79,7 @@
 			{
 				fixed4 c = tex2D(_MainTex, IN.texcoord) * IN.color;
 				c.rgb *= c.a;
+				c.rgba *= _Fade;
 
 				float2 l = { _WorldX, _WorldY };
 				float dist = distance(IN.worldpos, l) / 6;

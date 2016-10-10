@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using fi.tamk.game.theone.shader;
 
 namespace fi.tamk.game.theone.phys
 {
@@ -35,6 +36,7 @@ namespace fi.tamk.game.theone.phys
          * Buggy as fuck.
          */
         public bool DampenInertia = false;
+        private AlertShadeController _shader = null;
 
         /**
          * Player temporarily can't interact with this object.
@@ -47,6 +49,7 @@ namespace fi.tamk.game.theone.phys
         protected Transform _transform;
         protected Rigidbody2D _rb;
         protected float _originalGravity;
+        protected float _originalRotation;
         #endregion
 
         #region InteractableChecking
@@ -144,12 +147,15 @@ namespace fi.tamk.game.theone.phys
         void Start()
         {
             SceneManager.Instance.GameObjectMap.Add(gameObject, this);
+            _shader = GetComponent<AlertShadeController>();
+            _shader.Fade = 1;
 
             _touchList = new Dictionary<GameObject, Collision2D>();
             _transform = transform;
             _startLocation = _transform.position;
             _rb = GetComponent<Rigidbody2D>();
             _originalGravity = _rb.gravityScale;
+            _originalRotation = _rb.rotation;
 
             OnStart();
         }
@@ -221,6 +227,7 @@ namespace fi.tamk.game.theone.phys
             _rb.gravityScale = _originalGravity;
             _rb.velocity = Vector2.zero;
             _transform.position = _startLocation;
+            _rb.rotation = _originalRotation;
         }
 
         /**
@@ -229,6 +236,15 @@ namespace fi.tamk.game.theone.phys
         public void SetGravity(float newGravity)
         {
             _rb.gravityScale = newGravity;
+        }
+
+        public void SetFade(float ratio)
+        {
+            if (ratio < 0f || ratio > 1.0f) return;
+            if (_shader != null)
+            {
+                _shader.Fade = ratio;
+            }
         }
     }
 }

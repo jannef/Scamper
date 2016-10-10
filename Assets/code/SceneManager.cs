@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace fi.tamk.game.theone.phys
 {
@@ -107,12 +108,39 @@ namespace fi.tamk.game.theone.phys
             // TimeScale += Input.GetAxis("Horizontal") * _deltaTime;
         }
 
+        /**
+         *  Resets the scene on player death.
+         */
         public void PlayerDeathReset()
         {
             foreach (var t in GameObjectMap)
             {
                 t.Value.ResetBlock();
+
+                StartCoroutine(FadeIn(t.Value, 3f));
+                
             }
         }
+
+        /**
+         *  Fades the block in.
+         */
+        protected IEnumerator FadeIn(PGameBlock whichBlock, float duration)
+        {
+            bool blockLocked = whichBlock.LockedFromPlayer;
+            whichBlock.LockedFromPlayer = true;
+
+            float fade = 0f;
+
+            while (fade < 1.0f)
+            {
+                fade += (SceneManager.Instance.DeltaTime/duration);
+                whichBlock.SetFade(fade);
+                yield return null;
+            }
+            
+            whichBlock.LockedFromPlayer = blockLocked;
+        }
+
     }
 }
