@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using fi.tamk.game.theone.utils;
 
 namespace fi.tamk.game.theone.phys
 {
@@ -117,7 +118,7 @@ namespace fi.tamk.game.theone.phys
             {
                 t.Value.ResetBlock();
 
-                StartCoroutine(FadeIn(t.Value, 3f));
+                StartCoroutine(FadeIn(t.Value, 1f));
                 
             }
         }
@@ -134,8 +135,8 @@ namespace fi.tamk.game.theone.phys
 
             while (fade < 1.0f)
             {
-                fade += (SceneManager.Instance.DeltaTime/duration);
-                whichBlock.SetFade(fade);
+                fade += (SceneManager.Instance.DeltaTime / duration);
+                whichBlock.SetFade(Interpolations.Exponential(fade));
                 yield return null;
             }
             

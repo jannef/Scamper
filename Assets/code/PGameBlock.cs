@@ -36,7 +36,7 @@ namespace fi.tamk.game.theone.phys
          * Buggy as fuck.
          */
         public bool DampenInertia = false;
-        private AlertShadeController _shader = null;
+        private DesaturationShaderController _shader = null;
 
         /**
          * Player temporarily can't interact with this object.
@@ -147,7 +147,7 @@ namespace fi.tamk.game.theone.phys
         void Start()
         {
             SceneManager.Instance.GameObjectMap.Add(gameObject, this);
-            _shader = GetComponent<AlertShadeController>();
+            _shader = GetComponent<DesaturationShaderController>();
             _shader.Fade = 1;
 
             _touchList = new Dictionary<GameObject, Collision2D>();

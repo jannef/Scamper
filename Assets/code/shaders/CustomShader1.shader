@@ -78,21 +78,19 @@ Shader "Sprites/Custom-Jannef-1"
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				fixed4 c = tex2D(_MainTex, IN.texcoord) * IN.color;
+				c.a *= _Fade;
 				c.rgb *= c.a;
-				c.rgba *= _Fade;
 
 				float2 l = { _WorldX, _WorldY };
-				float dist = distance(IN.worldpos, l) / 6;
-				float dist_norm = min(dist, 1);
+				float dist = distance(IN.worldpos, l) / 8;
+				float dist_norm = max(0.25, min(dist, 1));
 				
 				c.rgb -= (dist / 4);
 
 				float L = (0.3 * c.r) + (0.6 * c.g) + (0.1 * c.b);
 				c.r += dist_norm * (L - c.r);
-				c.g += dist_norm * (L - c.r);
-				c.b += dist_norm * (L - c.r);
-				
-				//c.rgb = lerp(c.rgb, monochrome.xyz, pow((distance(IN.worldpos, l) / 8), 2));
+				c.g += dist_norm * (L - c.g);
+				c.b += dist_norm * (L - c.b);
 
 				return c;
 			}

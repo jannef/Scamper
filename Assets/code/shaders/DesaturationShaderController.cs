@@ -5,7 +5,7 @@ using fi.tamk.game.theone.phys;
 namespace fi.tamk.game.theone.shader
 {
     [RequireComponent(typeof(Renderer))]
-    public class AlertShadeController : MonoBehaviour
+    public class DesaturationShaderController : MonoBehaviour
     {
         public float Fade = 0f;
         private Material _mat;
