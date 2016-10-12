@@ -55,44 +55,13 @@ namespace fi.tamk.game.theone.phys
         #region InteractableChecking
         virtual public bool IsResting()
         {
-            if (_rb.gravityScale >= 0)
+            foreach (var t in _touchList)
             {
-                foreach (var t in _touchList)
-                {
-                    if (t.Value.contacts[0].point.y < _transform.position.y)
-                    {
-                        // eliminates a race condition that happens when collision happens on same
-                        // frame as click...
-                        if (SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable")
-                            && gameObject.CompareTag("Movable")
-                            && (SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp()))
-                        {
-                            _rb.gravityScale = 1f;
-                        }
+                var vecY = t.Key.transform.position.y - transform.position.y;
 
-                        // found solid ground or somethign in touch with ground below
-                        if (SceneManager.Instance.GameObjectMap[t.Key].IsResting()) return true;
-                    }
-                }
-            }
-            else
-            {
-                foreach (var t in _touchList)
+                if (vecY != 0 && SceneManager.Instance.GameObjectMap[t.Key].GravityUp() == GravityUp() && !IsPositive(vecY) == GravityUp())
                 {
-                    if (t.Value.contacts[0].point.y > _transform.position.y)
-                    {
-                        // eliminates a race condition that happens when collision happens on same
-                        // frame as click...
-                        if (SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable")
-                            && gameObject.CompareTag("Movable")
-                            && (SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp()))
-                        {
-                            _rb.gravityScale = 1f;
-                        }
-
-                        // found solid ground or somethign in touch with ground below
-                        if (SceneManager.Instance.GameObjectMap[t.Key].IsResting()) return true;
-                    }
+                    return true;
                 }
             }
 
@@ -100,41 +69,33 @@ namespace fi.tamk.game.theone.phys
             return false;
         }
 
+        protected static bool IsPositive(float number)
+        {
+            if (number > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public bool IsTopmost()
         {
-            if (_rb.gravityScale >= 0)
+            foreach (var t in _touchList)
             {
-                foreach (var t in _touchList)
+                // positive y is touch is above
+                var vec = t.Value.contacts[0].point - new Vector2(_transform.position.x, _transform.position.y);
+
+                if (!SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable") || Mathf.Abs(vec.x) > Mathf.Abs(vec.y))
                 {
-                    if (t.Value.contacts[0].point.y > _transform.position.y)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        if (SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable")
-                            && SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp())
-                        {
-                            return false;
-                        }
-                    }
+                    continue;
                 }
-            }
-            else
-            {
-                foreach (var t in _touchList)
+                else
                 {
-                    if (t.Value.contacts[0].point.y < _transform.position.y)
+                    Debug.Log(GravityUp() + " " + vec.y);
+                    if ((GravityUp() && vec.y > 0) || (!GravityUp() && vec.y <= 0))
                     {
                         return false;
-                    }
-                    else
-                    {
-                        if (SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable")
-                            && SceneManager.Instance.GameObjectMap[t.Key].GravityUp() != GravityUp())
-                        {
-                            return false;
-                        }
                     }
                 }
             }
