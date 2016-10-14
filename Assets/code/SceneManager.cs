@@ -35,12 +35,7 @@ namespace fi.tamk.game.theone.phys
 
         public GameObject PlayerGameObject;
 
-        public float TimerPhase
-        {
-            get { return _timer; }
-        }
-
-        private float _timer = 0f;
+        public float TimerPhase { get; private set; }
 
         public float TimeScale
         {
@@ -86,19 +81,20 @@ namespace fi.tamk.game.theone.phys
          */
         private SceneManager()
         {
+            TimerPhase = 0f;
             GameObjectMap = new Dictionary<GameObject, PGameBlock>();
         }
 
-        void Awake()
+        private void Awake()
         {
             PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
         }
 
         // TODO: Here for testing purposes only!! REMOVE/MOVE AT SOME POINT!!
-        void Update()
+        private void Update()
         {
             _deltaTime = Time.deltaTime;
-            _timer = (Mathf.Sin(Time.timeSinceLevelLoad * 2f) + 1)/6;
+            TimerPhase = (Mathf.Sin(Time.timeSinceLevelLoad * 2f) + 1)/6;
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -128,10 +124,10 @@ namespace fi.tamk.game.theone.phys
          */
         protected IEnumerator FadeIn(PGameBlock whichBlock, float duration)
         {
-            bool blockLocked = whichBlock.LockedFromPlayer;
+            var blockLocked = whichBlock.LockedFromPlayer;
             whichBlock.LockedFromPlayer = true;
 
-            float fade = 0f;
+            var fade = 0f;
 
             while (fade < 1.0f)
             {

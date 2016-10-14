@@ -4,7 +4,7 @@ namespace fi.tamk.game.theone.phys
 {
     public class PGameFloor : PGameBlock
     {
-        override public bool IsResting()
+        public override bool IsResting()
         {
             return true;
         }

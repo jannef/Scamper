@@ -35,13 +35,13 @@ namespace fi.tamk.game.theone.phys
         {
             if (LocomotionActive)
             {
-                _transform.Translate(Locomotion * SceneManager.Instance.DeltaTime, Space.World);
+                MyTransform.Translate(Locomotion * SceneManager.Instance.DeltaTime, Space.World);
             }
 
             if (_inRotation)
             {
                 _rotationTimer += SceneManager.Instance.DeltaTime;
-                _rb.rotation = Mathf.Lerp(_startRotation, _rotationTarget, Mathf.Min(_rotationTimer / _rotationEndTime));
+                Rb.rotation = Mathf.Lerp(_startRotation, _rotationTarget, Mathf.Min(_rotationTimer / _rotationEndTime));
 
                 if (_rotationTimer >= _rotationEndTime) _inRotation = false;
             }
@@ -49,7 +49,7 @@ namespace fi.tamk.game.theone.phys
         #endregion
 
         #region OverrideMethods
-        override protected void OnStart()
+        protected override void OnStart()
         {        
             // Store initial settings
             _initialAcceleration = LocomotionAcceleration;
@@ -62,18 +62,18 @@ namespace fi.tamk.game.theone.phys
         {
             if (duration <= 0)
             {
-                _rb.rotation = rotation;
+                Rb.rotation = rotation;
             }
             else
             {
                 _inRotation = true;
                 _rotationTimer = 0f;
                 _rotationEndTime = duration;
-                _startRotation = _rb.rotation;
+                _startRotation = Rb.rotation;
             }
         }
 
-        new public void ResetBlock()
+        public new void ResetBlock()
         {
             base.ResetBlock();
 
@@ -85,7 +85,7 @@ namespace fi.tamk.game.theone.phys
 
         public void StopBox()
         {
-            _rb.velocity = Vector2.zero;
+            Rb.velocity = Vector2.zero;
         }
     }
 }

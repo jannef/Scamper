@@ -1,90 +1,116 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using fi.tamk.game.theone.shader;
 
 namespace fi.tamk.game.theone.phys
 {
+    /// <summary>
+    /// Base class taht contains functionality of the logical gameObjects that interact with eachother
+    /// in the game world. This class offers collision detection related methods and resetting to original
+    /// position.
+    /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     public class PGameBlock : MonoBehaviour
     {
+        /// <summary>
+        /// Types of behaviours for objects on interaction.
+        /// </summary>
         public enum OnBoxClickAction { Impulse, ReverseGravity }
 
-        /**
-         * List of bodies and collision data
-         */
-        protected Dictionary<GameObject, Collision2D> _touchList;
+        /// <summary>
+        /// Stores data of collisions that are ongoing. This info is kept by
+        /// Box2d, but user cannot access with implementation used by unity.
+        /// </summary>
+        protected Dictionary<GameObject, Collision2D> TouchList;
 
-        #region States
-        /**
-         *  Object is only usable once, before unlocking from some event.
-         */
+        /// <summary>
+        /// Should the object be locked from the player after one use.
+        /// </summary>
         public bool LockAfterUse = false;
 
-        /**
-         * Action taken when clicked.
-         */
+        /// <summary>
+        /// Which action should this object take when clicked by the player.
+        /// </summary>
         public OnBoxClickAction OnClickAction = OnBoxClickAction.Impulse;
 
-        /**
-         * Force on click, if OnBoxClickAction.Impulsion
-         */
+        /// <summary>
+        /// Amounth of force to be applied to this on click.
+        /// </summary>
         public Vector2 ForceOnClick = new Vector2(0, 7.8f);
 
-        /**
-         * Should inertia be dampened when colliding with ground.
-         * 
-         * Buggy as fuck.
-         */
+        /// <summary>
+        /// Should dampen the inertia when colliding with solid ground...
+        /// 
+        /// TODO: Buggy as fuck, please avoid setting to true.
+        /// </summary>
         public bool DampenInertia = false;
+
+        /// <summary>
+        /// Controls shader that desuraturates objects futher away from the player.
+        /// </summary>
         private DesaturationShaderController _shader = null;
 
-        /**
-         * Player temporarily can't interact with this object.
-         */
+        /// <summary>
+        /// This object is locked from player interaction while this is true;
+        /// </summary>
         public bool LockedFromPlayer = false;
-        #endregion
 
-        #region ResetPositionValues
-        protected Vector3 _startLocation;
-        protected Transform _transform;
-        protected Rigidbody2D _rb;
-        protected float _originalGravity;
-        protected float _originalRotation;
-        #endregion
+        /// <summary>
+        /// Starting position of this object for resetting purposes.
+        /// </summary>
+        protected Vector3 StartLocation;
 
-        #region InteractableChecking
-        virtual public bool IsResting()
+        /// <summary>
+        /// Reference to this' gameObject's Transfrom. Cached for efficiency, depracated
+        /// and not wort using in later versions of unity.
+        /// </summary>
+        protected Transform MyTransform;
+
+        /// <summary>
+        /// Cached reference to rigidbody attached to gameObjects owning this.
+        /// </summary>
+        protected Rigidbody2D Rb;
+
+        /// <summary>
+        /// Original Gravity for resetting purposes.
+        /// </summary>
+        protected float OriginalGravity;
+
+        /// <summary>
+        /// Orifinal rotation for resetting purposes.
+        /// </summary>
+        protected float OriginalRotation;
+
+        /// <summary>
+        /// Finds out if this object can be considered resting on something that is considered always to be in rest or on top of something
+        /// that can find solid ground below calling this same method recursively.
+        /// 
+        /// We are not using simple rigidbody2d.velocity.magnitude~0 test, becasue that way we cannot have mobile platforms supporting
+        /// interactable PGameBlocks on top of them.
+        /// </summary>
+        /// <returns>True if this object is resting on a surface.</returns>
+        public virtual bool IsResting()
         {
-            foreach (var t in _touchList)
-            {
-                var vecY = t.Key.transform.position.y - transform.position.y;
-
-                if (vecY != 0 && SceneManager.Instance.GameObjectMap[t.Key].GravityUp() == GravityUp() && !IsPositive(vecY) == GravityUp())
-                {
-                    return true;
-                }
-            }
-
-            // didn't find solid ground below
-            return false;
+            // Have you already taken our lord Linqus Cristus as your personal saviour?
+            return (
+                from t in TouchList
+                let vecY = t.Key.transform.position.y - transform.position.y
+                where Math.Abs(vecY) > 0.005f && SceneManager.Instance.GameObjectMap[t.Key].GravityDown() == GravityDown() && !(vecY > 0) == GravityDown()
+                select t).Any();
         }
 
-        protected static bool IsPositive(float number)
-        {
-            if (number > 0)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
+        /// <summary>
+        /// Looks up the TouchList to figure out if another object is resting on top of this one.
+        /// </summary>
+        /// <returns>True if no object was found that is resting on this one.</returns>
         public bool IsTopmost()
         {
-            foreach (var t in _touchList)
+            foreach (var t in TouchList)
             {
                 // positive y is touch is above
-                var vec = t.Value.contacts[0].point - new Vector2(_transform.position.x, _transform.position.y);
+                var vec = t.Value.contacts[0].point - new Vector2(MyTransform.position.x, MyTransform.position.y);
 
                 if (!SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable") || Mathf.Abs(vec.x) > Mathf.Abs(vec.y))
                 {
@@ -92,8 +118,7 @@ namespace fi.tamk.game.theone.phys
                 }
                 else
                 {
-                    Debug.Log(GravityUp() + " " + vec.y);
-                    if ((GravityUp() && vec.y > 0) || (!GravityUp() && vec.y <= 0))
+                    if ((GravityDown() && vec.y > 0) || (!GravityDown() && vec.y <= 0))
                     {
                         return false;
                     }
@@ -102,106 +127,129 @@ namespace fi.tamk.game.theone.phys
 
             return true;
         }
-        #endregion
 
-        #region MonoBehaviourMethods
-        void Start()
+        /// <summary>
+        /// Overloaded MonoBehavior method performed on instantiation.
+        /// </summary>
+        private void Start()
         {
             SceneManager.Instance.GameObjectMap.Add(gameObject, this);
             _shader = GetComponent<DesaturationShaderController>();
             _shader.Fade = 1;
 
-            _touchList = new Dictionary<GameObject, Collision2D>();
-            _transform = transform;
-            _startLocation = _transform.position;
-            _rb = GetComponent<Rigidbody2D>();
-            _originalGravity = _rb.gravityScale;
-            _originalRotation = _rb.rotation;
+            TouchList = new Dictionary<GameObject, Collision2D>();
+            MyTransform = transform;
+            StartLocation = MyTransform.position;
+            Rb = GetComponent<Rigidbody2D>();
+            OriginalGravity = Rb.gravityScale;
+            OriginalRotation = Rb.rotation;
 
             OnStart();
         }
 
-        void OnMouseDown()
+        /// <summary>
+        /// Box2d event system method executed when this gameobject is clicked with mouse or
+        /// tapped on touch screen.
+        /// </summary>
+        private void OnMouseDown()
         {
-            if (!LockedFromPlayer && !SceneManager.Instance.Pause && IsResting() && IsTopmost())
+            if (LockedFromPlayer || SceneManager.Instance.Pause || !IsResting() || !IsTopmost()) return;
+            if (LockAfterUse) LockedFromPlayer = true;
+            switch (OnClickAction)
             {
-                if (LockAfterUse) LockedFromPlayer = true;
-                switch (OnClickAction)
-                {
-                    case OnBoxClickAction.ReverseGravity:
-                        _rb.gravityScale *= -1f;
-                        break;
-                    case OnBoxClickAction.Impulse:
-                    default:
-                        _rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
-                        break;
-                }
-            }
-        }
-        #endregion
-
-        /**
-         * Adds colliding object and the collision _touchList
-         */
-        void OnCollisionEnter2D(Collision2D col)
-        {
-            _touchList.Add(col.collider.gameObject, col);
-
-            if (IsResting())
-            {
-                if (DampenInertia) _rb.velocity = Vector2.zero;
+                case OnBoxClickAction.ReverseGravity:
+                    Rb.gravityScale *= -1f;
+                    break;
+                case OnBoxClickAction.Impulse:
+                default:
+                    Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
+                    break;
             }
         }
 
-        /**
-         * Returns true if local gravity is towards top.
-         */
-        private bool GravityUp()
+        /// <summary>
+        /// Box2d event that is triggered when a collision with another Box2d rigidbody
+        /// begins.
+        /// 
+        /// Collisiondata is stored in TouchList since we want to avoid catching
+        /// OnCollisionStay2d events every physics update - we are fine by just storing
+        /// the data and polling on demand.
+        /// 
+        /// There is a potential bug if two colliders adhert to eachother midair and then
+        /// continue to move together. Nasty stuff will happen, demonstrated by turning
+        /// dampen inertia on and getting two boxes to stick to eachother.
+        /// </summary>
+        /// <param name="col">Collision data passed from Box2d ohysics engine</param>
+        private void OnCollisionEnter2D(Collision2D col)
         {
-            if (_rb.gravityScale >= 0) return true;
-            return false;
+            TouchList.Add(col.collider.gameObject, col);
+
+            if (!IsResting()) return;
+            if (DampenInertia) Rb.velocity = Vector2.zero;
         }
 
-        /**
-         * Removes exiting collider from _touchList
-         */
-        void OnCollisionExit2D(Collision2D col)
+        /// <summary>
+        /// Figures out where gravity is pulling this object in x-axis.
+        /// Everythign will probably break if you change global gravity direction
+        /// from project settings.
+        /// </summary>
+        /// <returns>True if local gravity points down.</returns>
+        private bool GravityDown()
         {
-            _touchList.Remove(col.collider.gameObject);
+            return Rb.gravityScale >= 0;
         }
 
-        /**
-         * Called from Start(). For inheriting types to use so they don't accidentally left out
-         * important stuff in PGameBlock.Start().
-         */
-        virtual protected void OnStart()
+        /// <summary>
+        /// Removes stored collision involving the collider that is now triggering
+        /// Box2d's OnCollisionExit event.
+        /// </summary>
+        /// <param name="col"></param>
+        private void OnCollisionExit2D(Collision2D col)
+        {
+            TouchList.Remove(col.collider.gameObject);
+        }
+
+        /// <summary>
+        /// Called at Start(), for inherited classes to perform additional initialization
+        /// with reduced risk of not calling parents initialization function. This must be
+        /// done so, because we cannot enforce initialization by cosntructor in Unity.
+        /// 
+        /// User can always fuck things up by hiding Start() using 'new' keyword, but that's
+        /// something that can't be helped.
+        /// </summary>
+        protected virtual void OnStart()
         {
 
         }
 
-        /**
-         * Returns block to its initial position, speed and rotation etc. Inherited types should
-         * reset all behaviour to start values.
-         */
-        virtual public void ResetBlock()
+        /// <summary>
+        /// Resets this gameObject to it's original status to achieve level reset.
+        /// </summary>
+        public virtual void ResetBlock()
         {
-            _rb.gravityScale = _originalGravity;
-            _rb.velocity = Vector2.zero;
-            _transform.position = _startLocation;
-            _rb.rotation = _originalRotation;
+            Rb.gravityScale = OriginalGravity;
+            Rb.velocity = Vector2.zero;
+            MyTransform.position = StartLocation;
+            Rb.rotation = OriginalRotation;
         }
 
-        /**
-         * Sets gravity scale of related rigidbody2d.
-         */
+        /// <summary>
+        /// Setter for this' gameObject's rigidbody-component's gravity scale.
+        /// </summary>
+        /// <param name="newGravity">Gravityscale to set. Local gravity is 'float * vector2'.</param>
         public void SetGravity(float newGravity)
         {
-            _rb.gravityScale = newGravity;
+            Rb.gravityScale = newGravity;
         }
 
+        /// <summary>
+        /// Passes given parameter if it's in range [0f, 1f] to shader associated with this gameObject,
+        /// if such shaders controller is known to this (ie. found by GetComponent).
+        /// </summary>
+        /// <param name="ratio">Fade ratio to pass on. 1 is normal rendering, 0 is 100% opaque.</param>
         public void SetFade(float ratio)
         {
-            if (ratio < 0f || ratio > 1.0f) return;
+            if (ratio <= 0f || ratio >= 1.0f) return;
             if (_shader != null)
             {
                 _shader.Fade = ratio;

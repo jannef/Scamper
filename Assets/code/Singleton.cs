@@ -2,7 +2,7 @@
 using System.Collections;
 namespace fi.tamk.game.theone.phys
 {
-    abstract public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         /**
          * Singleton instance of the class.

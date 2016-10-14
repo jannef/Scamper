@@ -5,7 +5,7 @@ namespace fi.tamk.game.theone.phys
 {
     public class PPlayerBlock : PGameBlock
     {
-        [SerializeField] protected Vector2 _playerSpeed = new Vector2(2.2f, 0);
+        [SerializeField] protected Vector2 PlayerSpeed = new Vector2(2.2f, 0);
 
         #region States
         private bool _moving = false;
@@ -41,7 +41,7 @@ namespace fi.tamk.game.theone.phys
         {
             if (_moving)
             {
-                _transform.Translate(_playerSpeed * SceneManager.Instance.DeltaTime, Space.World);
+                MyTransform.Translate(PlayerSpeed * SceneManager.Instance.DeltaTime, Space.World);
             }
         }
 
@@ -62,7 +62,7 @@ namespace fi.tamk.game.theone.phys
         /**
          * Sets state of the block to default values.
          */
-        override public void ResetBlock()
+        public override void ResetBlock()
         {
             base.ResetBlock();
             _moving = false;
@@ -70,7 +70,7 @@ namespace fi.tamk.game.theone.phys
 
         public void Checkpoint(Checkpoint c)
         {
-            _startLocation = c.Spawn.position;
+            StartLocation = c.Spawn.position;
             _moving = false;
             _activeCheckpoint = c;
         }
