@@ -77,7 +77,7 @@ namespace fi.tamk.game.theone.phys
             }
         }
 
-        void Update()
+        void LateUpdate()
         {
             if (_activeTransition)
             {
