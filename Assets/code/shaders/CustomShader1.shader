@@ -90,7 +90,6 @@ Shader "Sprites/Custom-Jannef-1"
 				c.g += dist * (L - c.g);
 				c.b += dist * (L - c.b);
 
-				//c.a += dist;
 				return c;
 			}
 			ENDCG
