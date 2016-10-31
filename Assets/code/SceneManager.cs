@@ -112,32 +112,8 @@ namespace fi.tamk.game.theone.phys
         {
             foreach (var t in GameObjectMap)
             {
-                t.Value.ResetBlock();
-
-                StartCoroutine(FadeIn(t.Value, 1f));
-                
+                t.Value.ResetBlock();                
             }
         }
-
-        /**
-         *  Fades the block in.
-         */
-        protected IEnumerator FadeIn(PGameBlock whichBlock, float duration)
-        {
-            var blockLocked = whichBlock.LockedFromPlayer;
-            whichBlock.LockedFromPlayer = true;
-
-            var fade = 0f;
-
-            while (fade < 1.0f)
-            {
-                fade += (SceneManager.Instance.DeltaTime / duration);
-                whichBlock.SetFade(Interpolations.Exponential(fade));
-                yield return null;
-            }
-            
-            whichBlock.LockedFromPlayer = blockLocked;
-        }
-
     }
 }

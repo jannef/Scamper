@@ -48,11 +48,6 @@ namespace fi.tamk.game.theone.phys
         public bool DampenInertia = false;
 
         /// <summary>
-        /// Controls shader that desuraturates objects futher away from the player.
-        /// </summary>
-        private DesaturationShaderController _shader = null;
-
-        /// <summary>
         /// This object is locked from player interaction while this is true;
         /// </summary>
         public bool LockedFromPlayer = false;
@@ -134,8 +129,6 @@ namespace fi.tamk.game.theone.phys
         private void Start()
         {
             SceneManager.Instance.GameObjectMap.Add(gameObject, this);
-            _shader = GetComponent<DesaturationShaderController>();
-            _shader.Fade = 1;
 
             TouchList = new Dictionary<GameObject, Collision2D>();
             MyTransform = transform;
@@ -240,20 +233,6 @@ namespace fi.tamk.game.theone.phys
         public void SetGravity(float newGravity)
         {
             Rb.gravityScale = newGravity;
-        }
-
-        /// <summary>
-        /// Passes given parameter if it's in range [0f, 1f] to shader associated with this gameObject,
-        /// if such shaders controller is known to this (ie. found by GetComponent).
-        /// </summary>
-        /// <param name="ratio">Fade ratio to pass on. 1 is normal rendering, 0 is 100% opaque.</param>
-        public void SetFade(float ratio)
-        {
-            if (ratio <= 0f || ratio >= 1.0f) return;
-            if (_shader != null)
-            {
-                _shader.Fade = ratio;
-            }
         }
     }
 }

@@ -81,10 +81,11 @@ Shader "Sprites/Custom-Jannef-2"
 
 	fixed4 frag(v2f IN) : SV_Target
 	{
-		IN.texcoord.x = (IN.texcoord.x % (1 / _TileX));
-		IN.texcoord.y = (IN.texcoord.y % (1 / _TileY));
+		IN.texcoord.x %= 1 / _TileX;
+		IN.texcoord.y %= 1 / _TileY;
 
-		fixed4 c = tex2D(_MainTex, (frac(IN.texcoord) * float2(_TileX, _TileY))) * IN.color;
+		float4 c = tex2D(_MainTex, frac(IN.texcoord) * float2(_TileX, _TileY)) * IN.color;
+		//float4 c = tex2D(_MainTex, IN.texcoord) * IN.color;
 		c.a *= _Fade;
 		c.rgb *= c.a;
 
