@@ -19,7 +19,6 @@ namespace fi.tamk.game.theone.shader
             if (Effect != null)
             {
                 var v = _cam.WorldToScreenPoint(SceneManager.Instance.PlayerGameObject.transform.position);
-                Debug.Log(string.Format("x:{0}, y:{1}", v.x / _cam.pixelWidth, v.y / _cam.pixelHeight));
                 Effect.SetFloat("_Fade", 1);
                 Effect.SetFloat("_WorldX", v.x / _cam.pixelWidth);
                 Effect.SetFloat("_WorldY", v.y / _cam.pixelHeight);

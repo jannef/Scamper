@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using fi.tamk.game.theone.shader;
+using System.Collections;
 
 namespace fi.tamk.game.theone.phys
 {
@@ -17,9 +18,9 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// Types of behaviours for objects on interaction.
         /// </summary>
-        public enum OnBoxClickAction { Impulse, ReverseGravity }
+        public enum OnBoxClickAction { Impulse, ReverseGravity, None }
 
-        public enum OnRemoteActivation { Unlock, Impulse, ReverseGravity }
+        public enum OnRemoteActivationAction { Unlock, Impulse, ReverseGravity, None }
 
         /// <summary>
         /// Stores data of collisions that are ongoing. This info is kept by
@@ -36,6 +37,8 @@ namespace fi.tamk.game.theone.phys
         /// Which action should this object take when clicked by the player.
         /// </summary>
         public OnBoxClickAction OnClickAction = OnBoxClickAction.Impulse;
+
+        public OnRemoteActivationAction OnRemoteAction = OnRemoteActivationAction.None;
 
         /// <summary>
         /// Amounth of force to be applied to this on click.
@@ -156,16 +159,60 @@ namespace fi.tamk.game.theone.phys
                     Rb.gravityScale *= -1f;
                     break;
                 case OnBoxClickAction.Impulse:
-                default:
                     Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
+                    break;
+                default:
                     break;
             }
         }
 
-        public void OnRemoteActivation()
+        /// <summary>
+        /// Handles remote activation of this block by switch, button or such.
+        /// </summary>
+        public void OnRemoteActivation(float duration = -1)
         {
-            
+            switch(OnRemoteAction)
+            {
+                case OnRemoteActivationAction.Unlock:
+                    LockedFromPlayer = false;
+                    break;
+                case OnRemoteActivationAction.Impulse:
+                    Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
+                    break;
+                case OnRemoteActivationAction.ReverseGravity:
+                    Rb.gravityScale *= -1f;
+                    break;
+                default:
+                    break;
+            }
+
+            if (duration >= 0)
+            {
+                StartCoroutine(RemoteActivationReset(duration));
+            }
         }
+
+        /// <summary>
+        /// Handles resetting after beign affected by a remote activation.
+        /// </summary>
+        /// <param name="duration">How long should be waited before remote resets.</param>
+        /// <returns>Not used.</returns>
+        private IEnumerator RemoteActivationReset(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+
+            switch (OnRemoteAction)
+            {
+                case OnRemoteActivationAction.Unlock:
+                    LockedFromPlayer = true;
+                    break;
+                case OnRemoteActivationAction.ReverseGravity:
+                    Rb.gravityScale *= -1f;
+                    break;
+                default:
+                    break;
+            }
+        } 
 
         /// <summary>
         /// Box2d event that is triggered when a collision with another Box2d rigidbody
