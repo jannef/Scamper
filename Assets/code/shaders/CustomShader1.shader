@@ -1,4 +1,6 @@
-﻿Shader "Sprites/Custom-Jannef-1"
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Sprites/Custom-Jannef-1"
 {
 	Properties
 	{
@@ -64,7 +66,7 @@
 				OUT.vertex = mul(UNITY_MATRIX_MVP, IN.vertex);
 				OUT.color = IN.color * _Color;
 				OUT.texcoord = IN.texcoord;
-				OUT.worldpos = mul(_Object2World, IN.vertex).xy;
+				OUT.worldpos = mul(unity_ObjectToWorld, IN.vertex).xy;
 
 				#ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap(OUT.vertex);
