@@ -19,6 +19,8 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         public enum OnBoxClickAction { Impulse, ReverseGravity }
 
+        public enum OnRemoteActivation { Unlock, Impulse, ReverseGravity }
+
         /// <summary>
         /// Stores data of collisions that are ongoing. This info is kept by
         /// Box2d, but user cannot access with implementation used by unity.
@@ -158,6 +160,11 @@ namespace fi.tamk.game.theone.phys
                     Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
                     break;
             }
+        }
+
+        public void OnRemoteActivation()
+        {
+            
         }
 
         /// <summary>
