@@ -7,6 +7,7 @@ namespace fi.tamk.game.theone.shader
     public class CameraEffectController : MonoBehaviour
     {
         public Material Effect;
+        public float Intensity;
         private Camera _cam;
 
         private void Awake()
@@ -22,6 +23,7 @@ namespace fi.tamk.game.theone.shader
                 Effect.SetFloat("_Fade", 1);
                 Effect.SetFloat("_WorldX", v.x / _cam.pixelWidth);
                 Effect.SetFloat("_WorldY", v.y / _cam.pixelHeight);
+                Effect.SetFloat("_Overlay", Intensity);
                 Graphics.Blit(source, destination, Effect);
             }
         }
