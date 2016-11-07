@@ -9,6 +9,7 @@ Shader "Sprites/Custom-Jannef-1"
 		[MaterialToggle] PixelSnap("Pixel snap", Float) = 0
 		_WorldX("World X", Float) = 0
 		_WorldY("World Y", Float) = 0
+		_Overlay("Shadow intensity [0, 1]", Float) = 0.75
 	}
 
 	SubShader
@@ -55,6 +56,7 @@ Shader "Sprites/Custom-Jannef-1"
 			fixed4 _Color;
 			float _WorldX;
 			float _WorldY;
+			float _Overlay;
 
 			v2f vert(appdata_t IN)
 			{
@@ -76,12 +78,11 @@ Shader "Sprites/Custom-Jannef-1"
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				fixed4 c = tex2D(_MainTex, IN.texcoord);
-				c.a = 1;
+				c.a = _Overlay;
 
 				
 				float2 l = { _WorldX, 1 - _WorldY };
 				float dist = distance(IN.texcoord, l);
-				float dist_norm = max(0.25, min(dist, 1));
 
 				c.rgb -= (dist / 3);
 
