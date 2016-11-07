@@ -34,6 +34,11 @@ namespace fi.tamk.game.theone.phys
         public bool LockAfterUse = false;
 
         /// <summary>
+        /// If remote activation is active.
+        /// </summary>
+        private bool RemotelyActivated = false;
+
+        /// <summary>
         /// Which action should this object take when clicked by the player.
         /// </summary>
         public OnBoxClickAction OnClickAction = OnBoxClickAction.Impulse;
@@ -151,7 +156,7 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void OnMouseDown()
         {
-            if (LockedFromPlayer || SceneManager.Instance.Pause || !IsResting() || !IsTopmost()) return;
+            if (LockedFromPlayer || RemotelyActivated || SceneManager.Instance.Pause || !IsResting() || !IsTopmost()) return;
             if (LockAfterUse) LockedFromPlayer = true;
             switch (OnClickAction)
             {
@@ -160,6 +165,8 @@ namespace fi.tamk.game.theone.phys
                     break;
                 case OnBoxClickAction.Impulse:
                     Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
+                    break;
+                case OnBoxClickAction.None:
                     break;
                 default:
                     break;
@@ -171,16 +178,26 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         public void OnRemoteActivation(float duration = -1)
         {
+            if (RemotelyActivated) return;
+            RemotelyActivated = true;
+
             switch(OnRemoteAction)
             {
                 case OnRemoteActivationAction.Unlock:
                     LockedFromPlayer = false;
                     break;
                 case OnRemoteActivationAction.Impulse:
+                    if (LockedFromPlayer || SceneManager.Instance.Pause || !IsResting() || !IsTopmost())
+                    {
+                        RemotelyActivated = false;
+                        return;
+                    }
                     Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
                     break;
                 case OnRemoteActivationAction.ReverseGravity:
                     Rb.gravityScale *= -1f;
+                    break;
+                case OnRemoteActivationAction.None:
                     break;
                 default:
                     break;
@@ -190,17 +207,29 @@ namespace fi.tamk.game.theone.phys
             {
                 StartCoroutine(RemoteActivationReset(duration));
             }
+            else
+            {
+                RemotelyActivated = false;
+            }
         }
 
         /// <summary>
-        /// Handles resetting after beign affected by a remote activation.
+        /// Calls resetter after sufficent time has passed.
         /// </summary>
         /// <param name="duration">How long should be waited before remote resets.</param>
         /// <returns>Not used.</returns>
         private IEnumerator RemoteActivationReset(float duration)
         {
             yield return new WaitForSeconds(duration);
+            OnRemoteActivationActionReset();
+        }
 
+        /// <summary>
+        /// Resets state of the block after remote activation is finished.
+        /// </summary>
+        private void OnRemoteActivationActionReset()
+        {
+            Debug.Log("In resetter!");
             switch (OnRemoteAction)
             {
                 case OnRemoteActivationAction.Unlock:
@@ -209,10 +238,16 @@ namespace fi.tamk.game.theone.phys
                 case OnRemoteActivationAction.ReverseGravity:
                     Rb.gravityScale *= -1f;
                     break;
+                case OnRemoteActivationAction.Impulse:
+                    break;
+                case OnRemoteActivationAction.None:
+                    break;
                 default:
                     break;
             }
-        } 
+
+            RemotelyActivated = false;
+        }
 
         /// <summary>
         /// Box2d event that is triggered when a collision with another Box2d rigidbody
@@ -274,10 +309,13 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         public virtual void ResetBlock()
         {
+            StopAllCoroutines();
+            RemotelyActivated = false;
+
             Rb.gravityScale = OriginalGravity;
             Rb.velocity = Vector2.zero;
             MyTransform.position = StartLocation;
-            Rb.rotation = OriginalRotation;
+            Rb.rotation = OriginalRotation; 
         }
 
         /// <summary>
