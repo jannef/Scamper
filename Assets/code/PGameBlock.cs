@@ -136,7 +136,7 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// Overloaded MonoBehavior method performed on instantiation.
         /// </summary>
-        private void Start()
+        private void Awake()
         {
             SceneManager.Instance.GameObjectMap.Add(gameObject, this);
 
