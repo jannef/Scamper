@@ -78,8 +78,6 @@ namespace fi.tamk.game.theone.phys
 
         private void Awake()
         {
-            Debug.Log("SceneManager::Awake");
-
             TimerPhase = 0f;
             GameObjectMap = new Dictionary<GameObject, PGameBlock>();
             PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;

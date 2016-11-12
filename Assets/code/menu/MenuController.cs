@@ -18,7 +18,6 @@ namespace fi.tamk.game.theone.menu
 
         private static void LoadLevel(int whichLevel)
         {
-            Debug.Log(string.Format("{0}/{1}", whichLevel, SceneManager.sceneCount));
             if (whichLevel <= SceneManager.sceneCount)
             {
                 SceneManager.LoadScene(whichLevel);
@@ -27,7 +26,6 @@ namespace fi.tamk.game.theone.menu
 
         public void NewGame()
         {
-            Debug.Log("NewGame clicked");
             LoadLevel(1);
         }
 
