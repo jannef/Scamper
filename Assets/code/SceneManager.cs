@@ -76,17 +76,10 @@ namespace fi.tamk.game.theone.phys
          */
         public Dictionary<GameObject, PGameBlock> GameObjectMap;
 
-        /**
-         *  Is private to keep this solely a singleton class.
-         */
-        private SceneManager()
+        private void Awake()
         {
             TimerPhase = 0f;
             GameObjectMap = new Dictionary<GameObject, PGameBlock>();
-        }
-
-        private void Awake()
-        {
             PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
         }
 
