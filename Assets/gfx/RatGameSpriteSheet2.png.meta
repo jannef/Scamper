@@ -1,33 +1,33 @@
 fileFormatVersion: 2
-guid: 548bdbdd6a1eb8b44a11c9b46b448865
-timeCreated: 1478076192
+guid: 30df934fc302edc419a32d913b69bc1b
+timeCreated: 1478961608
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Black box big
-    21300002: Black box long
-    21300004: Black box small
-    21300006: Acc gold hole
-    21300008: Acc gold pivot
-    21300010: Grey box big
-    21300012: Acc U shape
-    21300014: Acc grey pivot
-    21300016: Grey box small
-    21300018: Grey box long
-    21300020: Yellow floor short
-    21300022: Yellow floor long
-    21300024: Hal black active
-    21300026: Hal black inactive
-    21300028: Hinge short
-    21300030: Hinge medium
-    21300032: Hinge long
-    21300034: Yellow button
-    21300036: Yellow rod
-    21300038: Arrow big
-    21300040: Arrow small
-    21300042: Hal big
-    21300044: Hal small
-    21300046: Acc ground metal thing
+    21300000: RatGameSpriteSheet2_0
+    21300002: RatGameSpriteSheet2_1
+    21300004: RatGameSpriteSheet2_2
+    21300006: RatGameSpriteSheet2_3
+    21300008: RatGameSpriteSheet2_4
+    21300010: RatGameSpriteSheet2_5
+    21300012: RatGameSpriteSheet2_6
+    21300014: RatGameSpriteSheet2_7
+    21300016: RatGameSpriteSheet2_8
+    21300018: RatGameSpriteSheet2_9
+    21300020: RatGameSpriteSheet2_10
+    21300022: RatGameSpriteSheet2_11
+    21300024: RatGameSpriteSheet2_12
+    21300026: RatGameSpriteSheet2_13
+    21300028: RatGameSpriteSheet2_14
+    21300030: RatGameSpriteSheet2_15
+    21300032: RatGameSpriteSheet2_16
+    21300034: RatGameSpriteSheet2_17
+    21300036: RatGameSpriteSheet2_18
+    21300038: RatGameSpriteSheet2_19
+    21300040: RatGameSpriteSheet2_20
+    21300042: RatGameSpriteSheet2_21
+    21300044: RatGameSpriteSheet2_22
+    21300046: RatGameSpriteSheet2_23
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -77,7 +77,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Black box big
+      name: RatGameSpriteSheet2_0
       rect:
         serializedVersion: 2
         x: 20
@@ -85,12 +85,12 @@ TextureImporter:
         width: 360
         height: 360
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Black box long
+      name: RatGameSpriteSheet2_1
       rect:
         serializedVersion: 2
         x: 400
@@ -98,12 +98,12 @@ TextureImporter:
         width: 360
         height: 180
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Black box small
+      name: RatGameSpriteSheet2_2
       rect:
         serializedVersion: 2
         x: 780
@@ -111,12 +111,12 @@ TextureImporter:
         width: 180
         height: 180
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Acc gold hole
+      name: RatGameSpriteSheet2_3
       rect:
         serializedVersion: 2
         x: 400
@@ -124,12 +124,12 @@ TextureImporter:
         width: 45
         height: 45
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Acc gold pivot
+      name: RatGameSpriteSheet2_4
       rect:
         serializedVersion: 2
         x: 460
@@ -137,12 +137,12 @@ TextureImporter:
         width: 60
         height: 45
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Grey box big
+      name: RatGameSpriteSheet2_5
       rect:
         serializedVersion: 2
         x: 600
@@ -150,25 +150,25 @@ TextureImporter:
         width: 360
         height: 360
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Acc U shape
+      name: RatGameSpriteSheet2_6
       rect:
         serializedVersion: 2
-        x: 420
-        y: 681
-        width: 60
-        height: 62
+        x: 400
+        y: 644
+        width: 100
+        height: 29
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Acc grey pivot
+      name: RatGameSpriteSheet2_7
       rect:
         serializedVersion: 2
         x: 518
@@ -176,12 +176,12 @@ TextureImporter:
         width: 60
         height: 56
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Grey box small
+      name: RatGameSpriteSheet2_8
       rect:
         serializedVersion: 2
         x: 20
@@ -189,12 +189,12 @@ TextureImporter:
         width: 180
         height: 180
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Grey box long
+      name: RatGameSpriteSheet2_9
       rect:
         serializedVersion: 2
         x: 220
@@ -202,12 +202,12 @@ TextureImporter:
         width: 360
         height: 180
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Yellow floor short
+      name: RatGameSpriteSheet2_10
       rect:
         serializedVersion: 2
         x: 20
@@ -215,12 +215,12 @@ TextureImporter:
         width: 220
         height: 30
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Yellow floor long
+      name: RatGameSpriteSheet2_11
       rect:
         serializedVersion: 2
         x: 260
@@ -228,12 +228,12 @@ TextureImporter:
         width: 400
         height: 30
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Hal black active
+      name: RatGameSpriteSheet2_12
       rect:
         serializedVersion: 2
         x: 744
@@ -241,12 +241,12 @@ TextureImporter:
         width: 92
         height: 90
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Hal black inactive
+      name: RatGameSpriteSheet2_13
       rect:
         serializedVersion: 2
         x: 851
@@ -254,64 +254,64 @@ TextureImporter:
         width: 90
         height: 90
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Hinge short
+      name: RatGameSpriteSheet2_14
       rect:
         serializedVersion: 2
-        x: 11
-        y: 319
-        width: 289
-        height: 40
+        x: 8
+        y: 316
+        width: 292
+        height: 43
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Hinge medium
+      name: RatGameSpriteSheet2_15
       rect:
         serializedVersion: 2
-        x: 319
+        x: 318
         y: 319
-        width: 401
-        height: 40
+        width: 405
+        height: 45
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Hinge long
+      name: RatGameSpriteSheet2_16
       rect:
         serializedVersion: 2
-        x: 10
+        x: 8
         y: 249
-        width: 530
-        height: 40
+        width: 532
+        height: 43
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Yellow button
+      name: RatGameSpriteSheet2_17
       rect:
         serializedVersion: 2
         x: 580
         y: 209
         width: 120
-        height: 61
+        height: 51
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Yellow rod
+      name: RatGameSpriteSheet2_18
       rect:
         serializedVersion: 2
         x: 738
@@ -319,12 +319,12 @@ TextureImporter:
         width: 230
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Arrow big
+      name: RatGameSpriteSheet2_19
       rect:
         serializedVersion: 2
         x: 8
@@ -332,12 +332,12 @@ TextureImporter:
         width: 198
         height: 198
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Arrow small
+      name: RatGameSpriteSheet2_20
       rect:
         serializedVersion: 2
         x: 225
@@ -345,12 +345,12 @@ TextureImporter:
         width: 123
         height: 121
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Hal big
+      name: RatGameSpriteSheet2_21
       rect:
         serializedVersion: 2
         x: 361
@@ -358,12 +358,12 @@ TextureImporter:
         width: 198
         height: 198
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Hal small
+      name: RatGameSpriteSheet2_22
       rect:
         serializedVersion: 2
         x: 595
@@ -371,18 +371,18 @@ TextureImporter:
         width: 90
         height: 90
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Acc ground metal thing
+      name: RatGameSpriteSheet2_23
       rect:
         serializedVersion: 2
-        x: 400
-        y: 644
-        width: 100
-        height: 28
+        x: 419
+        y: 681
+        width: 61
+        height: 63
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
