@@ -6,11 +6,9 @@ namespace fi.tamk.game.theone.phys
     public class PPlayerBlock : PGameBlock
     {
         [SerializeField] protected Vector2 PlayerSpeed = new Vector2(2.2f, 0);
-
-        #region States
+        [SerializeField] protected AnimationController PlayerAnimation = null;
         private bool _moving = false;
         private Checkpoint _activeCheckpoint = null;
-        #endregion
 
         #region MonoBehaviourMethods
         /**
@@ -39,10 +37,19 @@ namespace fi.tamk.game.theone.phys
          */
         void Update()
         {
+            var speedToSet = Mathf.Abs(PlayerSpeed.x);
+
             if (_moving)
             {
-                MyTransform.Translate(PlayerSpeed * SceneManager.Instance.DeltaTime, Space.World);
+                MyTransform.Translate(PlayerSpeed*SceneManager.Instance.DeltaTime, Space.World);
             }
+            else
+            {
+                speedToSet = 0f;
+            }
+
+            if (PlayerAnimation != null) PlayerAnimation.Speed = speedToSet;
+
         }
 
         /**
