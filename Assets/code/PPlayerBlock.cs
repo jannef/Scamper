@@ -7,6 +7,7 @@ namespace fi.tamk.game.theone.phys
     {
         [SerializeField] protected Vector2 PlayerSpeed = new Vector2(2.2f, 0);
         [SerializeField] protected AnimationController PlayerAnimation = null;
+        [SerializeField] protected Transform FloorCollisionTolerance = null;
         private bool _moving = false;
         private Checkpoint _activeCheckpoint = null;
 
@@ -18,10 +19,21 @@ namespace fi.tamk.game.theone.phys
          */
         void OnCollisionEnter2D(Collision2D col)
         {
-            if (col.collider.gameObject.CompareTag("Movable"))
+            if (col.collider.gameObject.CompareTag("Movable") ||
+                (col.collider.gameObject.CompareTag("MovableWalkable") && !CollisionBelow(col)))
             {
                 SceneManager.Instance.PlayerDeathReset();
             }
+        }
+
+        private bool CollisionBelow(Collision2D col)
+        {
+            if (FloorCollisionTolerance == null) return false;
+
+            var footHeight = FloorCollisionTolerance.position.y;
+            var colHeight = col.contacts[0].point.y;
+
+            return colHeight < footHeight;
         }
 
         /**
