@@ -264,6 +264,8 @@ namespace fi.tamk.game.theone.phys
         /// <param name="col">Collision data passed from Box2d ohysics engine</param>
         private void OnCollisionEnter2D(Collision2D col)
         {
+            // Player collisions can be ignored. Derived player class implements those.
+            if (col.collider.gameObject.CompareTag("Player")) return;
             TouchList.Add(col.collider.gameObject, col);
 
             if (!IsResting()) return;
