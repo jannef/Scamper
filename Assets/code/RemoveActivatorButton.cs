@@ -31,6 +31,8 @@ namespace fi.tamk.game.theone.phys
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             if (_spriteRenderer != null) _originalSprite = _spriteRenderer.sprite;
+
+            SceneManager.Instance.LevelResetEvent += OnLevelReset;
         }
 
         /// <summary>
@@ -63,11 +65,12 @@ namespace fi.tamk.game.theone.phys
             _collisions--;
 
             if (_collisions != 0) return;
+            ChangeToSprite(_originalSprite);
+
             foreach (var block in ActivatedBlocks)
             {
                 if (block == null) continue;
                 block.OnRemoteActivationActionReset();
-                ChangeToSprite(_originalSprite);
             }
         }
 
@@ -89,6 +92,15 @@ namespace fi.tamk.game.theone.phys
         private void ChangeToSprite(Sprite toWhich)
         {
             if (_spriteRenderer != null && toWhich != null) _spriteRenderer.sprite = toWhich;
+        }
+
+        /// <summary>
+        /// Changes to original sprite and resets the button.
+        /// </summary>
+        private void OnLevelReset()
+        {
+            ChangeToSprite(_originalSprite);
+            _collisions = 0;
         }
     }
 }

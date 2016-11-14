@@ -5,6 +5,8 @@ using fi.tamk.game.theone.utils;
 
 namespace fi.tamk.game.theone.phys
 {
+    public delegate void SceneEvent();
+
     public class SceneManager : Singleton<SceneManager>
     {
         #region PauseAndTime
@@ -34,6 +36,7 @@ namespace fi.tamk.game.theone.phys
         private bool _pause = false;
 
         public GameObject PlayerGameObject;
+        public event SceneEvent LevelResetEvent;
 
         public float TimerPhase { get; private set; }
 
@@ -83,19 +86,10 @@ namespace fi.tamk.game.theone.phys
             PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
         }
 
-        // TODO: Here for testing purposes only!! REMOVE/MOVE AT SOME POINT!!
         private void Update()
         {
             _deltaTime = Time.deltaTime;
             TimerPhase = (Mathf.Sin(Time.timeSinceLevelLoad * 2f) + 1)/6;
-
-            if (Input.GetButtonDown("Jump"))
-            {
-                Pause = !Pause;
-            }
-
-            // For the luls
-            // TimeScale += Input.GetAxis("Horizontal") * _deltaTime;
         }
 
         /**
@@ -103,10 +97,7 @@ namespace fi.tamk.game.theone.phys
          */
         public void PlayerDeathReset()
         {
-            foreach (var t in GameObjectMap)
-            {
-                t.Value.ResetBlock();                
-            }
+            if (LevelResetEvent != null) LevelResetEvent();
         }
     }
 }

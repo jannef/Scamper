@@ -147,6 +147,8 @@ namespace fi.tamk.game.theone.phys
             OriginalGravity = Rb.gravityScale;
             OriginalRotation = Rb.rotation;
 
+            SceneManager.Instance.LevelResetEvent += ResetBlock;
+
             OnStart();
         }
 
