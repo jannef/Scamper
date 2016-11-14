@@ -30,7 +30,6 @@ namespace fi.tamk.game.theone.phys
 
         private RaycastHit2D FindObstacle()
         {
-            // 9 is CatchRC
             RaycastHit2D rv = Physics2D.Linecast(Origin.position, End.position, LayerMask.GetMask(new [] {"Player", "CatchRC"}));
             if (rv) OnBeamInterruption(rv);
 
@@ -39,7 +38,7 @@ namespace fi.tamk.game.theone.phys
 
         private void OnBeamInterruption(RaycastHit2D Interruption)
         {
-            Debug.Log(Interruption);
+            
         }
 
         private void Update()
@@ -53,6 +52,7 @@ namespace fi.tamk.game.theone.phys
             var col = FindObstacle();
             if (col)
             {
+                Debug.Log(col.fraction);
                 _material.SetFloat("_WorldX", col.fraction);
             } else
             {
