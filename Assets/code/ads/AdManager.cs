@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Advertisements;
-using UnityEditor.Advertisements;
-using System.Collections;
 
 public class AdManager : MonoBehaviour {
     [SerializeField] private string AndroidId = "1181015";
