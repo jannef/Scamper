@@ -176,7 +176,7 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// Handles remote activation of this block by switch, button or such.
         /// </summary>
-        public void OnRemoteActivation(float duration = -1)
+        public void OnRemoteActivation(float duration = 0)
         {
             if (RemotelyActivated) return;
             RemotelyActivated = true;
@@ -203,13 +203,9 @@ namespace fi.tamk.game.theone.phys
                     break;
             }
 
-            if (duration >= 0)
+            if (duration > 0)
             {
                 StartCoroutine(RemoteActivationReset(duration));
-            }
-            else
-            {
-                RemotelyActivated = false;
             }
         }
 
@@ -227,9 +223,8 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// Resets state of the block after remote activation is finished.
         /// </summary>
-        private void OnRemoteActivationActionReset()
+        public void OnRemoteActivationActionReset()
         {
-            Debug.Log("In resetter!");
             switch (OnRemoteAction)
             {
                 case OnRemoteActivationAction.Unlock:
