@@ -4,6 +4,11 @@ using fi.tamk.game.theone.phys;
 
 namespace fi.tamk.game.theone.phys
 {
+    /// <summary>
+    /// Remotely activates blocks when assosiated game object is in contact with other
+    /// blocks.
+    /// </summary>
+    /// <auth>Janne Forsell</auth>
     public class RemoveActivatorButton : MonoBehaviour
     {
         /// <summary>

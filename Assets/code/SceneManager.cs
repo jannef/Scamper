@@ -5,14 +5,20 @@ using fi.tamk.game.theone.utils;
 
 namespace fi.tamk.game.theone.phys
 {
+    /// <summary>
+    /// Standard void no param event used to send messages.
+    /// </summary>
     public delegate void SceneEvent();
 
+    /// <summary>
+    /// One scene lifetime singleton that handles game logic, blocks and time.
+    /// </summary>
+    /// /// <auth>Janne Forsell</auth>
     public class SceneManager : Singleton<SceneManager>
     {
-        #region PauseAndTime
-        /**
-         *  Flag for pausing the game.
-         */
+        /// <summary>
+        /// Pause property.
+        /// </summary>
         public bool Pause
         {
             set
@@ -33,13 +39,31 @@ namespace fi.tamk.game.theone.phys
                 return _pause;
             }
         }
+
+        /// <summary>
+        /// Backing field for Pause.
+        /// </summary>
         private bool _pause = false;
 
+        /// <summary>
+        /// Reference to the player rat game object.
+        /// </summary>
         public GameObject PlayerGameObject;
+
+        /// <summary>
+        /// Event to blocks need to subscibe to to get level reset triggers.
+        /// </summary>
         public event SceneEvent LevelResetEvent;
+        
+        /*
+            Used to provide sin value based on time for character effects. This
+            functionality was moved to shaders and then dropped.
+        */
+        //public float TimerPhase { get; private set; }
 
-        public float TimerPhase { get; private set; }
-
+        /// <summary>
+        /// Handles timescale of the game. Pausing relies on it.
+        /// </summary>
         public float TimeScale
         {
             get
@@ -59,11 +83,15 @@ namespace fi.tamk.game.theone.phys
                 }
             }
         }
+
+        /// <summary>
+        /// When paused, previous timescale is saved here.
+        /// </summary>
         private float _timeScaleSaved = 1f;
-        private float _deltaTime = 0f;
-        /**
-         *  Contains Time.deltaTime or 0 depending if the game is paused.
-         */
+
+        /// <summary>
+        /// Property that gives deltaTime or 0, depending if the game is paused.
+        /// </summary>
         public float DeltaTime
         {
             get
@@ -72,29 +100,39 @@ namespace fi.tamk.game.theone.phys
                 return _deltaTime;
             }
         }
-        #endregion
 
-        /**
-         * Map to get (c#)object when we know gameObject, to avoid runtime reflections
-         */
+        /// <summary>
+        /// Backing field for DeltaTime.
+        /// </summary>
+        private float _deltaTime = 0f;
+
+        /// <summary>
+        /// Map to get (c#)object when we know gameObject, to avoid runtime reflections
+        /// </summary>
         public Dictionary<GameObject, PGameBlock> GameObjectMap;
 
+        /// <summary>
+        /// Sets up GameObjectMap and finds reference to player.
+        /// </summary>
         private void Awake()
         {
-            TimerPhase = 0f;
+            //TimerPhase = 0f;
             GameObjectMap = new Dictionary<GameObject, PGameBlock>();
             PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
         }
 
+        /// <summary>
+        /// Updates DeltaTime for the frame.
+        /// </summary>
         private void Update()
         {
             _deltaTime = Time.deltaTime;
-            TimerPhase = (Mathf.Sin(Time.timeSinceLevelLoad * 2f) + 1)/6;
+            //TimerPhase = (Mathf.Sin(Time.timeSinceLevelLoad * 2f) + 1)/6;
         }
 
-        /**
-         *  Resets the scene on player death.
-         */
+        /// <summary>
+        /// Fires the scene resetting signal.
+        /// </summary>
         public void PlayerDeathReset()
         {
             if (LevelResetEvent != null) LevelResetEvent();

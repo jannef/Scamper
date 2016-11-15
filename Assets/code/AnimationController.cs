@@ -3,6 +3,10 @@ using System.Collections;
 
 namespace fi.tamk.game.theone.phys
 {
+    /// <summary>
+    /// Controls the animator of the player character.
+    /// </summary>
+    /// <auth>Janne Forsell</auth>
     [RequireComponent(typeof(Animator), typeof(Rigidbody2D))]
     public class AnimationController : MonoBehaviour
     {
