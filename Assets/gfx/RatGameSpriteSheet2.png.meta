@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 30df934fc302edc419a32d913b69bc1b
-timeCreated: 1478961608
+timeCreated: 1479245392
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -161,10 +161,10 @@ TextureImporter:
         x: 400
         y: 644
         width: 100
-        height: 29
+        height: 27
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 0, y: 0, z: 0, w: 27}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
@@ -210,10 +210,10 @@ TextureImporter:
       name: RatGameSpriteSheet2_10
       rect:
         serializedVersion: 2
-        x: 20
-        y: 394
+        x: 22
+        y: 344
         width: 220
-        height: 30
+        height: 92
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -223,10 +223,10 @@ TextureImporter:
       name: RatGameSpriteSheet2_11
       rect:
         serializedVersion: 2
-        x: 260
-        y: 394
-        width: 400
-        height: 30
+        x: 267
+        y: 344
+        width: 220
+        height: 92
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -262,10 +262,10 @@ TextureImporter:
       name: RatGameSpriteSheet2_14
       rect:
         serializedVersion: 2
-        x: 8
-        y: 316
-        width: 292
-        height: 43
+        x: 30
+        y: 311
+        width: 247
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -275,10 +275,10 @@ TextureImporter:
       name: RatGameSpriteSheet2_15
       rect:
         serializedVersion: 2
-        x: 318
-        y: 319
-        width: 405
-        height: 45
+        x: 338
+        y: 311
+        width: 362
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -288,10 +288,10 @@ TextureImporter:
       name: RatGameSpriteSheet2_16
       rect:
         serializedVersion: 2
-        x: 8
-        y: 249
-        width: 532
-        height: 43
+        x: 19
+        y: 275
+        width: 799
+        height: 26
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -299,32 +299,6 @@ TextureImporter:
       tessellationDetail: 0
     - serializedVersion: 2
       name: RatGameSpriteSheet2_17
-      rect:
-        serializedVersion: 2
-        x: 580
-        y: 209
-        width: 120
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: RatGameSpriteSheet2_18
-      rect:
-        serializedVersion: 2
-        x: 738
-        y: 208
-        width: 230
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: RatGameSpriteSheet2_19
       rect:
         serializedVersion: 2
         x: 8
@@ -337,7 +311,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: RatGameSpriteSheet2_20
+      name: RatGameSpriteSheet2_18
       rect:
         serializedVersion: 2
         x: 225
@@ -350,7 +324,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: RatGameSpriteSheet2_21
+      name: RatGameSpriteSheet2_19
       rect:
         serializedVersion: 2
         x: 361
@@ -359,6 +333,32 @@ TextureImporter:
         height: 198
       alignment: 0
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: RatGameSpriteSheet2_20
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 209
+        width: 120
+        height: 51
+      alignment: 9
+      pivot: {x: 0.5, y: 0.041752834}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: RatGameSpriteSheet2_21
+      rect:
+        serializedVersion: 2
+        x: 738
+        y: 208
+        width: 230
+        height: 64
+      alignment: 9
+      pivot: {x: 0.013335916, y: 0.46156096}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -379,9 +379,9 @@ TextureImporter:
       name: RatGameSpriteSheet2_23
       rect:
         serializedVersion: 2
-        x: 419
-        y: 681
-        width: 61
+        x: 420
+        y: 680
+        width: 59
         height: 63
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
