@@ -12,6 +12,7 @@ namespace fi.tamk.game.theone.phys
     /// in the game world. This class offers collision detection related methods and resetting to original
     /// position.
     /// </summary>
+    /// <auth>Janne Forsell</auth>
     [RequireComponent(typeof(Rigidbody2D))]
     public class PGameBlock : MonoBehaviour
     {
@@ -36,7 +37,7 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// If remote activation is active.
         /// </summary>
-        private bool RemotelyActivated = false;
+        private bool _remotelyActivated = false;
 
         /// <summary>
         /// Which action should this object take when clicked by the player.
@@ -117,11 +118,7 @@ namespace fi.tamk.game.theone.phys
                 // positive y is touch is above
                 var vec = t.Value.contacts[0].point - new Vector2(MyTransform.position.x, MyTransform.position.y);
 
-                if (!SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable") || Mathf.Abs(vec.x) > Mathf.Abs(vec.y))
-                {
-                    continue;
-                }
-                else
+                if (!(!SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable") || Mathf.Abs(vec.x) > Mathf.Abs(vec.y)))
                 {
                     if ((GravityDown() && vec.y > 0) || (!GravityDown() && vec.y <= 0))
                     {
@@ -158,7 +155,7 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void OnMouseDown()
         {
-            if (LockedFromPlayer || RemotelyActivated || SceneManager.Instance.Pause || !IsResting() || !IsTopmost()) return;
+            if (LockedFromPlayer || _remotelyActivated || SceneManager.Instance.Pause || !IsResting() || !IsTopmost()) return;
             if (LockAfterUse) LockedFromPlayer = true;
             switch (OnClickAction)
             {
@@ -170,8 +167,6 @@ namespace fi.tamk.game.theone.phys
                     break;
                 case OnBoxClickAction.None:
                     break;
-                default:
-                    break;
             }
         }
 
@@ -180,8 +175,8 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         public void OnRemoteActivation(float duration = 0)
         {
-            if (RemotelyActivated) return;
-            RemotelyActivated = true;
+            if (_remotelyActivated) return;
+            _remotelyActivated = true;
 
             switch(OnRemoteAction)
             {
@@ -191,7 +186,7 @@ namespace fi.tamk.game.theone.phys
                 case OnRemoteActivationAction.Impulse:
                     if (LockedFromPlayer || SceneManager.Instance.Pause || !IsResting() || !IsTopmost())
                     {
-                        RemotelyActivated = false;
+                        _remotelyActivated = false;
                         return;
                     }
                     Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
@@ -200,8 +195,6 @@ namespace fi.tamk.game.theone.phys
                     Rb.gravityScale *= -1f;
                     break;
                 case OnRemoteActivationAction.None:
-                    break;
-                default:
                     break;
             }
 
@@ -239,11 +232,9 @@ namespace fi.tamk.game.theone.phys
                     break;
                 case OnRemoteActivationAction.None:
                     break;
-                default:
-                    break;
             }
 
-            RemotelyActivated = false;
+            _remotelyActivated = false;
         }
 
         /// <summary>
@@ -309,7 +300,7 @@ namespace fi.tamk.game.theone.phys
         public virtual void ResetBlock()
         {
             StopAllCoroutines();
-            RemotelyActivated = false;
+            _remotelyActivated = false;
 
             Rb.gravityScale = OriginalGravity;
             Rb.velocity = Vector2.zero;

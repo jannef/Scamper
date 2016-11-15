@@ -4,6 +4,11 @@ using fi.tamk.game.theone.phys;
 
 namespace fi.tamk.game.theone.phys
 {
+    /// <summary>
+    /// Remotely activates blocks when assosiated game object is in contact with other
+    /// blocks.
+    /// </summary>
+    /// <auth>Janne Forsell</auth>
     public class RemoveActivatorButton : MonoBehaviour
     {
         /// <summary>
@@ -17,11 +22,19 @@ namespace fi.tamk.game.theone.phys
         [SerializeField] private Sprite PushedStateSprite;
 
         /// <summary>
+        /// How long does the button take consider deactivatred after losign contact.
+        /// </summary>
+        [SerializeField] private float ContactInterruptionTolerance = 0.2f;
+
+        private float _timeSinceContactInterruption = 0f;
+        private bool _deactivationPending = false;
+
+        /// <summary>
         /// Collisions with acceptable activators based on tag currently active.
         /// </summary>
         private int _collisions = 0;
 
-        private SpriteRenderer _spriteRenderer = null;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
         private Sprite _originalSprite = null;
 
         /// <summary>
@@ -29,10 +42,28 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void Awake()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
             if (_spriteRenderer != null) _originalSprite = _spriteRenderer.sprite;
 
             SceneManager.Instance.LevelResetEvent += OnLevelReset;
+        }
+
+        /// <summary>
+        /// Handles deactivating the button after a grace period defined by ContactInterruptionTolerance.
+        /// </summary>
+        private void Update()
+        {
+            if (_deactivationPending)
+            {
+                _timeSinceContactInterruption += SceneManager.Instance.DeltaTime;
+
+                if (_timeSinceContactInterruption > ContactInterruptionTolerance)
+                {
+                    EndPressedState();
+                    _deactivationPending = false;
+                }
+            }
+
+            if (!_deactivationPending) _timeSinceContactInterruption = 0f;
         }
 
         /// <summary>
@@ -42,6 +73,8 @@ namespace fi.tamk.game.theone.phys
         private void OnCollisionEnter2D(Collision2D col)
         {
             if (!CheckTags(col)) return;
+            _deactivationPending = false;
+
             if (_collisions == 0)
             {
                 foreach (var block in ActivatedBlocks)
@@ -56,6 +89,20 @@ namespace fi.tamk.game.theone.phys
         }
 
         /// <summary>
+        /// Returns button to unpressed state. Swaps graphics, sends out deactivation signals.
+        /// </summary>
+        private void EndPressedState()
+        {
+            ChangeToSprite(_originalSprite);
+
+            foreach (var block in ActivatedBlocks)
+            {
+                if (block == null) continue;
+                block.OnRemoteActivationActionReset();
+            }
+        }
+
+        /// <summary>
         /// If this button is no longer touched, sends the remote reset signal.
         /// </summary>
         /// <param name="col">the collision</param>
@@ -65,13 +112,7 @@ namespace fi.tamk.game.theone.phys
             _collisions--;
 
             if (_collisions != 0) return;
-            ChangeToSprite(_originalSprite);
-
-            foreach (var block in ActivatedBlocks)
-            {
-                if (block == null) continue;
-                block.OnRemoteActivationActionReset();
-            }
+            _deactivationPending = true;
         }
 
         /// <summary>
