@@ -3,6 +3,10 @@ using System.Collections;
 
 namespace fi.tamk.game.theone.phys
 {
+    /// <summary>
+    /// Rescripts specific scriptable box that enters a trigger.
+    /// </summary>
+    /// <auth>Janne Forsell</auth>
     public class BoxScriptTrigger : MonoBehaviour
     {
         public bool StopBoxOnEnter = false;

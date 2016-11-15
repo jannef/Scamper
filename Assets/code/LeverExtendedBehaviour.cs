@@ -45,7 +45,7 @@ namespace fi.tamk.game.theone.phys
             if (_hinge == null || !LowerUpperLimitWhenPressed || !(_hinge.jointAngle < _hinge.limits.max)) return;
 
             var limits = _hinge.limits;
-            limits.max = _hinge.jointAngle;
+            limits.max = Mathf.Max(_hinge.jointAngle, limits.min);
 
             _hinge.limits = limits;
         }

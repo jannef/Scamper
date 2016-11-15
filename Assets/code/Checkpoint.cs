@@ -4,62 +4,104 @@ using fi.tamk.game.theone.utils;
 
 namespace fi.tamk.game.theone.phys
 {
-
+    /// <summary>
+    /// Check point instance. Saves player progress and moves camera when reached.
+    /// </summary>
     public class Checkpoint : MonoBehaviour
     {
+        /// <summary>
+        /// Automatic camera movement interpolation type. Default value in pretty good.
+        /// </summary>
         public InterpolationType CameraInterpolation = InterpolationType.Smootherstep;
 
-        /**
-         * Position to move camera into.
-         * 
-         * Checkpoint prefab has one automatically set, but if doing stuff manually,
-         * make sure to set one in game editor.
-         */
+        /// <summary>
+        /// Where the camera should move once this checkpoint is reached.
+        /// </summary>
         public Transform CameraPosition;
 
-        /**
-         * Position to spawn player into, if he dies before reachign another checkpoint.
-         * 
-         * Checkpoint prefab has one automatically set, but if doing stuff manually,
-         * make sure to set one in game editor.
-         */
+        /// <summary>
+        /// Where the player should spawn on death after this checkpoint is reached.
+        /// </summary>
         public Transform Spawn;
 
-        /**
-         * How long should the transition of panning camera and player take.
-         * 
-         * Player is moved to same location he would respawn into while camera in panned.
-         */
+        /// <summary>
+        /// How long should a camera transition take.
+        /// </summary>
         public float CameraTransitionTime = 2f;
 
-        /**
-         * How large should the camera wievport be for this checkpoints "level".
-         */
+        /// <summary>
+        /// How large should a new camera viewport be.
+        /// </summary>
         public float NewWieportSize = 5f;
 
-        #region TransitioHelperVariables
+        /// <summary>
+        /// Is a camera transition in effect.
+        /// </summary>
         private bool _activeTransition = false;
+
+        /// <summary>
+        /// Has this checkpoint already fired once. Prevents from firing again on player death reset.
+        /// </summary>
         private bool _hasFired = false;
+
+        /// <summary>
+        /// How much of the transition has elapsed.
+        /// </summary>
         private float _transitionTimer = 0f;
+
+        /// <summary>
+        /// How large camera was previously.
+        /// </summary>
         private float _oldSize;
 
+        /// <summary>
+        /// Cached transform of main camera.
+        /// </summary>
         private Transform _cameraTransform;
+
+        /// <summary>
+        /// Chached transform of player rat.
+        /// </summary>
         private Transform _playerTransform;
+
+        /// <summary>
+        /// Reference to main camera.
+        /// </summary>
         private Camera _camera;
 
+        /// <summary>
+        /// Whete the camera was previously.
+        /// </summary>
         private Vector3 _cameraBeginPosition;
+
+        /// <summary>
+        /// Where the player was previously.
+        /// </summary>
         private Vector3 _playerBeginPosition;
+
+        /// <summary>
+        /// Where the player should end up.
+        /// </summary>
         private Vector3 _playerTargetPosition;
 
+        /// <summary>
+        /// Reference to the logical player game object.
+        /// </summary>
         private PPlayerBlock _player;
-        #endregion
 
+        /// <summary>
+        /// Finds references.
+        /// </summary>
         void Awake()
         {
             _cameraTransform = Camera.main.gameObject.transform;
             _camera = Camera.main;
         }
 
+        /// <summary>
+        /// Activates the checkpoint.
+        /// </summary>
+        /// <param name="other">NOt used.</param>
         void OnTriggerEnter2D(Collider2D other)
         {
             if (!_hasFired && other.gameObject.CompareTag("Player"))
@@ -77,6 +119,9 @@ namespace fi.tamk.game.theone.phys
             }
         }
 
+        /// <summary>
+        /// Moves camera and player if transition is in progress.
+        /// </summary>
         void LateUpdate()
         {
             if (_activeTransition)

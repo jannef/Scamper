@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Advertisements;
 
+/// <summary>
+/// Shows ads on android build. Not really going to be used.
+/// </summary>
+/// <auth>Janne Forsell</auth>
 public class AdManager : MonoBehaviour {
     [SerializeField] private string AndroidId = "1181015";
 

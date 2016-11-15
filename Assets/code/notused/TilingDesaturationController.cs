@@ -4,6 +4,10 @@ using fi.tamk.game.theone.phys;
 
 namespace fi.tamk.game.theone.shader
 {
+    /// <summary>
+    /// This shader was scrapped. Not used.
+    /// </summary>
+    /// <auth>Janne Forsell</auth>
     [RequireComponent(typeof(Renderer))]
     public class TilingDesaturationController : MonoBehaviour
     {
