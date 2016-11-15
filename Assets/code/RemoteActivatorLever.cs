@@ -8,12 +8,12 @@ namespace fi.tamk.game.theone.phys
     /// Remote leaver activator.
     /// </summary>
     /// <auth>Janne Forsell</auth>
-    public class LeaverRemoteActivator : MonoBehaviour
+    public class RemoteActivatorLever : MonoBehaviour
     {
         /// <summary>
         /// Angle of the leaver at the moment.
         /// </summary>
-        public float LeaverAngle
+        public float LeverAngle
         {
             get {return _hinge.jointAngle; }
         }
@@ -34,12 +34,12 @@ namespace fi.tamk.game.theone.phys
         [SerializeField] private float UpperActivationLimit = 0;
 
         /// <summary>
-        /// Reference to sprite renderer of the leaver.
+        /// Reference to sprite renderer of the lever.
         /// </summary>
         [SerializeField] private SpriteRenderer SpriteRenderer;
 
         /// <summary>
-        /// Sprite to switch to when the leaver is pushed.
+        /// Sprite to switch to when the lever is pushed.
         /// </summary>
         [SerializeField] private Sprite PushedStateSprite;
 
@@ -49,7 +49,7 @@ namespace fi.tamk.game.theone.phys
         [SerializeField] private PGameBlock[] ActivatedBlocks;
 
         /// <summary>
-        /// Has this leaver been activated already.
+        /// Has this lever been activated already.
         /// </summary>
         private bool _hasActivated = false;
 
@@ -64,7 +64,7 @@ namespace fi.tamk.game.theone.phys
         private void Awake()
         {
             _originalSprite = SpriteRenderer.sprite;
-            SceneManager.Instance.LevelResetEvent += ResetLeaver;
+            SceneManager.Instance.LevelResetEvent += ResetLever;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void Update()
         {
-            if (_hasActivated || LeaverAngle > UpperActivationLimit || LeaverAngle < LowerActivationLimit) return;
+            if (_hasActivated || LeverAngle > UpperActivationLimit || LeverAngle < LowerActivationLimit) return;
             _hasActivated = true;
             ChangeToSprite(PushedStateSprite);
 
@@ -93,9 +93,9 @@ namespace fi.tamk.game.theone.phys
         }
 
         /// <summary>
-        /// Reset this leaver.
+        /// Reset this lever.
         /// </summary>
-        private void ResetLeaver()
+        private void ResetLever()
         {
             ChangeToSprite(_originalSprite);
             _hasActivated = false;
