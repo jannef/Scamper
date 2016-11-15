@@ -3,20 +3,43 @@ using System.Collections;
 
 namespace fi.tamk.game.theone.phys
 {
+    /// <summary>
+    /// Player game object.
+    /// </summary>
+    /// <auth>Janne Forsell</auth>
     public class PPlayerBlock : PGameBlock
     {
+        /// <summary>
+        /// Speed of player's advance once clicked.
+        /// </summary>
         [SerializeField] protected Vector2 PlayerSpeed = new Vector2(2.2f, 0);
+
+        /// <summary>
+        /// Reference to player animation controller.
+        /// </summary>
         [SerializeField] protected AnimationController PlayerAnimation = null;
+
+        /// <summary>
+        /// Reference to transfrom that judges if the collision is below player.
+        /// 
+        /// Used for walkable obstacles so that their other sides are still dangerous.
+        /// </summary>
         [SerializeField] protected Transform FloorCollisionTolerance = null;
+
+        /// <summary>
+        /// If the player is moving.
+        /// </summary>
         private bool _moving = false;
+
+        /// <summary>
+        /// Is a checkpoint transition underway.
+        /// </summary>
         private Checkpoint _activeCheckpoint = null;
 
-        #region MonoBehaviourMethods
-        /**
-         * Kills player when he collides with a block.
-         * 
-         * This also hides default behaviour so no touchlist is generated, this is intented for now.
-         */
+        /// <summary>
+        /// Kills the player on collision. Also hides defautl behaviour (touch list upkeep).
+        /// </summary>
+        /// <param name="col">The collision.</param>
         void OnCollisionEnter2D(Collision2D col)
         {
             if (col.collider.gameObject.CompareTag("Movable") ||
@@ -26,6 +49,13 @@ namespace fi.tamk.game.theone.phys
             }
         }
 
+        /// <summary>
+        /// Checks if the collision was from below. This is pretty much a guess, not accurate.
+        /// 
+        /// TODO: Could use normals to get more accurate guess i think.
+        /// </summary>
+        /// <param name="col">the collision</param>
+        /// <returns>true for below collision</returns>
         private bool CollisionBelow(Collision2D col)
         {
             if (FloorCollisionTolerance == null) return false;
@@ -36,17 +66,18 @@ namespace fi.tamk.game.theone.phys
             return colHeight < footHeight;
         }
 
-        /**
-         * Hides default behaviour, because player has no reason to manage touchlist.
-         */
+        /// <summary>
+        /// Hides default behaviour, because player has no reason to manage touchlist.
+        /// </summary>
+        /// <param name="col">not used</param>
         void OnCollisionExit2D(Collision2D col)
         {
 
         }
 
-        /**
-         * Moves player in the world.
-         */
+        /// <summary>
+        /// Moves the player in the world once clicked.
+        /// </summary>
         void Update()
         {
             var speedToSet = Mathf.Abs(PlayerSpeed.x);
@@ -64,9 +95,9 @@ namespace fi.tamk.game.theone.phys
 
         }
 
-        /**
-         * Overrides default behaviour that is used for "NPC" block to simply enable movement.
-         */
+        /// <summary>
+        /// Overrides default behaviour that is used for other blocks to simply enable movement.
+        /// </summary>
         void OnMouseDown()
         {
             if (!LockedFromPlayer
@@ -76,17 +107,20 @@ namespace fi.tamk.game.theone.phys
                 _moving = true;
             }
         }
-        #endregion
 
-        /**
-         * Sets state of the block to default values.
-         */
+        /// <summary>
+        /// Resets the state of this block.
+        /// </summary>
         public override void ResetBlock()
         {
             base.ResetBlock();
             _moving = false;
         }
 
+        /// <summary>
+        /// Sets variables when a checkpoint is reached.
+        /// </summary>
+        /// <param name="c">which chechpoint</param>
         public void Checkpoint(Checkpoint c)
         {
             StartLocation = c.Spawn.position;
@@ -94,6 +128,9 @@ namespace fi.tamk.game.theone.phys
             _activeCheckpoint = c;
         }
 
+        /// <summary>
+        /// Releases control of the character after checkpoitn transition is done.
+        /// </summary>
         public void CheckpointRelease()
         {
             _activeCheckpoint = null;

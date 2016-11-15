@@ -3,6 +3,9 @@ using System.Collections;
 
 namespace fi.tamk.game.theone.utils
 {
+    /// <summary>
+    /// Enumeration of different interpolation types.
+    /// </summary>
     public enum InterpolationType
     {
         Linear,
@@ -13,9 +16,12 @@ namespace fi.tamk.game.theone.utils
         Smootherstep
     }
 
+    /// <summary>
+    /// Offers utility with interpolations.
+    /// </summary>
+    /// <auth></auth>
     public class Interpolations
     {
-        
         public static float EaseIn(float value)
         {
             return Mathf.Cos(value * Mathf.PI * 0.5f);
