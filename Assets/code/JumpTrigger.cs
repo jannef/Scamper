@@ -20,7 +20,7 @@ namespace fi.tamk.game.theone.phys
         /// <param name="other">Not used.</param>
         void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject == SceneManager.Instance.PlayerGameObject)
             {
                 other.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, JumpPower), ForceMode2D.Impulse);
             }
