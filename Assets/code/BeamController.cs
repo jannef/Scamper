@@ -10,6 +10,22 @@ namespace fi.tamk.game.theone.phys
     public class BeamController : MonoBehaviour
     {
         /// <summary>
+        /// Blocks this remote activator will affect.
+        /// </summary>
+        [SerializeField] private PGameBlock[] ActivatedBlocks;
+
+        /// <summary>
+        /// If this beam should kill the player.
+        /// </summary>
+        [SerializeField] private bool KillsPlayer = false;
+
+        /// <summary>
+        /// Has the current interruption of the beam already been handled.
+        /// This resets when the beam has one uninterrupted update.
+        /// </summary>
+        private bool InterruptionHandled = false;
+
+        /// <summary>
         /// Origin of the beam.
         /// </summary>
         [SerializeField] private Transform Origin;
@@ -41,6 +57,13 @@ namespace fi.tamk.game.theone.phys
         {
             _transform = transform;
             _material = GetComponent<Renderer>().material;
+            SceneManager.Instance.LevelResetEvent += ResetBeam;
+        }
+
+        private void ResetBeam()
+        {
+            if (InterruptionHandled) EndInterruption();
+            InterruptionHandled = false;
         }
 
         /// <summary>
@@ -70,18 +93,7 @@ namespace fi.tamk.game.theone.phys
         private RaycastHit2D FindObstacle()
         {
             RaycastHit2D rv = Physics2D.Linecast(Origin.position, End.position, LayerMask.GetMask(new [] {"Player", "CatchRC"}));
-            if (rv) OnBeamInterruption(rv);
-
             return rv;
-        }
-
-        /// <summary>
-        /// Fires when something blocks blocks the beams path.
-        /// </summary>
-        /// <param name="Interruption">The hit that interrupted the beam.</param>
-        private void OnBeamInterruption(RaycastHit2D Interruption)
-        {
-            
         }
 
         /// <summary>
@@ -98,11 +110,53 @@ namespace fi.tamk.game.theone.phys
             var col = FindObstacle();
             if (col)
             {
-                Debug.Log(col.fraction);
                 _material.SetFloat("_WorldX", col.fraction);
+                if (!InterruptionHandled)
+                {
+                    // Setting boolean before the function call is mandatory. Do not change.
+                    InterruptionHandled = true;
+                    BeginInterruption(col);
+                }
+
             } else
             {
                 _material.SetFloat("_WorldX", 1);
+                if (InterruptionHandled)
+                {
+                    EndInterruption();
+                    InterruptionHandled = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handling of the interruption of the beam, depending on what interrupted it and what behaviour is set.
+        /// </summary>
+        /// <param name="col">the interrupting event</param>
+        private void BeginInterruption(RaycastHit2D col)
+        {
+            if (KillsPlayer && col.collider.gameObject.CompareTag("Player"))
+            {
+                SceneManager.Instance.PlayerDeathReset();
+                return;
+            }
+
+            foreach (var block in ActivatedBlocks)
+            {
+                if (block == null) continue;
+                block.OnRemoteActivation();
+            }
+        }
+
+        /// <summary>
+        /// Sending end of activation event to blocks.
+        /// </summary>
+        private void EndInterruption()
+        {
+            foreach (var block in ActivatedBlocks)
+            {
+                if (block == null) continue;
+                block.OnRemoteActivationActionReset();
             }
         }
     }
