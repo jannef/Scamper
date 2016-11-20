@@ -23,6 +23,8 @@ namespace fi.tamk.game.theone.phys
 
         public enum OnRemoteActivationAction { Unlock, Impulse, ReverseGravity, None }
 
+        public event SceneEvent BlockClickedEvent;
+
         /// <summary>
         /// Stores data of collisions that are ongoing. This info is kept by
         /// Box2d, but user cannot access with implementation used by unity.
@@ -157,6 +159,7 @@ namespace fi.tamk.game.theone.phys
         {
             if (LockedFromPlayer || _remotelyActivated || SceneManager.Instance.Pause || !IsResting() || !IsTopmost()) return;
             if (LockAfterUse) LockedFromPlayer = true;
+            if (BlockClickedEvent != null) BlockClickedEvent();
 
             switch (OnClickAction)
             {
