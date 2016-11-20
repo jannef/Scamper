@@ -26,12 +26,25 @@ namespace fi.tamk.game.theone.phys
         [SerializeField] private bool LowerUpperLimitWhenPressed = false;
 
         /// <summary>
+        /// Reverses direction the lever is pushed towards.
+        /// </summary>
+        [SerializeField]
+        private bool ReverseDirection = false;
+
+        /// <summary>
         /// Get reference to hinge joint.
         /// </summary>
         private void Awake()
         {
             _hinge = GetComponent<HingeJoint2D>();
             if (_hinge == null) return;
+
+            if (ReverseDirection)
+            {
+                var motor = _hinge.motor;
+                motor.motorSpeed *= -1f;
+                _hinge.motor = motor;
+            }
 
             _originaLimits2D = _hinge.limits;
             SceneManager.Instance.LevelResetEvent += ResetLimits;
@@ -42,10 +55,18 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void Update()
         {
-            if (_hinge == null || !LowerUpperLimitWhenPressed || !(_hinge.jointAngle < _hinge.limits.max)) return;
+            if (_hinge == null || !LowerUpperLimitWhenPressed || ((!(_hinge.jointAngle < _hinge.limits.max) && !ReverseDirection) || (!(_hinge.jointAngle > _hinge.limits.min) && ReverseDirection))) return;
 
             var limits = _hinge.limits;
-            limits.max = Mathf.Max(_hinge.jointAngle, limits.min);
+            if (ReverseDirection)
+            {
+                limits.min = Mathf.Min(_hinge.jointAngle, limits.max);
+            }
+            else
+            {
+                limits.max = Mathf.Max(_hinge.jointAngle, limits.min);
+            }
+            
 
             _hinge.limits = limits;
         }

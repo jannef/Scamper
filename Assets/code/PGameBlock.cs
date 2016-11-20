@@ -157,6 +157,7 @@ namespace fi.tamk.game.theone.phys
         {
             if (LockedFromPlayer || _remotelyActivated || SceneManager.Instance.Pause || !IsResting() || !IsTopmost()) return;
             if (LockAfterUse) LockedFromPlayer = true;
+
             switch (OnClickAction)
             {
                 case OnBoxClickAction.ReverseGravity:
