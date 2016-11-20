@@ -23,6 +23,16 @@ namespace fi.tamk.game.theone.phys
         [SerializeField] private float SpeedMultiplier = 0.34f;
 
         /// <summary>
+        /// Should the falling state be up for the animator.
+        /// </summary>
+        public bool Falling = false;
+
+        /// <summary>
+        /// Should the braking state be up fir the animator.
+        /// </summary>
+        public bool Braking = false;
+
+        /// <summary>
         /// Animator in this game object.
         /// </summary>
         private Animator _animator;
@@ -47,6 +57,8 @@ namespace fi.tamk.game.theone.phys
         void Update()
         {
             _animator.SetFloat("speed", Speed);
+            _animator.SetBool("braking", Braking);
+            _animator.SetBool("falling", Falling);
 
             if (Speed <= 0.05f)
             {

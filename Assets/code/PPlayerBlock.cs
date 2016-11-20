@@ -36,6 +36,8 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private Checkpoint _activeCheckpoint = null;
 
+        private Rigidbody2D _rigidbody = null;
+
         /// <summary>
         /// Kills the player on collision. Also hides defautl behaviour (touch list upkeep).
         /// </summary>
@@ -91,8 +93,7 @@ namespace fi.tamk.game.theone.phys
                 speedToSet = 0f;
             }
 
-            if (PlayerAnimation != null) PlayerAnimation.Speed = speedToSet;
-
+            PlayerAnimation.Speed = speedToSet;
         }
 
         /// <summary>
@@ -126,6 +127,7 @@ namespace fi.tamk.game.theone.phys
             StartLocation = c.Spawn.position;
             _moving = false;
             _activeCheckpoint = c;
+            PlayerAnimation.Braking = true;
         }
 
         /// <summary>
@@ -134,6 +136,7 @@ namespace fi.tamk.game.theone.phys
         public void CheckpointRelease()
         {
             _activeCheckpoint = null;
+            PlayerAnimation.Braking = false;
         }
     }
 }
