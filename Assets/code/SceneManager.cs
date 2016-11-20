@@ -45,6 +45,8 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private bool _pause = false;
 
+        public float TimeSinceLevelLoaded { get; private set; }
+
         /// <summary>
         /// Reference to the player rat game object.
         /// </summary>
@@ -127,6 +129,7 @@ namespace fi.tamk.game.theone.phys
         private void Update()
         {
             _deltaTime = Time.deltaTime;
+            TimeSinceLevelLoaded += DeltaTime;
             //TimerPhase = (Mathf.Sin(Time.timeSinceLevelLoad * 2f) + 1)/6;
         }
 
