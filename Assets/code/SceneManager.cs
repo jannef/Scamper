@@ -56,7 +56,20 @@ namespace fi.tamk.game.theone.phys
         /// Event to blocks need to subscibe to to get level reset triggers.
         /// </summary>
         public event SceneEvent LevelResetEvent;
-        
+
+        /// <summary>
+        /// Detecting when boxes are clicked.
+        /// </summary>
+        public event SceneEvent ClickEvent;
+
+        /// <summary>
+        /// Triggers ClickEvent.
+        /// </summary>
+        public void BoxClicked()
+        {
+            if (ClickEvent != null) ClickEvent();
+        }
+
         /*
             Used to provide sin value based on time for character effects. This
             functionality was moved to shaders and then dropped.

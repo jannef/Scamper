@@ -92,6 +92,11 @@ namespace fi.tamk.game.theone.phys
         protected float OriginalRotation;
 
         /// <summary>
+        /// Stores original LockedFromPlayer status for resets.
+        /// </summary>
+        protected bool _originalLockStatus;
+
+        /// <summary>
         /// Finds out if this object can be considered resting on something that is considered always to be in rest or on top of something
         /// that can find solid ground below calling this same method recursively.
         /// 
@@ -145,6 +150,7 @@ namespace fi.tamk.game.theone.phys
             Rb = GetComponent<Rigidbody2D>();
             OriginalGravity = Rb.gravityScale;
             OriginalRotation = Rb.rotation;
+            _originalLockStatus = LockedFromPlayer;
 
             SceneManager.Instance.LevelResetEvent += ResetBlock;
 
@@ -160,6 +166,8 @@ namespace fi.tamk.game.theone.phys
             if (LockedFromPlayer || _remotelyActivated || SceneManager.Instance.Pause || !IsResting() || !IsTopmost()) return;
             if (LockAfterUse) LockedFromPlayer = true;
             if (BlockClickedEvent != null) BlockClickedEvent();
+
+            SceneManager.Instance.BoxClicked();
 
             switch (OnClickAction)
             {
@@ -309,7 +317,9 @@ namespace fi.tamk.game.theone.phys
             Rb.gravityScale = OriginalGravity;
             Rb.velocity = Vector2.zero;
             MyTransform.position = StartLocation;
-            Rb.rotation = OriginalRotation; 
+            Rb.rotation = OriginalRotation;
+
+            LockedFromPlayer = _originalLockStatus;
         }
 
         /// <summary>
