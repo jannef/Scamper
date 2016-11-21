@@ -12,7 +12,9 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// How big an impulse.
         /// </summary>
-        public float JumpPower = 5f;
+        public Vector2 JumpPower = new Vector2(0, 5.1f);
+
+        [SerializeField] private float DistanceModifier = 3f;
 
         /// <summary>
         /// Player rigid body reference.
@@ -25,24 +27,6 @@ namespace fi.tamk.game.theone.phys
         private AnimationController _playerAnimation;
 
         /// <summary>
-        /// Has this trigger already fired.
-        /// </summary>
-        private bool _hasFired = false;
-
-        /// <summary>
-        /// Gives the impulse.
-        /// </summary>
-        /// <param name="other">Not used.</param>
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (!_hasFired && other.gameObject == SceneManager.Instance.PlayerGameObject)
-            {
-                _playerrbRigidbody.AddForce(new Vector2(0, JumpPower), ForceMode2D.Impulse);
-                _hasFired = true;
-            }
-        }
-
-        /// <summary>
         /// Tell the player animator to be on falling state while in the trigger.
         /// </summary>
         /// <param name="other">the triggering collider</param>
@@ -51,6 +35,10 @@ namespace fi.tamk.game.theone.phys
             if (other.gameObject == SceneManager.Instance.PlayerGameObject)
             {
                 _playerAnimation.Falling = true;
+
+                var dist = Mathf.Pow(1 / Vector2.Distance(transform.position, other.gameObject.transform.position), DistanceModifier);
+                Debug.Log(dist);
+                _playerrbRigidbody.AddForce(JumpPower * dist, ForceMode2D.Force);
             }
         }
 
@@ -81,7 +69,7 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void ResetTrigger()
         {
-            _hasFired = false;
+            
         }
     }
 }
