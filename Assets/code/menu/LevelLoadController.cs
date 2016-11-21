@@ -19,6 +19,8 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         private const string _saveFile = "save.savedata";
 
+        private int _changeToOnLoad = -1;
+
         /// <summary>
         /// Persistent data trough play sessions.
         /// </summary>
@@ -97,9 +99,16 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         /// <param name="arg0">Not used.</param>
         /// <param name="loadSceneMode">Not used.</param>
-        private static void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode loadSceneMode)
+        private void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode loadSceneMode)
         {
             fi.tamk.game.theone.phys.SceneManager.TurnOffQuitFlag();
+
+            if (_changeToOnLoad >= 0)
+            {
+                var to = _changeToOnLoad;
+                _changeToOnLoad = -1;
+                SceneManager.LoadScene(to);
+            }
         }
 
         /// <summary>
@@ -161,6 +170,12 @@ namespace fi.tamk.game.theone.menu
         private void OnApplicationQuit()
         {
             SaveGameData();
+        }
+
+        public void ToScene(int whichScene)
+        {
+            _changeToOnLoad = whichScene;
+            SceneManager.LoadScene(0);
         }
     }
 }

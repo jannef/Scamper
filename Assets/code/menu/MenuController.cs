@@ -58,5 +58,10 @@ namespace fi.tamk.game.theone.menu
         {
             LoadLevel(0);
         }
+
+        public void TestLoadLevel()
+        {
+            fi.tamk.game.theone.phys.SceneManager.Instance.PersistentData.ToScene(2);
+        }
     }
 }

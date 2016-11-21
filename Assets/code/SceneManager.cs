@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using fi.tamk.game.theone.utils;
+using fi.tamk.game.theone.menu;
 
 namespace fi.tamk.game.theone.phys
 {
@@ -16,6 +17,8 @@ namespace fi.tamk.game.theone.phys
     /// /// <auth>Janne Forsell</auth>
     public class SceneManager : Singleton<SceneManager>
     {
+        public LevelLoadController PersistentData;
+
         /// <summary>
         /// Pause property.
         /// </summary>
@@ -134,6 +137,9 @@ namespace fi.tamk.game.theone.phys
             //TimerPhase = 0f;
             GameObjectMap = new Dictionary<GameObject, PGameBlock>();
             PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
+            PersistentData = FindObjectOfType<LevelLoadController>();
+
+            if (PersistentData == null) UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         }
 
         /// <summary>
