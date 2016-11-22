@@ -7,6 +7,7 @@ namespace fi.tamk.game.theone.phys
     {
         private void NeckLightOn()
         {
+            StopAllCoroutines();
             ActivateLight();
         }
 
