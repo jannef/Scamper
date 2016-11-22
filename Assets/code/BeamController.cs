@@ -64,6 +64,9 @@ namespace fi.tamk.game.theone.phys
             SceneManager.Instance.LevelResetEvent += ResetBeam;
         }
 
+        /// <summary>
+        /// Handles reset events.
+        /// </summary>
         private void ResetBeam()
         {
             if (InterruptionHandled) EndInterruption();
@@ -109,7 +112,7 @@ namespace fi.tamk.game.theone.phys
         }
 
         /// <summary>
-        /// Updates the beam it's shader.
+        /// Updates particle system of the beam according to collisions.
         /// </summary>
         private void Update()
         { 

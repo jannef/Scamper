@@ -10,10 +10,13 @@ namespace fi.tamk.game.theone.phys
     public class JumpTrigger : MonoBehaviour
     {
         /// <summary>
-        /// How big an impulse.
+        /// How big of a force.
         /// </summary>
         public Vector2 JumpPower = new Vector2(0, 5.1f);
 
+        /// <summary>
+        /// How much should distance affect the rat.
+        /// </summary>
         [SerializeField] private float DistanceModifier = 3f;
 
         /// <summary>
@@ -27,7 +30,7 @@ namespace fi.tamk.game.theone.phys
         private AnimationController _playerAnimation;
 
         /// <summary>
-        /// Tell the player animator to be on falling state while in the trigger.
+        /// Hovers the player and changes it's animation.
         /// </summary>
         /// <param name="other">the triggering collider</param>
         private void OnTriggerStay2D(Collider2D other)
