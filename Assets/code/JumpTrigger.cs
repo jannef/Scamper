@@ -37,7 +37,6 @@ namespace fi.tamk.game.theone.phys
                 _playerAnimation.Falling = true;
 
                 var dist = Mathf.Pow(1 / Vector2.Distance(transform.position, other.gameObject.transform.position), DistanceModifier);
-                Debug.Log(dist);
                 _playerrbRigidbody.AddForce(JumpPower * dist, ForceMode2D.Force);
             }
         }

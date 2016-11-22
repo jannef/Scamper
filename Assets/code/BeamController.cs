@@ -48,7 +48,9 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// Cached renderer material to mask parts of the beam in shader.
         /// </summary>
-        private Material _material;
+        //private Material _material;
+
+        private ParticleSystem _particleSystem;
 
         /// <summary>
         /// Gets references to objects.
@@ -56,7 +58,9 @@ namespace fi.tamk.game.theone.phys
         private void Awake()
         {
             _transform = transform;
-            _material = GetComponent<Renderer>().material;
+            //_material = GetComponent<Renderer>().material;
+            _particleSystem = GetComponent<ParticleSystem>();
+
             SceneManager.Instance.LevelResetEvent += ResetBeam;
         }
 
@@ -70,9 +74,9 @@ namespace fi.tamk.game.theone.phys
         /// Finds center of the origin and end.
         /// </summary>
         /// <returns>The found center.</returns>
-        private Vector3 FindCenterOfSprite()
+        private Vector3 FindCenterOfSprite(Vector3 loc)
         {
-            return (Origin.position + End.position) / 2;
+            return (Origin.position + loc + Vector3.back) / 2;
         }
 
         /// <summary>
@@ -90,52 +94,59 @@ namespace fi.tamk.game.theone.phys
         /// Finds the obstacles (at Player or CatchRC layer) in this beam's path.
         /// </summary>
         /// <returns></returns>
-        private RaycastHit2D FindObstacle()
+        private Vector3 FindObstacle(out GameObject other, out float frac)
         {
             RaycastHit2D rv = Physics2D.Linecast(Origin.position, End.position, LayerMask.GetMask(new [] {"Player", "CatchRC"}));
-            return rv;
+            if (rv)
+            {
+                other = rv.collider.gameObject;
+                frac = rv.fraction;
+                return rv.point;
+            }
+            other = null;
+            frac = 1;
+            return End.position;
         }
 
         /// <summary>
         /// Updates the beam it's shader.
         /// </summary>
         private void Update()
-        {
-            _transform.position = FindCenterOfSprite();
+        { 
             _transform.rotation = Quaternion.AngleAxis(FindRotationOfSprite(End.position), Vector3.forward);
 
-            float scale = (Origin.position - End.position).magnitude * ScaleModifier;
-            _transform.localScale = new Vector3(scale, scale, 1);
+            //_transform.localScale = new Vector3(scale, scale, 1);
+            GameObject other = null;
+            float frac = 1;
+            var col = FindObstacle(out other, out frac);
 
-            var col = FindObstacle();
-            if (col)
-            {
-                _material.SetFloat("_WorldX", col.fraction);
-                if (!InterruptionHandled)
-                {
-                    // Setting boolean before the function call is mandatory. Do not change.
-                    InterruptionHandled = true;
-                    BeginInterruption(col);
-                }
+            Debug.Log(col);
 
-            } else
+            _transform.position = FindCenterOfSprite(col);
+
+            var scale = new Vector3((Origin.position - End.position).magnitude, 0, 0);
+            var shape = _particleSystem.shape;
+            shape.box = scale * frac;
+
+            //_material.SetFloat("_WorldX", col.fraction);
+            if (!InterruptionHandled)
             {
-                _material.SetFloat("_WorldX", 1);
-                if (InterruptionHandled)
-                {
-                    EndInterruption();
-                    InterruptionHandled = false;
-                }
+                // Setting boolean before the function call is mandatory. Do not change.
+                InterruptionHandled = true;
+                BeginInterruption(other);
             }
+
+            
+            
         }
 
         /// <summary>
         /// Handling of the interruption of the beam, depending on what interrupted it and what behaviour is set.
         /// </summary>
         /// <param name="col">the interrupting event</param>
-        private void BeginInterruption(RaycastHit2D col)
+        private void BeginInterruption(GameObject col)
         {
-            if (KillsPlayer && col.collider.gameObject.CompareTag("Player"))
+            if (KillsPlayer && col.CompareTag("Player"))
             {
                 SceneManager.Instance.PlayerDeathReset();
                 return;
