@@ -91,7 +91,19 @@ namespace fi.tamk.game.theone.menu
 
             DontDestroyOnLoad(this);
             SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
-            _saveData = LoadGameData();
+            
+            try
+            {
+                _saveData = LoadGameData();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                _saveData = new SaveData(SceneManager.sceneCount);
+                SaveGameData();
+
+            }
+            
         }
 
         /// <summary>
@@ -109,8 +121,6 @@ namespace fi.tamk.game.theone.menu
                 _changeToOnLoad = -1;
                 SceneManager.LoadScene(to);
             }
-
-            _saveData.RandomTest++;
         }
 
         /// <summary>
