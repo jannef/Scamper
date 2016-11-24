@@ -24,7 +24,7 @@ namespace fi.tamk.game.theone.menu
         /// <summary>
         /// Persistent data trough play sessions.
         /// </summary>
-        private SaveData _saveData = null;
+        public SaveData _saveData = null;
 
         /// <summary>
         /// If the save file exists or not.
@@ -46,7 +46,7 @@ namespace fi.tamk.game.theone.menu
         /// Persistent data datatype.
         /// </summary>
         [Serializable]
-        private class SaveData
+        public class SaveData
         {
             /// <summary>
             /// Dictionary of levels and their completion status.
@@ -57,6 +57,7 @@ namespace fi.tamk.game.theone.menu
             /// Which level was last played. Continue and next level rely on this.
             /// </summary>
             public int LastLevelPlayed = 0;
+            public int RandomTest = 0;
 
             /// <summary>
             /// Constructor for the persistent data struct.
@@ -109,6 +110,8 @@ namespace fi.tamk.game.theone.menu
                 _changeToOnLoad = -1;
                 SceneManager.LoadScene(to);
             }
+
+            _saveData.RandomTest++;
         }
 
         /// <summary>
