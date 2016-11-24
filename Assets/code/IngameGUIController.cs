@@ -36,6 +36,21 @@ namespace fi.tamk.game.theone.ui
         [SerializeField] private Image resetImage;
 
         /// <summary>
+        /// Reference to the image used to display death mask.
+        /// </summary>
+        [SerializeField] private Image deathImage;
+
+        /// <summary>
+        /// Mask color for death image.
+        /// </summary>
+        [SerializeField] private Color[] deathMask;
+
+        /// <summary>
+        /// Time it takes to transition.
+        /// </summary>
+        [SerializeField] private float deathFlickerDuration = 0.43f;
+
+        /// <summary>
         /// Retuns number of deaths since level loaded.
         /// </summary>
         private int RatNumber
@@ -60,7 +75,7 @@ namespace fi.tamk.game.theone.ui
         private void Awake()
         {
             RatNumber = 1;
-            SceneManager.Instance.LevelResetEvent += IncreaseDeaths;
+            SceneManager.Instance.LevelResetEvent += HandlePlayerDeath;
         }
 
         /// <summary>
@@ -79,6 +94,33 @@ namespace fi.tamk.game.theone.ui
         }
 
         /// <summary>
+        /// Recursive handler for death flicker.
+        /// </summary>
+        /// <param name="duration">How long does one color transition last in seconds.</param>
+        /// <param name="cols">Colors to flicker trough.</param>
+        /// <param name="iteration">Do not use. Uses this internally.</param>
+        /// <returns></returns>
+        private IEnumerator DeathFlicker(float duration, Color[] cols, int iteration = 0)
+        {
+            Debug.Log(iteration);
+
+            Color colBegin = cols[iteration % cols.Length];
+            Color colEnd = cols[(iteration + 1) % cols.Length];
+
+            var timer = 0f;
+            while (timer <= duration)
+            {
+                timer += SceneManager.Instance.DeltaTime;
+                deathImage.color = Color.Lerp(colBegin, colEnd, Mathf.Min(timer / duration, 1f));
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            Debug.Log(cols.Length);
+            if (iteration < (cols.Length - 2)) StartCoroutine(DeathFlicker(duration, cols, ++iteration));
+        }
+
+        /// <summary>
         /// Resets the level without a deaths. Button behavior.
         /// </summary>
         public void ResetButton()
@@ -90,9 +132,10 @@ namespace fi.tamk.game.theone.ui
         /// <summary>
         /// Increases deats by one.
         /// </summary>
-        private void IncreaseDeaths()
+        private void HandlePlayerDeath()
         {
             RatNumber++;
+            StartCoroutine(DeathFlicker(deathFlickerDuration, deathMask));
         }
     }
 }
