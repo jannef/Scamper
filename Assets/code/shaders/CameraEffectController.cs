@@ -8,6 +8,7 @@ namespace fi.tamk.game.theone.shader
     /// Camera post effect shader controller.
     /// </summary>
     /// <auth>Janne Forsell</auth>
+    [RequireComponent(typeof(Camera))]
     public class CameraEffectController : MonoBehaviour
     {
         /// <summary>
@@ -30,6 +31,12 @@ namespace fi.tamk.game.theone.shader
         /// </summary>
         private void Awake()
         {
+            if (!SystemInfo.supportsImageEffects || Effect == null)
+            {
+                this.enabled = false;
+                return;
+            }
+
             _cam = GetComponent<Camera>();
         }
 
