@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text;
 using UnityEngine.UI;
 using fi.tamk.game.theone.phys;
 
@@ -10,6 +11,11 @@ namespace fi.tamk.game.theone.ui
     /// </summary>
     public class IngameGUIController : MonoBehaviour
     {
+        /// <summary>
+        /// List of possible GUI states.
+        /// </summary>
+        private enum GuiState { Start, Normal, Paused }
+
         /// <summary>
         /// Reference to time indicator.
         /// </summary>
@@ -26,9 +32,14 @@ namespace fi.tamk.game.theone.ui
         [SerializeField] private Image recordImage;
 
         /// <summary>
-        /// Reference to monetization energy indicator.
+        /// Paused sprite for recordImage;
         /// </summary>
-        [SerializeField] private Image powerImage;
+        [SerializeField] private Sprite notReconrdingSprite;
+
+        /// <summary>
+        /// Original sprite of recordImage.
+        /// </summary>
+        private Sprite recordSprite;
 
         /// <summary>
         /// Reference to level reset button.
@@ -41,6 +52,21 @@ namespace fi.tamk.game.theone.ui
         [SerializeField] private Image deathImage;
 
         /// <summary>
+        /// Pause button image.
+        /// </summary>
+        [SerializeField] private Image pauseImage;
+
+        /// <summary>
+        /// Play buttin sprite to replace pause image.
+        /// </summary>
+        [SerializeField] private Sprite playImageSprite;
+
+        /// <summary>
+        /// Original sprite of pauseImage;
+        /// </summary>
+        private Sprite pauseSprite;
+
+        /// <summary>
         /// Mask color for death image.
         /// </summary>
         [SerializeField] private Color[] deathMask;
@@ -49,6 +75,37 @@ namespace fi.tamk.game.theone.ui
         /// Time it takes to transition.
         /// </summary>
         [SerializeField] private float deathFlickerDuration = 0.43f;
+
+        /// <summary>
+        /// State of the GUI.
+        /// </summary>
+        private GuiState _guiState = GuiState.Start;
+
+        /// <summary>
+        /// Activates given gui state.
+        /// </summary>
+        /// <param name="whichState"></param>
+        private void ActivateState(GuiState whichState)
+        {
+            _guiState = whichState;
+
+            switch (whichState)
+            {
+                case GuiState.Normal:
+                    SceneManager.Instance.Pause = false;
+                    pauseImage.sprite = pauseSprite;
+                    recordImage.sprite = recordSprite;
+                    break;
+                case GuiState.Paused:
+                    SceneManager.Instance.Pause = true;
+                    pauseImage.sprite = playImageSprite;
+                    recordImage.sprite = notReconrdingSprite;
+                    break;
+                case GuiState.Start:
+                default:
+                    break;
+            }
+        }
 
         /// <summary>
         /// Retuns number of deaths since level loaded.
@@ -74,8 +131,13 @@ namespace fi.tamk.game.theone.ui
         /// </summary>
         private void Awake()
         {
+            pauseSprite = pauseImage.sprite;
+            recordSprite = recordImage.sprite;
+
             RatNumber = 1;
             SceneManager.Instance.LevelResetEvent += HandlePlayerDeath;
+
+            ActivateState(GuiState.Normal);
         }
 
         /// <summary>
@@ -102,6 +164,8 @@ namespace fi.tamk.game.theone.ui
         /// <returns></returns>
         private IEnumerator DeathFlicker(float duration, Color[] cols, int iteration = 0)
         {
+            deathImage.raycastTarget = true;
+
             Color colBegin = cols[iteration % cols.Length];
             Color colEnd = cols[(iteration + 1) % cols.Length];
 
@@ -114,7 +178,14 @@ namespace fi.tamk.game.theone.ui
                 yield return new WaitForEndOfFrame();
             }
 
-            if (iteration < (cols.Length - 2)) StartCoroutine(DeathFlicker(duration, cols, ++iteration));
+            if (iteration < (cols.Length - 2))
+            {
+                StartCoroutine(DeathFlicker(duration, cols, ++iteration));
+            }
+            else
+            {
+                deathImage.raycastTarget = false;
+            }
         }
 
         /// <summary>
@@ -122,6 +193,7 @@ namespace fi.tamk.game.theone.ui
         /// </summary>
         public void ResetButton()
         {
+            if (_guiState != GuiState.Normal) ActivateState(GuiState.Normal);
             SceneManager.Instance.PlayerDeathReset();
             RatNumber--;
         }
@@ -133,6 +205,11 @@ namespace fi.tamk.game.theone.ui
         {
             RatNumber++;
             StartCoroutine(DeathFlicker(deathFlickerDuration, deathMask));
+        }
+
+        public void PausePlayButton()
+        {
+            ActivateState(_guiState == GuiState.Normal ? GuiState.Paused : GuiState.Normal);
         }
     }
 }
