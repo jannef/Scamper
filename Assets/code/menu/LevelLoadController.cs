@@ -137,7 +137,6 @@ namespace fi.tamk.game.theone.menu
             var formatter = new BinaryFormatter();
             var stream = new MemoryStream(data);
 
-            Debug.Log(string.Format("Loaded successfully: {0}", SaveFile));
             return (SaveData)(formatter.Deserialize(stream));
         }
 
@@ -151,8 +150,6 @@ namespace fi.tamk.game.theone.menu
 
             formatter.Serialize(stream, _saveData);
             File.WriteAllBytes(SaveFile, stream.GetBuffer());
-
-            Debug.Log(string.Format("Saved game data successfully: {0}", SaveFile));
         }
 
         /// <summary>

@@ -92,12 +92,21 @@ namespace fi.tamk.game.theone.phys
             if (SpriteRenderer != null && toWhich != null) SpriteRenderer.sprite = toWhich;
         }
 
+
         /// <summary>
         /// Reset this lever.
         /// </summary>
         private void ResetLever()
         {
             ChangeToSprite(_originalSprite);
+            if (_hasActivated)
+            {
+                foreach (var block in ActivatedBlocks)
+                {
+                    if (block == null) continue;
+                    block.OnRemoteActivationActionReset();
+                }
+            }
             _hasActivated = false;
         }
     }

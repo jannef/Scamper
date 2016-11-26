@@ -97,6 +97,11 @@ namespace fi.tamk.game.theone.phys
         protected bool _originalLockStatus;
 
         /// <summary>
+        /// True if remote deactivation is in progress.
+        /// </summary>
+        protected bool _remoteDeactivationInProgress = false;
+
+        /// <summary>
         /// Finds out if this object can be considered resting on something that is considered always to be in rest or on top of something
         /// that can find solid ground below calling this same method recursively.
         /// 
@@ -125,12 +130,12 @@ namespace fi.tamk.game.theone.phys
                 // positive y is touch is above
                 var vec = t.Value.contacts[0].point - new Vector2(MyTransform.position.x, MyTransform.position.y);
 
-                if (!(!SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable") || Mathf.Abs(vec.x) > Mathf.Abs(vec.y)))
+                if (!SceneManager.Instance.GameObjectMap[t.Key].CompareTag("Movable") ||
+                    Mathf.Abs(vec.x) > Mathf.Abs(vec.y)) continue;
+
+                if ((GravityDown() && vec.y > 0) || (!GravityDown() && vec.y <= 0))
                 {
-                    if ((GravityDown() && vec.y > 0) || (!GravityDown() && vec.y <= 0))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
@@ -223,8 +228,12 @@ namespace fi.tamk.game.theone.phys
         /// <returns>Not used.</returns>
         private IEnumerator RemoteActivationReset(float duration)
         {
+            if (!_remoteDeactivationInProgress) yield break;
+
+            _remoteDeactivationInProgress = true;
             yield return new WaitForSeconds(duration);
             OnRemoteActivationActionReset();
+            _remoteDeactivationInProgress = false;
         }
 
         /// <summary>
@@ -312,9 +321,13 @@ namespace fi.tamk.game.theone.phys
         public virtual void ResetBlock()
         {
             StopAllCoroutines();
-            _remotelyActivated = false;
 
-            Rb.gravityScale = OriginalGravity;
+            // Only reset gravity here if it was reversed by clicking!
+            if (OnClickAction == OnBoxClickAction.ReverseGravity )Rb.gravityScale = OriginalGravity;
+
+            _remotelyActivated = false;
+            _remoteDeactivationInProgress = false;
+            
             Rb.velocity = Vector2.zero;
             MyTransform.position = StartLocation;
             Rb.rotation = OriginalRotation;

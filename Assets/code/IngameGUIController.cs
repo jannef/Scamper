@@ -102,8 +102,6 @@ namespace fi.tamk.game.theone.ui
         /// <returns></returns>
         private IEnumerator DeathFlicker(float duration, Color[] cols, int iteration = 0)
         {
-            Debug.Log(iteration);
-
             Color colBegin = cols[iteration % cols.Length];
             Color colEnd = cols[(iteration + 1) % cols.Length];
 
@@ -116,7 +114,6 @@ namespace fi.tamk.game.theone.ui
                 yield return new WaitForEndOfFrame();
             }
 
-            Debug.Log(cols.Length);
             if (iteration < (cols.Length - 2)) StartCoroutine(DeathFlicker(duration, cols, ++iteration));
         }
 

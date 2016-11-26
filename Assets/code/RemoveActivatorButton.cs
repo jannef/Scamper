@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using fi.tamk.game.theone.phys;
+using UnityEngine.Assertions.Comparers;
 
 namespace fi.tamk.game.theone.phys
 {
@@ -27,12 +28,12 @@ namespace fi.tamk.game.theone.phys
         [SerializeField] private float ContactInterruptionTolerance = 0.2f;
 
         private float _timeSinceContactInterruption = 0f;
-        private bool _deactivationPending = false;
+        private bool _isPressed = false;
 
         /// <summary>
         /// Collisions with acceptable activators based on tag currently active.
         /// </summary>
-        private int _collisions = 0;
+        [SerializeField] private int _collisions = 0;
 
         [SerializeField] private SpriteRenderer _spriteRenderer;
         private Sprite _originalSprite = null;
@@ -52,18 +53,18 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void Update()
         {
-            if (_deactivationPending)
+            if (_collisions == 0 && _isPressed)
             {
                 _timeSinceContactInterruption += SceneManager.Instance.DeltaTime;
-
                 if (_timeSinceContactInterruption > ContactInterruptionTolerance)
                 {
                     EndPressedState();
-                    _deactivationPending = false;
                 }
             }
-
-            if (!_deactivationPending) _timeSinceContactInterruption = 0f;
+            else
+            {
+                _timeSinceContactInterruption = 0f;
+            }
         }
 
         /// <summary>
@@ -73,15 +74,16 @@ namespace fi.tamk.game.theone.phys
         private void OnCollisionEnter2D(Collision2D col)
         {
             if (!CheckTags(col)) return;
-            _deactivationPending = false;
 
-            if (_collisions == 0)
+            if (_collisions == 0 && !_isPressed)
             {
                 foreach (var block in ActivatedBlocks)
                 {
                     if (block == null) continue;
                     block.OnRemoteActivation();
                 }
+
+                _isPressed = true;
             }
 
             _collisions++;
@@ -93,6 +95,7 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void EndPressedState()
         {
+            _isPressed = false;
             ChangeToSprite(_originalSprite);
 
             foreach (var block in ActivatedBlocks)
@@ -110,9 +113,6 @@ namespace fi.tamk.game.theone.phys
         {
             if (!CheckTags(col)) return;
             _collisions--;
-
-            if (_collisions != 0) return;
-            _deactivationPending = true;
         }
 
         /// <summary>
@@ -140,8 +140,7 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void OnLevelReset()
         {
-            ChangeToSprite(_originalSprite);
-            _collisions = 0;
+            _timeSinceContactInterruption = Mathf.Infinity;
         }
     }
 }
