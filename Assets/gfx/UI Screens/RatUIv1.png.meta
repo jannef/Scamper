@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: fd9db8525cd251e4f89fd599907f484f
-timeCreated: 1480081855
+timeCreated: 1480204644
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -92,39 +92,13 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: RatUIv1_2
-      rect:
-        serializedVersion: 2
-        x: 458
-        y: 812
-        width: 293
-        height: 119
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
       name: RatUIv1_4
       rect:
         serializedVersion: 2
-        x: 818
-        y: 807
-        width: 122
-        height: 122
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: RatUIv1_5
-      rect:
-        serializedVersion: 2
-        x: 458
-        y: 647
-        width: 293
-        height: 120
+        x: 453
+        y: 802
+        width: 487
+        height: 127
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,10 +108,10 @@ TextureImporter:
       name: RatUIv1_7
       rect:
         serializedVersion: 2
-        x: 818
-        y: 650
-        width: 122
-        height: 122
+        x: 453
+        y: 643
+        width: 487
+        height: 130
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
