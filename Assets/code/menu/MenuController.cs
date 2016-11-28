@@ -27,7 +27,7 @@ namespace fi.tamk.game.theone.menu
         /// Loads level based on unity scene index.
         /// </summary>
         /// <param name="whichLevel">Which scene to load.</param>
-        public static void LoadLevel(int whichLevel)
+        public void LoadLevel(int whichLevel)
         {
             if (whichLevel <= SceneManager.sceneCount)
             {
