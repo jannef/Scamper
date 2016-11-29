@@ -77,6 +77,11 @@ namespace fi.tamk.game.theone.ui
         [SerializeField] private float deathFlickerDuration = 0.43f;
 
         /// <summary>
+        /// The pause menu;
+        /// </summary>
+        [SerializeField] private GameObject PauseMenu;
+
+        /// <summary>
         /// State of the GUI.
         /// </summary>
         private GuiState _guiState = GuiState.Start;
@@ -95,11 +100,13 @@ namespace fi.tamk.game.theone.ui
                     SceneManager.Instance.Pause = false;
                     pauseImage.sprite = pauseSprite;
                     recordImage.sprite = recordSprite;
+                    PauseMenu.SetActive(false);
                     break;
                 case GuiState.Paused:
                     SceneManager.Instance.Pause = true;
                     pauseImage.sprite = playImageSprite;
                     recordImage.sprite = notReconrdingSprite;
+                    PauseMenu.SetActive(true);
                     break;
                 case GuiState.Start:
                 default:
@@ -210,6 +217,11 @@ namespace fi.tamk.game.theone.ui
         public void PausePlayButton()
         {
             ActivateState(_guiState == GuiState.Normal ? GuiState.Paused : GuiState.Normal);
+        }
+
+        public void BackToLevelSelect()
+        {
+            SceneManager.Instance.PersistentData.ToLevelSelect();
         }
     }
 }

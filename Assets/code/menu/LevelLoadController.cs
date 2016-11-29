@@ -186,5 +186,10 @@ namespace fi.tamk.game.theone.menu
             _changeToOnLoad = whichScene;
             SceneManager.LoadScene(0);
         }
+
+        public void ToLevelSelect()
+        {
+            ToScene(0);
+        }
     }
 }
