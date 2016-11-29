@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using fi.tamk.game.theone.phys;
 using fi.tamk.game.theone.utils;
+using UnityEngine.Events;
 
 namespace fi.tamk.game.theone.ui
 {
@@ -21,9 +22,9 @@ namespace fi.tamk.game.theone.ui
         [SerializeField, Range(0.1f, 10f)] private float TransitionTime = 0.3f;
 
         /// <summary>
-        /// Event that is fired when the state changes.
+        /// Learn to serialize delegates pls.
         /// </summary>
-        public event CallBack OnStateChange;
+        [SerializeField] private UnityEvent OnToggleEvent;
 
         /// <summary>
         /// State this toggle is currently in.
@@ -90,7 +91,7 @@ namespace fi.tamk.game.theone.ui
 
             _state = !_state;
             _inTransition = false;
-            if (OnStateChange != null) OnStateChange(_state);
+            OnToggleEvent.Invoke();
         }
 
         /// <summary>
