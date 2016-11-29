@@ -123,8 +123,6 @@ namespace fi.tamk.game.theone.phys
             float frac = 1;
             var col = FindObstacle(out other, out frac);
 
-            Debug.Log(col);
-
             _transform.position = FindCenterOfSprite(col);
 
             var scale = new Vector3((Origin.position - End.position).magnitude, 0, 0);
@@ -132,14 +130,12 @@ namespace fi.tamk.game.theone.phys
             shape.box = scale * frac;
 
             //_material.SetFloat("_WorldX", col.fraction);
-            if (!InterruptionHandled)
+            if (other != null && !InterruptionHandled)
             {
                 // Setting boolean before the function call is mandatory. Do not change.
                 InterruptionHandled = true;
                 BeginInterruption(other);
             }
-
-            
             
         }
 
