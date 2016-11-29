@@ -114,8 +114,18 @@ namespace fi.tamk.game.theone.phys
         {
             get
             {
-                if (Pause) return 0f;
-                return _deltaTime;
+                return Pause ? 0f : _deltaTime;
+            }
+        }
+
+        /// <summary>
+        /// Delta time for menu elements, that are not paused with the game.
+        /// </summary>
+        public float MenuDeltaTime
+        {
+            get
+            {
+                return Time.unscaledDeltaTime;;
             }
         }
 
