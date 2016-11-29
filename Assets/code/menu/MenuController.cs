@@ -29,18 +29,7 @@ namespace fi.tamk.game.theone.menu
         /// <param name="whichLevel">Which scene to load.</param>
         public void LoadLevel(int whichLevel)
         {
-            if (whichLevel <= SceneManager.sceneCount)
-            {
-                SceneManager.LoadScene(whichLevel);
-            }
-        }
-
-        /// <summary>
-        /// Starts a new game.
-        /// </summary>
-        public void NewGame()
-        {
-            LoadLevel(1);
+            _levelLoad.ToScene(whichLevel);
         }
 
         /// <summary>
@@ -57,11 +46,6 @@ namespace fi.tamk.game.theone.menu
         public void MainMenu()
         {
             LoadLevel(0);
-        }
-
-        public void TestLoadLevel()
-        {
-            fi.tamk.game.theone.phys.SceneManager.Instance.PersistentData.ToScene(2);
         }
     }
 }
