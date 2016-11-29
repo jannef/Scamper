@@ -7,13 +7,8 @@ namespace fi.tamk.game.theone.phys
     /// Manages a beam emitter object.
     /// </summary>
     /// <auth>Janne Forsell</auth>
-    public class BeamController : MonoBehaviour
+    public class BeamController : RemoteBase
     {
-        /// <summary>
-        /// Blocks this remote activator will affect.
-        /// </summary>
-        [SerializeField] private PGameBlock[] ActivatedBlocks;
-
         /// <summary>
         /// If this beam should kill the player.
         /// </summary>
@@ -58,7 +53,6 @@ namespace fi.tamk.game.theone.phys
         private void Awake()
         {
             _transform = transform;
-            //_material = GetComponent<Renderer>().material;
             _particleSystem = GetComponent<ParticleSystem>();
 
             SceneManager.Instance.LevelResetEvent += ResetBeam;
@@ -118,7 +112,6 @@ namespace fi.tamk.game.theone.phys
         { 
             _transform.rotation = Quaternion.AngleAxis(FindRotationOfSprite(End.position), Vector3.forward);
 
-            //_transform.localScale = new Vector3(scale, scale, 1);
             GameObject other = null;
             float frac = 1;
             var col = FindObstacle(out other, out frac);
@@ -129,7 +122,6 @@ namespace fi.tamk.game.theone.phys
             var shape = _particleSystem.shape;
             shape.box = scale * frac;
 
-            //_material.SetFloat("_WorldX", col.fraction);
             if (other != null && !InterruptionHandled)
             {
                 // Setting boolean before the function call is mandatory. Do not change.
@@ -151,11 +143,7 @@ namespace fi.tamk.game.theone.phys
                 return;
             }
 
-            foreach (var block in ActivatedBlocks)
-            {
-                if (block == null) continue;
-                block.OnRemoteActivation();
-            }
+            ActivateBlocks();
         }
 
         /// <summary>
@@ -163,11 +151,17 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void EndInterruption()
         {
-            foreach (var block in ActivatedBlocks)
-            {
-                if (block == null) continue;
-                block.OnRemoteActivationActionReset();
-            }
+            DeactivateBlocks();
+        }
+
+        public void OnRemoteActivation()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnRemoteActivationActionReset()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
