@@ -47,5 +47,10 @@ namespace fi.tamk.game.theone.menu
         {
             LoadLevel(0);
         }
+
+        public void LevelSelect()
+        {
+            LoadLevel(1);
+        }
     }
 }

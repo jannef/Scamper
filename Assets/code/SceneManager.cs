@@ -144,8 +144,8 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void Awake()
         {
-            //TimerPhase = 0f;
             GameObjectMap = new Dictionary<GameObject, PGameBlock>();
+
             PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
             PersistentData = FindObjectOfType<LevelLoadController>();
 
