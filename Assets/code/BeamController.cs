@@ -47,6 +47,8 @@ namespace fi.tamk.game.theone.phys
 
         private ParticleSystem _particleSystem;
 
+        [SerializeField] private bool IsActive = true;
+
         /// <summary>
         /// Gets references to objects.
         /// </summary>
@@ -113,20 +115,29 @@ namespace fi.tamk.game.theone.phys
             _transform.rotation = Quaternion.AngleAxis(FindRotationOfSprite(End.position), Vector3.forward);
 
             GameObject other = null;
-            float frac = 1;
-            var col = FindObstacle(out other, out frac);
 
-            _transform.position = FindCenterOfSprite(col);
+            if (IsActive)
+            {
+                float frac = 1;
+                var col = FindObstacle(out other, out frac);
 
-            var scale = new Vector3((Origin.position - End.position).magnitude, 0, 0);
-            var shape = _particleSystem.shape;
-            shape.box = scale * frac;
+                _transform.position = FindCenterOfSprite(col);
 
-            if (other != null && !InterruptionHandled)
+                var scale = new Vector3((Origin.position - End.position).magnitude, 0, 0);
+                var shape = _particleSystem.shape;
+                shape.box = scale*frac;
+            }
+
+            if (!InterruptionHandled && other != null)
             {
                 // Setting boolean before the function call is mandatory. Do not change.
                 InterruptionHandled = true;
                 BeginInterruption(other);
+            }
+
+            if (InterruptionHandled && other == null)
+            {
+                EndInterruption();   
             }
             
         }
@@ -152,16 +163,19 @@ namespace fi.tamk.game.theone.phys
         private void EndInterruption()
         {
             DeactivateBlocks();
+            InterruptionHandled = false;
         }
 
-        public void OnRemoteActivation()
+        public override void OnRemoteActivation()
         {
-            throw new System.NotImplementedException();
+            IsActive = false;
+            _particleSystem.Stop();
         }
 
-        public void OnRemoteActivationActionReset()
+        public override void OnRemoteActivationActionReset()
         {
-            throw new System.NotImplementedException();
+            IsActive = true;
+            _particleSystem.Play();
         }
     }
 }
