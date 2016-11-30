@@ -8,7 +8,7 @@ namespace fi.tamk.game.theone.phys
     /// Remote leaver activator.
     /// </summary>
     /// <auth>Janne Forsell</auth>
-    public class RemoteActivatorLever : MonoBehaviour
+    public class RemoteActivatorLever : RemoteBase
     {
         /// <summary>
         /// Angle of the leaver at the moment.
@@ -44,11 +44,6 @@ namespace fi.tamk.game.theone.phys
         [SerializeField] private Sprite PushedStateSprite;
 
         /// <summary>
-        /// Blocks this remote activator will affect.
-        /// </summary>
-        [SerializeField] private PGameBlock[] ActivatedBlocks;
-
-        /// <summary>
         /// Has this lever been activated already.
         /// </summary>
         private bool _hasActivated = false;
@@ -76,11 +71,7 @@ namespace fi.tamk.game.theone.phys
             _hasActivated = true;
             ChangeToSprite(PushedStateSprite);
 
-            foreach (var block in ActivatedBlocks)
-            {
-                if (block == null) continue;
-                block.OnRemoteActivation();
-            }
+            ActivateBlocks();
         }
 
         /// <summary>
@@ -99,14 +90,7 @@ namespace fi.tamk.game.theone.phys
         private void ResetLever()
         {
             ChangeToSprite(_originalSprite);
-            if (_hasActivated)
-            {
-                foreach (var block in ActivatedBlocks)
-                {
-                    if (block == null) continue;
-                    block.OnRemoteActivationActionReset();
-                }
-            }
+            if (_hasActivated) DeactivateBlocks();
             _hasActivated = false;
         }
     }

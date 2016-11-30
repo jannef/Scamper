@@ -14,7 +14,7 @@ namespace fi.tamk.game.theone.phys
     /// </summary>
     /// <auth>Janne Forsell</auth>
     [RequireComponent(typeof(Rigidbody2D))]
-    public class PGameBlock : MonoBehaviour
+    public class PGameBlock : RemoteBehaviour
     {
         /// <summary>
         /// Types of behaviours for objects on interaction.
@@ -46,6 +46,9 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         public OnBoxClickAction OnClickAction = OnBoxClickAction.Impulse;
 
+        /// <summary>
+        /// Which action should this object perform when remotely activating.
+        /// </summary>
         public OnRemoteActivationAction OnRemoteAction = OnRemoteActivationAction.None;
 
         /// <summary>
@@ -190,7 +193,7 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// Handles remote activation of this block by switch, button or such.
         /// </summary>
-        public void OnRemoteActivation(float duration = 0)
+        public override void OnRemoteActivation()
         {
             if (_remotelyActivated) return;
             _remotelyActivated = true;
@@ -214,32 +217,12 @@ namespace fi.tamk.game.theone.phys
                 case OnRemoteActivationAction.None:
                     break;
             }
-
-            if (duration > 0)
-            {
-                StartCoroutine(RemoteActivationReset(duration));
-            }
-        }
-
-        /// <summary>
-        /// Calls resetter after sufficent time has passed.
-        /// </summary>
-        /// <param name="duration">How long should be waited before remote resets.</param>
-        /// <returns>Not used.</returns>
-        private IEnumerator RemoteActivationReset(float duration)
-        {
-            if (!_remoteDeactivationInProgress) yield break;
-
-            _remoteDeactivationInProgress = true;
-            yield return new WaitForSeconds(duration);
-            OnRemoteActivationActionReset();
-            _remoteDeactivationInProgress = false;
         }
 
         /// <summary>
         /// Resets state of the block after remote activation is finished.
         /// </summary>
-        public void OnRemoteActivationActionReset()
+        public override void OnRemoteActivationActionReset()
         {
             switch (OnRemoteAction)
             {

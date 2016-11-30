@@ -7,8 +7,6 @@ using UnityEngine.Events;
 
 namespace fi.tamk.game.theone.ui
 {
-    public delegate void CallBack(bool output);
-
     public class ToggleButton : MonoBehaviour
     {
         /// <summary>

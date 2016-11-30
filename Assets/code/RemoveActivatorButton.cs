@@ -10,13 +10,8 @@ namespace fi.tamk.game.theone.phys
     /// blocks.
     /// </summary>
     /// <auth>Janne Forsell</auth>
-    public class RemoveActivatorButton : MonoBehaviour
+    public class RemoveActivatorButton : RemoteBase
     {
-        /// <summary>
-        /// Blocks this remote activator will affect.
-        /// </summary>
-        [SerializeField] private PGameBlock[] ActivatedBlocks;
-
         /// <summary>
         /// Alternate sprite to use when in pushed state.
         /// </summary>
@@ -77,12 +72,7 @@ namespace fi.tamk.game.theone.phys
 
             if (_collisions == 0 && !_isPressed)
             {
-                foreach (var block in ActivatedBlocks)
-                {
-                    if (block == null) continue;
-                    block.OnRemoteActivation();
-                }
-
+                ActivateBlocks();
                 _isPressed = true;
             }
 
@@ -98,11 +88,7 @@ namespace fi.tamk.game.theone.phys
             _isPressed = false;
             ChangeToSprite(_originalSprite);
 
-            foreach (var block in ActivatedBlocks)
-            {
-                if (block == null) continue;
-                block.OnRemoteActivationActionReset();
-            }
+            DeactivateBlocks();
         }
 
         /// <summary>
