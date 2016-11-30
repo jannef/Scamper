@@ -11,7 +11,7 @@ namespace fi.tamk.game.theone.menu
     public class MenuController : MonoBehaviour
     {
         /// <summary>
-        /// Reference to persitent data container.
+        /// Reference to persistent data container.
         /// </summary>
         private LevelLoadController _levelLoad;
 
@@ -51,6 +51,11 @@ namespace fi.tamk.game.theone.menu
         public void LevelSelect()
         {
             LoadLevel(1);
+        }
+
+        public void InfoScreen()
+        {
+            LoadLevel(6);
         }
     }
 }
