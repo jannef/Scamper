@@ -15,6 +15,8 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         private LevelLoadController _levelLoad;
 
+        private int _levelIndex;
+
         /// <summary>
         /// Finds LevelLoadController for persistent data. Start is the right place so multiples of that type are already gone.
         /// </summary>
@@ -56,6 +58,20 @@ namespace fi.tamk.game.theone.menu
         public void InfoScreen()
         {
             LoadLevel(6);
+        }
+
+        public void CheckLockedLevels()
+        {
+            for (int i = 1; i < LockLevel.levels; i++)
+            {
+                _levelIndex = (i + 1);
+                if ((PlayerPrefs.GetInt("level" + _levelIndex.ToString())) == 1)
+                {
+                    GameObject.Find("LockedDay" + (i + 1)).SetActive(false);
+                    GameObject.Find("Day" + (i + 1)).SetActive(true);
+                    Debug.Log("Unlocked");
+                }
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ namespace fi.tamk.game.theone.phys
     /// Level end checkpoint.
     /// </summary>
     /// <auth>Janne Forsell</auth>
-    public class LevelEndCheckpoin : MonoBehaviour {
+    public class LevelEndCheckpoint : MonoBehaviour {
         /// <summary>
         /// To which level to jump into.
         /// </summary>
