@@ -16,16 +16,13 @@ namespace fi.tamk.game.theone.menu
         private LevelLoadController _levelLoad;
 
         private int _levelIndex;
-
-        protected string currentLevel;
-
+        
         /// <summary>
         /// Finds LevelLoadController for persistent data. Start is the right place so multiples of that type are already gone.
         /// </summary>
         private void Start()
         {
             _levelLoad = FindObjectOfType<LevelLoadController>();
-            currentLevel = SceneManager.GetActiveScene().name;
 
             for (int i = 0; i <= LockLevel.levels; i++)
             {
@@ -76,26 +73,14 @@ namespace fi.tamk.game.theone.menu
 
         public void CheckLockedLevels()
         {
-            for (int i = 1; i < LockLevel.levels; i++)
+            for (int j = 1; j < LockLevel.levels; j++)
             {
-                _levelIndex = (i + 1);
+                _levelIndex = (j + 1);
                 if ((PlayerPrefs.GetInt("level" + _levelIndex.ToString())) == 1)
                 {
-                    GameObject.Find("LockedDay" + (i + 1)).SetActive(false);
-                    GameObject.Find("Day" + (i + 1)).SetActive(true);
+                    GameObject.Find("LockedDay" + (j + 1)).SetActive(false);
+                    GameObject.Find("Day" + (j + 1)).SetActive(true);
                     Debug.Log("Unlocked");
-                }
-            }
-        }
-
-        protected void UnlockLevels()
-        {
-            for (int i = 0; i < LockLevel.levels; i++)
-            {
-                if (currentLevel == "Day" + (i + 1).ToString() + "_playerfriendly")
-                {
-                    _levelIndex = (i + 1);
-                    PlayerPrefs.SetInt("level" + _levelIndex.ToString(), 1);
                 }
             }
         }

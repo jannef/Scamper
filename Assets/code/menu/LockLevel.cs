@@ -9,7 +9,7 @@ public class LockLevel : MonoBehaviour {
     
     void Start()
     {
-        PlayerPrefs.DeleteAll();
+        // PlayerPrefs.DeleteAll();
         LockLevels();
     }
 
