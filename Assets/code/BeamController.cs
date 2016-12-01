@@ -128,7 +128,7 @@ namespace fi.tamk.game.theone.phys
                 shape.box = scale*frac;
             }
 
-            if (!InterruptionHandled && other != null)
+            if (!InterruptionHandled && other != null || other == SceneManager.Instance.PlayerGameObject)
             {
                 // Setting boolean before the function call is mandatory. Do not change.
                 InterruptionHandled = true;
