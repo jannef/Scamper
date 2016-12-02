@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 using System.IO;
 
 namespace fi.tamk.game.theone.menu
@@ -22,7 +22,7 @@ namespace fi.tamk.game.theone.menu
         /// <summary>
         /// Persistent data trough play sessions.
         /// </summary>
-        private SaveData _saveData = null;
+        [SerializeField] private SaveData _saveData = null;
 
         /// <summary>
         /// If the save file exists or not.
@@ -49,14 +49,14 @@ namespace fi.tamk.game.theone.menu
             /// <summary>
             /// Dictionary of levels and their completion status.
             /// </summary>
-            public readonly Dictionary<int, bool> LevelsCompleted = null;
+            public Dictionary<int, bool> LevelsCompleted = new Dictionary<int, bool>();
 
             /// <summary>
             /// Which level was last played. Continue and next level rely on this.
             /// </summary>
             public int LastLevelPlayed = 0;
 
-            public Dictionary<int, bool> LevelsLocked = null;
+            public Dictionary<int, bool> LevelsLocked = new Dictionary<int, bool>();
 
             /// <summary>
             /// Constructor for the persistent data struct.
@@ -64,11 +64,6 @@ namespace fi.tamk.game.theone.menu
             /// <param name="howManyLevels"></param>
             public SaveData(int howManyLevels)
             {
-                LevelsCompleted = new Dictionary<int, bool>();
-
-                LevelsLocked = new Dictionary<int, bool>();
-
-                // Populates the dictionary based on how many scenes there are in the project.
                 // TODO: rethink this. Title screen, menu, level select and scoring screen all eat up scenes
                 // so might need to be adjusted a little.
                 for (int i = 0; i < howManyLevels; i++)
@@ -98,6 +93,7 @@ namespace fi.tamk.game.theone.menu
             try
             {
                 _saveData = LoadGameData();
+
             }
             catch (Exception e)
             {
@@ -130,10 +126,10 @@ namespace fi.tamk.game.theone.menu
 
             // read save data
             byte[] data = File.ReadAllBytes(SaveFile);
-            var formatter = new BinaryFormatter();
+            var formatter = new DataContractSerializer(typeof(SaveData));
             var stream = new MemoryStream(data);
 
-            return (SaveData)(formatter.Deserialize(stream));
+            return (SaveData)(formatter.ReadObject(stream));
         }
 
         /// <summary>
@@ -141,16 +137,15 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         private void SaveGameData()
         {
-            var formatter = new BinaryFormatter();
+            var formatter = new DataContractSerializer(typeof(SaveData));
             var stream = new MemoryStream();
 
-            formatter.Serialize(stream, _saveData);
+            formatter.WriteObject(stream, _saveData);
             File.WriteAllBytes(SaveFile, stream.GetBuffer());
         }
 
         public void InitializeLevelLocks()
         {
-            Debug.Log("Initializing level locks");
             for (int j = 0; j < LockLevel.levels; j++)
             {
                 _saveData.LevelsLocked.Add(j, true);

@@ -23,7 +23,7 @@ namespace fi.tamk.game.theone.menu
         /// <summary>
         /// Finds LevelLoadController for persistent data. Start is the right place so multiples of that type are already gone.
         /// </summary>
-        private void Start()
+        private void Awake()
         {
             _levelLoad = FindObjectOfType<LevelLoadController>();
 
@@ -80,6 +80,7 @@ namespace fi.tamk.game.theone.menu
             {
                 _levelIndex = (j + 1);
                 bool locked = true;
+
                 if (_levelLoad.GetLevelsLocked().TryGetValue(_levelIndex, out locked))
                 {
                     GameObject.Find("LockedDay" + (j + 1)).SetActive(false);
