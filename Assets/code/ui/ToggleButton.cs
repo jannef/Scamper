@@ -22,7 +22,9 @@ namespace fi.tamk.game.theone.ui
         /// <summary>
         /// Learn to serialize delegates pls.
         /// </summary>
-        [SerializeField] private UnityEvent OnToggleEvent;
+        [SerializeField] private UnityEvent OnActivate;
+
+        [SerializeField] private UnityEvent OnDeactivate;
 
         /// <summary>
         /// State this toggle is currently in.
@@ -89,7 +91,15 @@ namespace fi.tamk.game.theone.ui
 
             _state = !_state;
             _inTransition = false;
-            OnToggleEvent.Invoke();
+
+            if (_state)
+            {
+                OnActivate.Invoke();
+            }
+            else
+            {
+                OnDeactivate.Invoke();
+            }
         }
 
         /// <summary>
