@@ -17,11 +17,9 @@ namespace fi.tamk.game.theone.phys
         /// <param name="other"></param>
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject == SceneManager.Instance.PlayerGameObject)
-            {
-               LevelLoadController.Instance.ToScene(7);
-            }
+            if (other.gameObject != SceneManager.Instance.PlayerGameObject) return;
+            LevelLoadController.Instance.CompleteLevel(LevelLoadController.Instance.LastLevelStarted);
+            LevelLoadController.Instance.ToScene(7);
         }
-
     }
 }

@@ -16,6 +16,15 @@ namespace fi.tamk.game.theone.menu
     /// <auth>Janne Forsell</auth>
     public class LevelLoadController : Singleton<LevelLoadController>
     {
+        public const int NumberOfLevels = 4;
+
+        public int LastLevelStarted
+        {
+            get { return _saveData.LastLevelPlayed; }
+
+            set { _saveData.LastLevelPlayed = value; }
+        }
+
         /// <summary>
         /// Save file filename.
         /// </summary>
@@ -34,6 +43,12 @@ namespace fi.tamk.game.theone.menu
             get { return File.Exists(SaveFile); }
         }
 
+        public void ResetSave()
+        {
+            _saveData = new SaveData(NumberOfLevels);
+            SaveGameData();
+        }
+
         /// <summary>
         /// Full path to save file.
         /// </summary>
@@ -49,11 +64,6 @@ namespace fi.tamk.game.theone.menu
         private class SaveData
         {
             /// <summary>
-            /// Dictionary of levels and their completion status.
-            /// </summary>
-            public Dictionary<int, bool> LevelsCompleted = new Dictionary<int, bool>();
-
-            /// <summary>
             /// Which level was last played. Continue and next level rely on this.
             /// </summary>
             public int LastLevelPlayed = 0;
@@ -66,14 +76,10 @@ namespace fi.tamk.game.theone.menu
             /// <param name="howManyLevels"></param>
             public SaveData(int howManyLevels)
             {
-                // TODO: rethink this. Title screen, menu, level select and scoring screen all eat up scenes
-                // so might need to be adjusted a little.
                 for (int i = 0; i < howManyLevels; i++)
                 {
-                    LevelsCompleted.Add(i, false);
-                    LevelsLocked.Add(i, false);
+                    LevelsLocked.Add(i, i != 0);
                 }
-                
             }
         }
 
@@ -83,19 +89,19 @@ namespace fi.tamk.game.theone.menu
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
+
             try
             {
                 _saveData = LoadGameData();
-                if (_saveData.LevelsCompleted == null || _saveData.LevelsLocked == null) throw new Exception("Dun goofed with dictionaries again!");
+                if (_saveData.LevelsLocked == null) throw new Exception("Dun goofed with dictionaries again!");
 
             }
             catch (Exception e)
             {
                 Debug.Log(e);
-                _saveData = new SaveData(SceneManager.sceneCount);
+                _saveData = new SaveData(LevelLoadController.NumberOfLevels);
                 SaveGameData();
             }
-
         }
 
         /// <summary>
@@ -104,10 +110,8 @@ namespace fi.tamk.game.theone.menu
         /// <returns></returns>
         private SaveData LoadGameData()
         {
-            // return fresh save data
             if (!SaveExists) return new SaveData(SceneManager.sceneCount);
 
-            // read save data
             byte[] data = File.ReadAllBytes(SaveFile);
             var formatter = new DataContractSerializer(typeof(SaveData));
             var stream = new MemoryStream(data);
@@ -127,48 +131,15 @@ namespace fi.tamk.game.theone.menu
             File.WriteAllBytes(SaveFile, stream.GetBuffer());
         }
 
-        public void InitializeLevelLocks()
-        {
-            for (int j = 0; j < LockLevel.levels; j++)
-            {
-                _saveData.LevelsLocked.Add(j, true);
-            }
-        }
-
         /// <summary>
         /// Marks a given level completed.
         /// </summary>
         /// <param name="whichLevel">Which level to mark completed. This is a unity project scene index number.</param>
         public void CompleteLevel(int whichLevel)
         {
-            if (_saveData.LevelsCompleted.ContainsKey(whichLevel))
+            if (_saveData.LevelsLocked.ContainsKey(whichLevel))
             {
-                _saveData.LevelsCompleted[whichLevel] = true;
-            }
-        }
-
-        /// <summary>
-        /// Sets last played scene.
-        /// </summary>
-        /// <param name="toWhichLevel">To what to set the last played scene.</param>
-        public void SetLastPlayed(int toWhichLevel)
-        {
-            _saveData.LastLevelPlayed = toWhichLevel;
-        }
-
-        /// <summary>
-        /// Sets locked status of the given level.
-        /// </summary>
-        /// <param name="levelIndex">Which level's lock status to modify.</param>
-        /// <param name="locked">If the level should be locked or not.</param>
-        public void LevelLocks(int levelIndex, bool locked)
-        {
-            for (int j = 0; j < LockLevel.levels; j++)
-            {
-                if (j == levelIndex)
-                {
-                    _saveData.LevelsLocked.Add(j, locked);
-                }
+                _saveData.LevelsLocked[whichLevel] = false;
             }
         }
 
@@ -191,6 +162,12 @@ namespace fi.tamk.game.theone.menu
         public void ToScene(int whichScene)
         {
             SceneManager.LoadScene(whichScene);
+        }
+
+        public void ToLevel(int whichLevel)
+        {
+            LastLevelStarted = whichLevel;
+            ToScene(whichLevel + 1);
         }
 
         public void ToLevelSelect()
