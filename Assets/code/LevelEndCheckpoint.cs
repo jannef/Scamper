@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 namespace fi.tamk.game.theone.phys
@@ -7,11 +8,7 @@ namespace fi.tamk.game.theone.phys
     /// Level end checkpoint.
     /// </summary>
     /// <auth>Janne Forsell</auth>
-    public class LevelEndCheckpoin : MonoBehaviour {
-        /// <summary>
-        /// To which level to jump into.
-        /// </summary>
-        [SerializeField] private int ToWhichLevel = 0;
+    public class LevelEndCheckpoint : MonoBehaviour {
 
         /// <summary>
         /// Changes to ToWhichLevel scene (via a menu screen)
@@ -21,8 +18,9 @@ namespace fi.tamk.game.theone.phys
         {
             if (other.gameObject == SceneManager.Instance.PlayerGameObject)
             {
-                SceneManager.Instance.PersistentData.ToScene(ToWhichLevel);
+                SceneManager.Instance.PersistentData.ToScene(7);
             }
         }
+
     }
 }
