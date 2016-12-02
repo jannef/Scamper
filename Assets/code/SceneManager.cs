@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using fi.tamk.game.theone.utils;
 using fi.tamk.game.theone.menu;
+using UnityEngine.SceneManagement;
 
 namespace fi.tamk.game.theone.phys
 {
@@ -137,19 +138,20 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// Map to get (c#)object when we know gameObject, to avoid runtime reflections
         /// </summary>
-        public Dictionary<GameObject, PGameBlock> GameObjectMap;
+        public Dictionary<GameObject, PGameBlock> GameObjectMap = new Dictionary<GameObject, PGameBlock>();
 
         /// <summary>
         /// Sets up GameObjectMap and finds reference to player.
         /// </summary>
         private void Awake()
         {
-            GameObjectMap = new Dictionary<GameObject, PGameBlock>();
+            OnSceneChange();
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += OnSceneChange();
+        }
 
+        private void OnSceneChange(Scene prev, Scene next)
+        {
             PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
-            PersistentData = FindObjectOfType<LevelLoadController>();
-
-            if (PersistentData == null) UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         }
 
         /// <summary>

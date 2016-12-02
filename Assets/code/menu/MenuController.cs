@@ -11,11 +11,6 @@ namespace fi.tamk.game.theone.menu
     public class MenuController : MonoBehaviour
     {
         /// <summary>
-        /// Reference to persistent data container.
-        /// </summary>
-        private LevelLoadController _levelLoad;
-
-        /// <summary>
         /// Index number of a certain level.
         /// </summary>
         private int _levelIndex;
@@ -25,7 +20,6 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         private void Awake()
         {
-            _levelLoad = FindObjectOfType<LevelLoadController>();
 
             for (int i = 0; i <= LockLevel.levels; i++)
             {
@@ -40,7 +34,7 @@ namespace fi.tamk.game.theone.menu
         /// <param name="whichLevel">Which scene to load.</param>
         public void LoadLevel(int whichLevel)
         {
-            _levelLoad.ToScene(whichLevel);
+            LevelLoadController.Instance.ToScene(whichLevel);
         }
 
         /// <summary>
@@ -81,7 +75,7 @@ namespace fi.tamk.game.theone.menu
                 _levelIndex = (j + 1);
                 bool locked = true;
 
-                if (_levelLoad.GetLevelsLocked().TryGetValue(_levelIndex, out locked))
+                if (LevelLoadController.Instance.GetLevelsLocked().TryGetValue(_levelIndex, out locked))
                 {
                     GameObject.Find("LockedDay" + (j + 1)).SetActive(false);
                     GameObject.Find("Day" + (j + 1) + "Button").SetActive(true);

@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using System.Runtime.Serialization;
 using System.IO;
+using System.Linq.Expressions;
+using fi.tamk.game.theone.utils;
 
 namespace fi.tamk.game.theone.menu
 {
@@ -12,7 +14,7 @@ namespace fi.tamk.game.theone.menu
     /// Handles persistent data and saving and loading of scenes.
     /// </summary>
     /// <auth>Janne Forsell</auth>
-    public class LevelLoadController : MonoBehaviour
+    public class LevelLoadController : Singleton<LevelLoadController>
     {
         /// <summary>
         /// Save file filename.
@@ -69,6 +71,7 @@ namespace fi.tamk.game.theone.menu
                 for (int i = 0; i < howManyLevels; i++)
                 {
                     LevelsCompleted.Add(i, false);
+                    LevelsLocked.Add(i, false);
                 }
                 
             }
@@ -79,20 +82,10 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         private void Awake()
         {
-            var found = FindObjectsOfType<LevelLoadController>();
-
-            if (found.Any(f => f != this))
-            {
-                Destroy(this.gameObject);
-                return;
-            }
-
-            DontDestroyOnLoad(this);
-            SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
-            
             try
             {
                 _saveData = LoadGameData();
+                if (_saveData.LevelsCompleted == null || _saveData.LevelsLocked == null) throw new Exception("Dun goofed with dictionaries again!");
 
             }
             catch (Exception e)
@@ -100,19 +93,8 @@ namespace fi.tamk.game.theone.menu
                 Debug.Log(e);
                 _saveData = new SaveData(SceneManager.sceneCount);
                 SaveGameData();
-
             }
 
-        }
-
-        /// <summary>
-        /// When a scene is loaded unity fires event this is subscribed (done in Awake()) to.
-        /// </summary>
-        /// <param name="arg0">Not used.</param>
-        /// <param name="loadSceneMode">Not used.</param>
-        private void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode loadSceneMode)
-        {
-            fi.tamk.game.theone.phys.SceneManager.TurnOffQuitFlag();
         }
 
         /// <summary>

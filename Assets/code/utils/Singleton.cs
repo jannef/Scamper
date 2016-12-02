@@ -32,11 +32,6 @@ namespace fi.tamk.game.theone.utils
         {
             get
             {
-                if (_quit)
-                {
-                    return null;
-                }
-
                 lock (_lock)
                 {
                     if (_instance != null) return _instance;
@@ -48,14 +43,7 @@ namespace fi.tamk.game.theone.utils
                         var singleton = new GameObject();
                         _instance = singleton.AddComponent<T>();
                         singleton.name = "Singleton instance of " + typeof(T).ToString();
-                        /*
-                            DontDestroyOnLoad(singleton);
-
-                            Disabled because we need to have singletons derive from this class one scene lifetime.
-                            It was an oversight to rely on singleton at the start of the development. Changes to
-                            concept forced to this workaround or rewrite. Due lack of time/energy decided to settle
-                            on workaround.
-                        */
+                        DontDestroyOnLoad(singleton);
                     }
                     else
                     {
@@ -68,23 +56,6 @@ namespace fi.tamk.game.theone.utils
                     return _instance;
                 }
             }
-        }
-
-        /// <summary>
-        /// Sets "flag" to signal application is quitting.
-        /// </summary>
-        public void OnDestroy()
-        {
-            _quit = true;
-        }
-
-        /// <summary>
-        /// Turns of quitting flag, as it is mistakenly raised on scene change. This is due a workaround 
-        /// discussed in comment block above (@ T Instance).
-        /// </summary>
-        public static void TurnOffQuitFlag()
-        {
-            _quit = false;
         }
     }
 }
