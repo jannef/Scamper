@@ -1,27 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LockLevel : MonoBehaviour {
+namespace fi.tamk.game.theone.menu
+{
 
-    public static int levels = 4;
-
-    private int levelIndex;
-    
-    void Start()
+    public class LockLevel : MonoBehaviour
     {
-        // PlayerPrefs.DeleteAll();
-        LockLevels();
-    }
 
-    void LockLevels()
-    {
-        for (int i = 0; i < levels; i++)
+        public const int levels = 4;
+
+        private LevelLoadController _levelLoad;
+
+        private int levelIndex;
+
+        private void Start()
         {
-            levelIndex = (i + 1);
+            _levelLoad = FindObjectOfType<LevelLoadController>();
+            // PlayerPrefs.DeleteAll();
+            LockLevels();
+        }
 
-            if (!PlayerPrefs.HasKey("level" + levelIndex.ToString()))
+        void LockLevels()
+        {
+            for (int i = 0; i < levels; i++)
             {
-                PlayerPrefs.SetInt("level" + levelIndex.ToString(), 0);
+                levelIndex = (i + 1);
+
+                _levelLoad.LevelLocks(levelIndex, true);
+
             }
         }
     }

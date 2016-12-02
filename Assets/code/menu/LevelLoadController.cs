@@ -56,6 +56,8 @@ namespace fi.tamk.game.theone.menu
             /// </summary>
             public int LastLevelPlayed = 0;
 
+            public Dictionary<int, bool> LevelsLocked = null;
+
             /// <summary>
             /// Constructor for the persistent data struct.
             /// </summary>
@@ -64,6 +66,8 @@ namespace fi.tamk.game.theone.menu
             {
                 LevelsCompleted = new Dictionary<int, bool>();
 
+                LevelsLocked = new Dictionary<int, bool>();
+
                 // Populates the dictionary based on how many scenes there are in the project.
                 // TODO: rethink this. Title screen, menu, level select and scoring screen all eat up scenes
                 // so might need to be adjusted a little.
@@ -71,6 +75,7 @@ namespace fi.tamk.game.theone.menu
                 {
                     LevelsCompleted.Add(i, false);
                 }
+                
             }
         }
 
@@ -101,7 +106,7 @@ namespace fi.tamk.game.theone.menu
                 SaveGameData();
 
             }
-            
+
         }
 
         /// <summary>
@@ -143,6 +148,15 @@ namespace fi.tamk.game.theone.menu
             File.WriteAllBytes(SaveFile, stream.GetBuffer());
         }
 
+        public void InitializeLevelLocks()
+        {
+            Debug.Log("Initializing level locks");
+            for (int j = 0; j < LockLevel.levels; j++)
+            {
+                _saveData.LevelsLocked.Add(j, true);
+            }
+        }
+
         /// <summary>
         /// Marks a given level completed.
         /// </summary>
@@ -165,6 +179,31 @@ namespace fi.tamk.game.theone.menu
         }
 
         /// <summary>
+        /// Sets locked status of the given level.
+        /// </summary>
+        /// <param name="levelIndex">Which level's lock status to modify.</param>
+        /// <param name="locked">If the level should be locked or not.</param>
+        public void LevelLocks(int levelIndex, bool locked)
+        {
+            for (int j = 0; j < LockLevel.levels; j++)
+            {
+                if (j == levelIndex)
+                {
+                    _saveData.LevelsLocked.Add(j, locked);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns a dictionary holding data on levels locked.
+        /// </summary>
+        /// <returns>Dictionary holding data on levels locked.</returns>
+        public Dictionary<int, bool> GetLevelsLocked()
+        {
+            return _saveData.LevelsLocked;
+        }
+        
+        /// <summary>
         /// Calls SaveGameData() to save persistent data when the app is closing.
         /// </summary>
         private void OnApplicationQuit()
@@ -179,7 +218,7 @@ namespace fi.tamk.game.theone.menu
 
         public void ToLevelSelect()
         {
-            ToScene(0);
+            ToScene(1);
         }
     }
 }
