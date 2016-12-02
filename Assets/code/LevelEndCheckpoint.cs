@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using fi.tamk.game.theone.menu;
 
 namespace fi.tamk.game.theone.phys
 {
@@ -18,7 +19,7 @@ namespace fi.tamk.game.theone.phys
         {
             if (other.gameObject == SceneManager.Instance.PlayerGameObject)
             {
-                SceneManager.Instance.PersistentData.ToScene(7);
+               LevelLoadController.Instance.ToScene(7);
             }
         }
 

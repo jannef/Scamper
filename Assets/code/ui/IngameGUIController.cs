@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Text;
+using fi.tamk.game.theone.menu;
 using UnityEngine.UI;
 using fi.tamk.game.theone.phys;
 
@@ -221,7 +222,7 @@ namespace fi.tamk.game.theone.ui
 
         public void BackToLevelSelect()
         {
-            SceneManager.Instance.PersistentData.ToLevelSelect();
+            LevelLoadController.Instance.ToLevelSelect();
         }
     }
 }

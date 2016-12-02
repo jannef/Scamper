@@ -43,7 +43,6 @@ namespace fi.tamk.game.theone.utils
                         var singleton = new GameObject();
                         _instance = singleton.AddComponent<T>();
                         singleton.name = "Singleton instance of " + typeof(T).ToString();
-                        DontDestroyOnLoad(singleton);
                     }
                     else
                     {

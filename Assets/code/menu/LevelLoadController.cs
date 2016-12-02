@@ -82,6 +82,7 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         private void Awake()
         {
+            DontDestroyOnLoad(gameObject);
             try
             {
                 _saveData = LoadGameData();
@@ -174,10 +175,9 @@ namespace fi.tamk.game.theone.menu
         /// <summary>
         /// Returns a dictionary holding data on levels locked.
         /// </summary>
-        /// <returns>Dictionary holding data on levels locked.</returns>
-        public Dictionary<int, bool> GetLevelsLocked()
+        public Dictionary<int, bool> LevelsLocked
         {
-            return _saveData.LevelsLocked;
+            get { return _saveData.LevelsLocked; }
         }
         
         /// <summary>

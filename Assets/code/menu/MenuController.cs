@@ -75,7 +75,7 @@ namespace fi.tamk.game.theone.menu
                 _levelIndex = (j + 1);
                 bool locked = true;
 
-                if (LevelLoadController.Instance.GetLevelsLocked().TryGetValue(_levelIndex, out locked))
+                if (LevelLoadController.Instance.LevelsLocked.TryGetValue(_levelIndex, out locked))
                 {
                     GameObject.Find("LockedDay" + (j + 1)).SetActive(false);
                     GameObject.Find("Day" + (j + 1) + "Button").SetActive(true);

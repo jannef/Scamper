@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using fi.tamk.game.theone.utils;
 using fi.tamk.game.theone.menu;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace fi.tamk.game.theone.phys
@@ -18,8 +19,6 @@ namespace fi.tamk.game.theone.phys
     /// /// <auth>Janne Forsell</auth>
     public class SceneManager : Singleton<SceneManager>
     {
-        public LevelLoadController PersistentData;
-
         /// <summary>
         /// Pause property.
         /// </summary>
@@ -54,7 +53,12 @@ namespace fi.tamk.game.theone.phys
         /// <summary>
         /// Reference to the player rat game object.
         /// </summary>
-        public GameObject PlayerGameObject;
+        public GameObject PlayerGameObject
+        {
+            get { return _playerGameObject ?? (_playerGameObject = FindObjectOfType<PPlayerBlock>().gameObject); }
+        }
+
+        private GameObject _playerGameObject = null;
 
         /// <summary>
         /// Event to blocks need to subscibe to to get level reset triggers.
@@ -139,20 +143,6 @@ namespace fi.tamk.game.theone.phys
         /// Map to get (c#)object when we know gameObject, to avoid runtime reflections
         /// </summary>
         public Dictionary<GameObject, PGameBlock> GameObjectMap = new Dictionary<GameObject, PGameBlock>();
-
-        /// <summary>
-        /// Sets up GameObjectMap and finds reference to player.
-        /// </summary>
-        private void Awake()
-        {
-            OnSceneChange();
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += OnSceneChange();
-        }
-
-        private void OnSceneChange(Scene prev, Scene next)
-        {
-            PlayerGameObject = FindObjectOfType<PPlayerBlock>().gameObject;
-        }
 
         /// <summary>
         /// Updates DeltaTime for the frame.
