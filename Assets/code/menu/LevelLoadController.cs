@@ -25,6 +25,9 @@ namespace fi.tamk.game.theone.menu
             set { _saveData.LastLevelPlayed = value; }
         }
 
+        public float LevelCompletionTime = 0f;
+        public int RatsDeadPerLevel = 0;
+
         /// <summary>
         /// Save file filename.
         /// </summary>

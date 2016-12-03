@@ -120,19 +120,14 @@ namespace fi.tamk.game.theone.ui
         /// </summary>
         private int RatNumber
         {
-            get { return _ratBackup; }
+            get { return LevelLoadController.Instance.RatsDeadPerLevel; }
 
             set
             {
-                _ratBackup = value;
-                livesUiText.text = string.Format("RAT #{0}", _ratBackup);
+                LevelLoadController.Instance.RatsDeadPerLevel = value;
+                livesUiText.text = string.Format("RAT #{0}", LevelLoadController.Instance.RatsDeadPerLevel);
             }
         }
-
-        /// <summary>
-        /// Backing field for RatNumber.
-        /// </summary>
-        private int _ratBackup = 0;
 
         /// <summary>
         /// Sets deaths and binds to death event.
@@ -153,14 +148,17 @@ namespace fi.tamk.game.theone.ui
         /// </summary>
         private void Update()
         {
-            var time = SceneManager.Instance.TimeSinceLevelLoaded;
+            timeUiText.text = SecondsToString(SceneManager.Instance.TimeSinceLevelLoaded);
+        }
 
-            var hours = (int)(time/3600);
-            var minutes = (int)((time%3600)/60);
-            var seconds = (int) (time%60);
-            var hundos = (int) ((time*100)%100);
+        public static string SecondsToString(float time)
+        {
+            var hours = (int)(time / 3600);
+            var minutes = (int)((time % 3600) / 60);
+            var seconds = (int)(time % 60);
+            var hundos = (int)((time * 100) % 100);
 
-            timeUiText.text = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", hours, minutes, seconds, hundos);
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", hours, minutes, seconds, hundos);
         }
 
         /// <summary>
