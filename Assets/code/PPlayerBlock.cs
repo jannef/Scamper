@@ -14,7 +14,9 @@ namespace fi.tamk.game.theone.phys
 
         public AudioClip deathSound;
 
-        private AudioSource source;
+        private AudioSource runSource;
+
+        private AudioSource deathSource;
 
         private const float runVolume = 0.7f;
 
@@ -51,7 +53,9 @@ namespace fi.tamk.game.theone.phys
         
         void Awake()
         {
-            source.GetComponent<AudioSource>();
+            AudioSource[] audios = GetComponents<AudioSource>();
+            runSource = audios[0];
+            deathSource = audios[1];
         }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace fi.tamk.game.theone.phys
             if (col.collider.gameObject.CompareTag("Movable") ||
                 (col.collider.gameObject.CompareTag("MovableWalkable") && !CollisionBelow(col)))
             {
-                source.PlayOneShot(deathSound, deathVolume);
+                deathSource.PlayOneShot(deathSound, deathVolume);
                 SceneManager.Instance.PlayerDeathReset();
             }
         }
@@ -123,7 +127,7 @@ namespace fi.tamk.game.theone.phys
                 && !SceneManager.Instance.Pause)
             {
                 _moving = true;
-                source.PlayOneShot(runSound, runVolume);
+                runSource.PlayOneShot(runSound, runVolume);
             }
         }
 
