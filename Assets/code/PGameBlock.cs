@@ -16,6 +16,18 @@ namespace fi.tamk.game.theone.phys
     [RequireComponent(typeof(Rigidbody2D))]
     public class PGameBlock : RemoteBehaviour
     {
+		public AudioClip runSound;
+
+		public AudioClip deathSound;
+
+		public AudioSource runSource;
+
+		public AudioSource deathSource;
+
+		public const float runVolume = 0.7f;
+
+		public const float deathVolume = 0.5f;
+
         /// <summary>
         /// Types of behaviours for objects on interaction.
         /// </summary>
@@ -295,7 +307,9 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         protected virtual void OnStart()
         {
-
+			AudioSource[] audios = GetComponents<AudioSource>();
+			runSource = audios[0];
+			deathSource = audios[1];
         }
 
         /// <summary>
