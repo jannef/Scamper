@@ -108,6 +108,7 @@ namespace fi.tamk.game.theone.phys
             if (_moving)
             {
                 MyTransform.Translate(PlayerSpeed*SceneManager.Instance.DeltaTime, Space.World);
+                runSource.PlayOneShot(runSound, runVolume);
             }
             else
             {
@@ -127,7 +128,6 @@ namespace fi.tamk.game.theone.phys
                 && !SceneManager.Instance.Pause)
             {
                 _moving = true;
-                runSource.PlayOneShot(runSound, runVolume);
             }
         }
 
