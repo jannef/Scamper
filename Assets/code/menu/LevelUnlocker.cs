@@ -5,6 +5,9 @@ namespace fi.tamk.game.theone.menu
 {
     public class LevelUnlocker : MonoBehaviour
     {
+        public GameObject LockedIcon;
+        private const string LockName = "Locked";
+
         private void Awake()
         {
             CheckLockedLevels();
@@ -22,17 +25,30 @@ namespace fi.tamk.game.theone.menu
         public void CheckLockedLevels()
         {
             var canvas = GameObject.Find("Canvas");
-
-            foreach (var b in LevelLoadController.Instance.LevelsLocked)
-            {
-                Debug.Log(b);
-            }
+            DestroyOldLocks(canvas);
 
             for (var j = 0; j < LevelLoadController.NumberOfLevels; j++)
             {
                 var i = (j + 1);
                 if (!LevelLoadController.Instance.LevelsLocked.ContainsKey(j)) continue;
-                canvas.transform.GetChild(i).gameObject.SetActive(!LevelLoadController.Instance.LevelsLocked[j]);
+                var locked = LevelLoadController.Instance.LevelsLocked[j];
+                canvas.transform.GetChild(i).gameObject.SetActive(!locked);
+
+                if (!locked) continue;
+                var lockIcon = Instantiate(LockedIcon, canvas.transform) as GameObject;
+                lockIcon.name = LockName;
+
+                ((RectTransform) lockIcon.transform).anchoredPosition =
+                    ((RectTransform) canvas.transform.GetChild(i)).anchoredPosition;
+            }
+        }
+
+        private static void DestroyOldLocks(GameObject parent)
+        {
+            for (var i = 0; i < parent.transform.childCount; i++)
+            {
+                var child = parent.transform.GetChild(i).gameObject;
+                if (child.name.Equals(LockName)) DestroyImmediate(child);
             }
         }
     }
