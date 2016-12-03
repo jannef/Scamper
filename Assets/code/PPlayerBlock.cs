@@ -108,7 +108,6 @@ namespace fi.tamk.game.theone.phys
             if (_moving)
             {
                 MyTransform.Translate(PlayerSpeed*SceneManager.Instance.DeltaTime, Space.World);
-                runSource.PlayOneShot(runSound, runVolume);
             }
             else
             {
@@ -127,6 +126,7 @@ namespace fi.tamk.game.theone.phys
                 && !_moving && _activeCheckpoint == null
                 && !SceneManager.Instance.Pause)
             {
+                runSource.PlayOneShot(runSound, runVolume);
                 _moving = true;
             }
         }
