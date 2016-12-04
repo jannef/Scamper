@@ -9,6 +9,13 @@ namespace fi.tamk.game.theone.phys
     /// <auth>Janne Forsell</auth>
     public class JumpTrigger : MonoBehaviour
     {
+
+        public AudioClip fanSound;
+
+        private AudioSource fanSource;
+
+        private const float fanVolume = 0.8f;
+
         /// <summary>
         /// How big of a force.
         /// </summary>
@@ -38,10 +45,32 @@ namespace fi.tamk.game.theone.phys
             if (other.gameObject == SceneManager.Instance.PlayerGameObject)
             {
                 _playerAnimation.Falling = true;
-
+                
                 var dist = Mathf.Pow(1 / Vector2.Distance(transform.position, other.gameObject.transform.position), DistanceModifier);
                 _playerrbRigidbody.AddForce(JumpPower * dist, ForceMode2D.Force);
             }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject == SceneManager.Instance.PlayerGameObject)
+            {
+                fanSource.PlayOneShot(fanSound, fanVolume);
+            }
+        }
+
+        public static IEnumerator FadeOut (AudioSource source, float fadeTime)
+        {
+            float startVolume = source.volume;
+            while (source.volume > 0)
+            {
+                source.volume -= startVolume * Time.deltaTime / fadeTime;
+
+                yield return null;
+            }
+
+            source.Stop();
+            source.volume = startVolume;
         }
 
         /// <summary>
@@ -52,15 +81,17 @@ namespace fi.tamk.game.theone.phys
         {
             if (other.gameObject == SceneManager.Instance.PlayerGameObject)
             {
+                StartCoroutine(FadeOut(fanSource, 1.0f));
                 _playerAnimation.Falling = false;
             }
         }
 
         /// <summary>
-        /// Get reference to player animator and rigid body.
+        /// Get reference to audio source, player animator and rigid body.
         /// </summary>
         private void Awake()
         {
+            fanSource = GetComponent<AudioSource>();
             _playerrbRigidbody = SceneManager.Instance.PlayerGameObject.GetComponent<Rigidbody2D>();
             _playerAnimation = SceneManager.Instance.PlayerGameObject.GetComponent<AnimationController>();
             SceneManager.Instance.LevelResetEvent += ResetTrigger;
