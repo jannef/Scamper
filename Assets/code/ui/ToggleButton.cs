@@ -104,6 +104,7 @@ namespace fi.tamk.game.theone.ui
             {
                 OnActivate.Invoke();
                 AudioListener.pause = false;
+                switchSource.PlayOneShot(switchSound, switchVolume);
             }
             else
             {
@@ -120,9 +121,6 @@ namespace fi.tamk.game.theone.ui
             if (_inTransition) return;
 
             _inTransition = true;
-
-            switchSource.PlayOneShot(switchSound, switchVolume);
-
             StartCoroutine(TransitionState());
         }
     }

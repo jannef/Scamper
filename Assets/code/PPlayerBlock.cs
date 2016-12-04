@@ -9,6 +9,9 @@ namespace fi.tamk.game.theone.phys
     /// <auth>Janne Forsell</auth>
     public class PPlayerBlock : PGameBlock
     {
+        [SerializeField, Range(1f, 999f)] public float GlobalAudioCutoffDistance = 20f;
+        [SerializeField, Range(0f, 50f)] public float LinearFadeDistanceAfterCutoff = 7.5f;
+
         public AudioClip runSound;
 
         public AudioClip deathSound;
@@ -66,7 +69,8 @@ namespace fi.tamk.game.theone.phys
             if (col.collider.gameObject.CompareTag("Movable") ||
                 (col.collider.gameObject.CompareTag("MovableWalkable") && !CollisionBelow(col)))
             {
-                deathSource.PlayOneShot(deathSound, deathVolume);
+                SceneManager.Instance.PlayDistanceBasedSound(deathSource.PlayOneShot, deathSound, deathVolume, transform.position);
+                //deathSource.PlayOneShot(deathSound, deathVolume);
                 SceneManager.Instance.PlayerDeathReset();
             }
         }
@@ -125,7 +129,8 @@ namespace fi.tamk.game.theone.phys
                 && !_moving && _activeCheckpoint == null
                 && !SceneManager.Instance.Pause)
             {
-                runSource.PlayOneShot(runSound, runVolume);
+                SceneManager.Instance.PlayDistanceBasedSound(runSource.PlayOneShot, runSound, runVolume, transform.position);
+                //runSource.PlayOneShot(runSound, runVolume);
                 _moving = true;
             }
         }

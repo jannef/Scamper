@@ -158,7 +158,8 @@ namespace fi.tamk.game.theone.phys
         {
             if (KillsPlayer && col.CompareTag("Player"))
             {
-                deathSource.PlayOneShot(deathSound, deathVolume);
+                SceneManager.Instance.PlayDistanceBasedSound(deathSource.PlayOneShot, deathSound, deathVolume, transform.position);
+                //deathSource.PlayOneShot(deathSound, deathVolume);
                 SceneManager.Instance.PlayerDeathReset();
                 return;
             }

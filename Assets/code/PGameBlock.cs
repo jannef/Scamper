@@ -190,11 +190,13 @@ namespace fi.tamk.game.theone.phys
             {
                 case OnBoxClickAction.ReverseGravity:
                     Rb.gravityScale *= -1f;
-                    source.PlayOneShot(telekinesisSound, telekinesisVolume);
+                    SceneManager.Instance.PlayDistanceBasedSound(source.PlayOneShot, telekinesisSound, telekinesisVolume, transform.position);
+                    //source.PlayOneShot(telekinesisSound, telekinesisVolume);
                     break;
                 case OnBoxClickAction.Impulse:
                     Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
-                    source.PlayOneShot(telekinesisSound, telekinesisVolume);
+                    SceneManager.Instance.PlayDistanceBasedSound(source.PlayOneShot, telekinesisSound, telekinesisVolume, transform.position);
+                    //source.PlayOneShot(telekinesisSound, telekinesisVolume);
                     break;
                 case OnBoxClickAction.None:
                     break;

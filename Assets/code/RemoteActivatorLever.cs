@@ -79,7 +79,9 @@ namespace fi.tamk.game.theone.phys
             if (_hasActivated || LeverAngle > UpperActivationLimit || LeverAngle < LowerActivationLimit) return;
             _hasActivated = true;
             ChangeToSprite(PushedStateSprite);
-            magnetSource.PlayOneShot(magnetSound, magnetVolume);
+
+            SceneManager.Instance.PlayDistanceBasedSound(magnetSource.PlayOneShot, magnetSound, magnetVolume, transform.position);
+            //magnetSource.PlayOneShot(magnetSound, magnetVolume);
 
             ActivateBlocks();
         }

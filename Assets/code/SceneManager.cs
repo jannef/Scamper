@@ -60,6 +60,13 @@ namespace fi.tamk.game.theone.phys
 
         private GameObject _playerGameObject = null;
 
+        public PPlayerBlock PlayerLogicalObject
+        {
+            get { return _playerLogicalObject ?? (_playerLogicalObject = FindObjectOfType<PPlayerBlock>()); }
+        }
+
+        private PPlayerBlock _playerLogicalObject = null;
+
         /// <summary>
         /// Event to blocks need to subscibe to to get level reset triggers.
         /// </summary>
@@ -160,6 +167,18 @@ namespace fi.tamk.game.theone.phys
         public void PlayerDeathReset()
         {
             if (LevelResetEvent != null) LevelResetEvent();
+        }
+
+        public delegate void OneShotPlayer(AudioClip clip, float volume);
+
+        public void PlayDistanceBasedSound(OneShotPlayer soundDelegate, AudioClip audio, float volume, Vector3 position)
+        {
+            var distance = Vector3.Magnitude(position - PlayerGameObject.transform.position);
+            Debug.Log(volume);
+            var vol = volume * Mathf.InverseLerp(PlayerLogicalObject.GlobalAudioCutoffDistance + PlayerLogicalObject.LinearFadeDistanceAfterCutoff, PlayerLogicalObject.GlobalAudioCutoffDistance, distance);
+            Debug.Log(vol + " after");
+
+            soundDelegate(audio, vol);
         }
     }
 }

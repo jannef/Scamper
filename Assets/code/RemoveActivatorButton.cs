@@ -80,7 +80,8 @@ namespace fi.tamk.game.theone.phys
 
             if (_collisions == 0 && !_isPressed)
             {
-                magnetSource.PlayOneShot(magnetSound, magnetVolume);
+                SceneManager.Instance.PlayDistanceBasedSound(magnetSource.PlayOneShot, magnetSound, magnetVolume, transform.position);
+                //magnetSource.PlayOneShot(magnetSound, magnetVolume);
                 ActivateBlocks();
                 _isPressed = true;
             }
