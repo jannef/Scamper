@@ -9,6 +9,13 @@ namespace fi.tamk.game.theone.phys
     /// <auth>Janne Forsell</auth>
     public class BeamController : RemoteBase
     {
+
+        public AudioClip deathSound;
+
+        private AudioSource deathSource;
+
+        private const float deathVolume = 0.6f;
+
         /// <summary>
         /// If this beam should kill the player.
         /// </summary>
@@ -54,6 +61,7 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void Awake()
         {
+            deathSource = GetComponent<AudioSource>();
             _transform = transform;
             _particleSystem = GetComponent<ParticleSystem>();
 
@@ -150,6 +158,7 @@ namespace fi.tamk.game.theone.phys
         {
             if (KillsPlayer && col.CompareTag("Player"))
             {
+                deathSource.PlayOneShot(deathSound, deathVolume);
                 SceneManager.Instance.PlayerDeathReset();
                 return;
             }
