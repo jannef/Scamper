@@ -104,12 +104,12 @@ namespace fi.tamk.game.theone.ui
             {
                 OnActivate.Invoke();
                 AudioListener.pause = false;
-                switchSource.PlayOneShot(switchSound, switchVolume);
             }
             else
             {
                 OnDeactivate.Invoke();
                 AudioListener.pause = true;
+                switchSource.PlayOneShot(switchSound, switchVolume);
             }
         }
 
