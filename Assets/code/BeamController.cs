@@ -11,9 +11,6 @@ namespace fi.tamk.game.theone.phys
     {
 
         public AudioClip deathSound;
-
-        private AudioSource deathSource;
-
         private const float deathVolume = 0.6f;
 
         /// <summary>
@@ -61,7 +58,6 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void Awake()
         {
-            deathSource = GetComponent<AudioSource>();
             _transform = transform;
             _particleSystem = GetComponent<ParticleSystem>();
 
@@ -158,7 +154,7 @@ namespace fi.tamk.game.theone.phys
         {
             if (KillsPlayer && col.CompareTag("Player"))
             {
-                SceneManager.Instance.PlayDistanceBasedSound(deathSource.PlayOneShot, deathSound, deathVolume, transform.position);
+                SceneManager.Instance.PlayDistanceBasedSound(deathSound, deathVolume, transform.position);
                 //deathSource.PlayOneShot(deathSound, deathVolume);
                 SceneManager.Instance.PlayerDeathReset();
                 return;

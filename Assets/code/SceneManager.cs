@@ -171,14 +171,20 @@ namespace fi.tamk.game.theone.phys
 
         public delegate void OneShotPlayer(AudioClip clip, float volume);
 
-        public void PlayDistanceBasedSound(OneShotPlayer soundDelegate, AudioClip audio, float volume, Vector3 position)
+        public void PlayDistanceBasedSound(AudioClip audio, float volume, Vector3 position, AudioSource source = null)
         {
             var distance = Vector3.Magnitude(position - PlayerGameObject.transform.position);
-            Debug.Log(volume);
             var vol = volume * Mathf.InverseLerp(PlayerLogicalObject.GlobalAudioCutoffDistance + PlayerLogicalObject.LinearFadeDistanceAfterCutoff, PlayerLogicalObject.GlobalAudioCutoffDistance, distance);
-            Debug.Log(vol + " after");
 
-            soundDelegate(audio, vol);
+            //soundDelegate(audio, vol);
+            if (source == null)
+            {
+                PlayerLogicalObject.runSource.PlayOneShot(audio, vol);
+            }
+            else
+            {
+                source.PlayOneShot(audio, vol);
+            }
         }
     }
 }

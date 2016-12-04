@@ -18,8 +18,6 @@ namespace fi.tamk.game.theone.phys
 
         public AudioSource runSource;
 
-        public AudioSource deathSource;
-
         public const float runVolume = 0.5f;
 
         public const float deathVolume = 0.6f;
@@ -55,9 +53,7 @@ namespace fi.tamk.game.theone.phys
 
         protected override void OnAwake()
         {
-            AudioSource[] audios = GetComponents<AudioSource>();
-            runSource = audios[0];
-            deathSource = audios[1];
+            runSource = GetComponent<AudioSource>();
         }
 
         /// <summary>
@@ -69,7 +65,7 @@ namespace fi.tamk.game.theone.phys
             if (col.collider.gameObject.CompareTag("Movable") ||
                 (col.collider.gameObject.CompareTag("MovableWalkable") && !CollisionBelow(col)))
             {
-                SceneManager.Instance.PlayDistanceBasedSound(deathSource.PlayOneShot, deathSound, deathVolume, transform.position);
+                SceneManager.Instance.PlayDistanceBasedSound(deathSound, deathVolume, transform.position);
                 //deathSource.PlayOneShot(deathSound, deathVolume);
                 SceneManager.Instance.PlayerDeathReset();
             }
@@ -129,7 +125,7 @@ namespace fi.tamk.game.theone.phys
                 && !_moving && _activeCheckpoint == null
                 && !SceneManager.Instance.Pause)
             {
-                SceneManager.Instance.PlayDistanceBasedSound(runSource.PlayOneShot, runSound, runVolume, transform.position);
+                SceneManager.Instance.PlayDistanceBasedSound(runSound, runVolume, transform.position);
                 //runSource.PlayOneShot(runSound, runVolume);
                 _moving = true;
             }

@@ -55,7 +55,7 @@ namespace fi.tamk.game.theone.phys
         {
             if (other.gameObject == SceneManager.Instance.PlayerGameObject)
             {
-                SceneManager.Instance.PlayDistanceBasedSound(fanSource.PlayOneShot, fanSound, fanVolume, transform.position);
+                SceneManager.Instance.PlayDistanceBasedSound(fanSound, fanVolume, transform.position, fanSource);
                 //fanSource.PlayOneShot(fanSound, fanVolume);
             }
         }

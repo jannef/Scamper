@@ -14,9 +14,6 @@ namespace fi.tamk.game.theone.phys
     {
 
         public AudioClip magnetSound;
-
-        private AudioSource magnetSource;
-
         private const float magnetVolume = 1.0f;
 
         /// <summary>
@@ -47,7 +44,6 @@ namespace fi.tamk.game.theone.phys
         {
             if (_spriteRenderer != null) _originalSprite = _spriteRenderer.sprite;
 
-            magnetSource = GetComponent<AudioSource>();
             SceneManager.Instance.LevelResetEvent += OnLevelReset;
         }
 
@@ -80,7 +76,7 @@ namespace fi.tamk.game.theone.phys
 
             if (_collisions == 0 && !_isPressed)
             {
-                SceneManager.Instance.PlayDistanceBasedSound(magnetSource.PlayOneShot, magnetSound, magnetVolume, transform.position);
+                SceneManager.Instance.PlayDistanceBasedSound(magnetSound, magnetVolume, transform.position);
                 //magnetSource.PlayOneShot(magnetSound, magnetVolume);
                 ActivateBlocks();
                 _isPressed = true;
