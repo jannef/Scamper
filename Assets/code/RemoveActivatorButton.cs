@@ -12,6 +12,13 @@ namespace fi.tamk.game.theone.phys
     /// <auth>Janne Forsell</auth>
     public class RemoveActivatorButton : RemoteBase
     {
+
+        public AudioClip magnetSound;
+
+        private AudioSource magnetSource;
+
+        private const float magnetVolume = 1.0f;
+
         /// <summary>
         /// Alternate sprite to use when in pushed state.
         /// </summary>
@@ -40,6 +47,7 @@ namespace fi.tamk.game.theone.phys
         {
             if (_spriteRenderer != null) _originalSprite = _spriteRenderer.sprite;
 
+            magnetSource = GetComponent<AudioSource>();
             SceneManager.Instance.LevelResetEvent += OnLevelReset;
         }
 
@@ -72,6 +80,7 @@ namespace fi.tamk.game.theone.phys
 
             if (_collisions == 0 && !_isPressed)
             {
+                magnetSource.PlayOneShot(magnetSound, magnetVolume);
                 ActivateBlocks();
                 _isPressed = true;
             }

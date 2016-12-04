@@ -5,13 +5,20 @@ using System.Collections;
 namespace fi.tamk.game.theone.phys
 {
     /// <summary>
-    /// Remote leaver activator.
+    /// Remote lever activator.
     /// </summary>
     /// <auth>Janne Forsell</auth>
     public class RemoteActivatorLever : RemoteBase
     {
+
+        public AudioClip magnetSound;
+
+        private AudioSource magnetSource;
+
+        private const float magnetVolume = 1.0f;
+
         /// <summary>
-        /// Angle of the leaver at the moment.
+        /// Angle of the lever at the moment.
         /// </summary>
         public float LeverAngle
         {
@@ -58,6 +65,8 @@ namespace fi.tamk.game.theone.phys
         /// </summary>
         private void Awake()
         {
+            magnetSource = GetComponent<AudioSource>();
+
             _originalSprite = SpriteRenderer.sprite;
             SceneManager.Instance.LevelResetEvent += ResetLever;
         }
@@ -70,6 +79,7 @@ namespace fi.tamk.game.theone.phys
             if (_hasActivated || LeverAngle > UpperActivationLimit || LeverAngle < LowerActivationLimit) return;
             _hasActivated = true;
             ChangeToSprite(PushedStateSprite);
+            magnetSource.PlayOneShot(magnetSound, magnetVolume);
 
             ActivateBlocks();
         }
