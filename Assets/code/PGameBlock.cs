@@ -30,7 +30,7 @@ namespace fi.tamk.game.theone.phys
 
         private AudioSource source;
 
-        private const float telekinesisVolume = 2.0f;
+        private const float telekinesisVolume = 0.7f;
         
         /// <summary>
         /// Stores data of collisions that are ongoing. This info is kept by
