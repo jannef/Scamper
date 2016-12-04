@@ -82,6 +82,18 @@ namespace fi.tamk.game.theone.ui
         /// </summary>
         [SerializeField] private GameObject PauseMenu;
 
+        public AudioClip UIClickSound;
+
+        public AudioClip rewindSound;
+
+        private AudioSource UIClickSource;
+
+        private AudioSource rewindSource;
+
+        private const float UIClickVolume = 1.0f;
+
+        private const float rewindVolume = 1.0f;
+        
         /// <summary>
         /// State of the GUI.
         /// </summary>
@@ -134,6 +146,10 @@ namespace fi.tamk.game.theone.ui
         /// </summary>
         private void Awake()
         {
+            AudioSource[] audios = GetComponents<AudioSource>();
+            UIClickSource = audios[0];
+            rewindSource = audios[1];
+
             pauseSprite = pauseImage.sprite;
             recordSprite = recordImage.sprite;
 
@@ -200,12 +216,13 @@ namespace fi.tamk.game.theone.ui
         public void ResetButton()
         {
             if (_guiState != GuiState.Normal) ActivateState(GuiState.Normal);
+            rewindSource.PlayOneShot(rewindSound, rewindVolume);
             SceneManager.Instance.PlayerDeathReset();
             RatNumber--;
         }
 
         /// <summary>
-        /// Increases deats by one.
+        /// Increases deaths by one.
         /// </summary>
         private void HandlePlayerDeath()
         {
@@ -216,6 +233,7 @@ namespace fi.tamk.game.theone.ui
         public void PausePlayButton()
         {
             ActivateState(_guiState == GuiState.Normal ? GuiState.Paused : GuiState.Normal);
+            UIClickSource.PlayOneShot(UIClickSound, UIClickVolume);
         }
 
         public void BackToLevelSelect()
