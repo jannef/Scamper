@@ -17,9 +17,9 @@ namespace fi.tamk.game.theone.phys
 
         public AudioSource deathSource;
 
-        public const float runVolume = 0.7f;
+        public const float runVolume = 0.5f;
 
-        public const float deathVolume = 0.5f;
+        public const float deathVolume = 0.6f;
 
         /// <summary>
         /// Speed of player's advance once clicked.

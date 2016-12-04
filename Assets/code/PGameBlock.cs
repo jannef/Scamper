@@ -26,6 +26,12 @@ namespace fi.tamk.game.theone.phys
 
         public event SceneEvent BlockClickedEvent;
 
+        public AudioClip telekinesisSound;
+
+        private AudioSource source;
+
+        private const float telekinesisVolume = 2.0f;
+        
         /// <summary>
         /// Stores data of collisions that are ongoing. This info is kept by
         /// Box2d, but user cannot access with implementation used by unity.
@@ -153,6 +159,8 @@ namespace fi.tamk.game.theone.phys
         {
             SceneManager.Instance.GameObjectMap.Add(gameObject, this);
 
+            source = GetComponent<AudioSource>();
+
             TouchList = new Dictionary<GameObject, Collision2D>();
             MyTransform = transform;
             StartLocation = MyTransform.position;
@@ -182,9 +190,11 @@ namespace fi.tamk.game.theone.phys
             {
                 case OnBoxClickAction.ReverseGravity:
                     Rb.gravityScale *= -1f;
+                    source.PlayOneShot(telekinesisSound, telekinesisVolume);
                     break;
                 case OnBoxClickAction.Impulse:
                     Rb.AddForce(ForceOnClick, ForceMode2D.Impulse);
+                    source.PlayOneShot(telekinesisSound, telekinesisVolume);
                     break;
                 case OnBoxClickAction.None:
                     break;
