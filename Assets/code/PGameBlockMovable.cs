@@ -39,7 +39,7 @@ namespace fi.tamk.game.theone.phys
             }
         }
 
-        protected override void OnStart()
+        protected override void OnAwake()
         {        
             // Store initial settings
             _initialAcceleration = LocomotionAcceleration;

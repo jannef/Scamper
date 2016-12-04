@@ -15,7 +15,8 @@ namespace fi.tamk.game.theone.phys
     /// <auth>Janne Forsell</auth>
     [RequireComponent(typeof(Rigidbody2D))]
     public class PGameBlock : RemoteBehaviour
-    {
+    {	
+
         /// <summary>
         /// Types of behaviours for objects on interaction.
         /// </summary>
@@ -162,7 +163,7 @@ namespace fi.tamk.game.theone.phys
 
             SceneManager.Instance.LevelResetEvent += ResetBlock;
 
-            OnStart();
+            OnAwake();
         }
 
         /// <summary>
@@ -286,16 +287,16 @@ namespace fi.tamk.game.theone.phys
         }
 
         /// <summary>
-        /// Called at Start(), for inherited classes to perform additional initialization
+        /// Called at Awake(), for inherited classes to perform additional initialization
         /// with reduced risk of not calling parents initialization function. This must be
         /// done so, because we cannot enforce initialization by cosntructor in Unity.
         /// 
         /// User can always fuck things up by hiding Start() using 'new' keyword, but that's
         /// something that can't be helped.
         /// </summary>
-        protected virtual void OnStart()
+        protected virtual void OnAwake()
         {
-
+			
         }
 
         /// <summary>
