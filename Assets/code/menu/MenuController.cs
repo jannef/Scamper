@@ -10,6 +10,18 @@ namespace fi.tamk.game.theone.menu
     /// <auth>Janne Forsell</auth>
     public class MenuController : MonoBehaviour
     {
+
+        public AudioClip UIClickSound;
+
+        private AudioSource UIClickSource;
+
+        private const float UIClickVolume = 1.0f;
+        
+        protected void Awake()
+        {
+            UIClickSource = GetComponent<AudioSource>();
+        }
+
         /// <summary>
         /// Loads level based on unity scene index.
         /// </summary>
@@ -24,6 +36,7 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         public void QuitGame()
         {
+            UIClickSource.PlayOneShot(UIClickSound, UIClickVolume);
             Application.Quit();
         }
 
@@ -32,22 +45,29 @@ namespace fi.tamk.game.theone.menu
         /// </summary>
         public void MainMenu()
         {
-            LevelLoadController.Instance.ToScene(0);
+            StartCoroutine(DelayedLoad(UIClickSound, UIClickVolume, UIClickSound.length, 0));
         }
 
         public void LevelSelect()
         {
-            LevelLoadController.Instance.ToScene(1);
+            StartCoroutine(DelayedLoad(UIClickSound, UIClickVolume, UIClickSound.length, 1));
         }
 
         public void InfoScreen()
         {
-            LevelLoadController.Instance.ToScene(6);
+            StartCoroutine(DelayedLoad(UIClickSound, UIClickVolume, UIClickSound.length, 6));
         }
 
         public void VictoryScreen()
         {
             LevelLoadController.Instance.ToScene(7);
+        }
+
+        private IEnumerator DelayedLoad(AudioClip clip, float clipVolume, float clipLength, int whichScene)
+        {
+            UIClickSource.PlayOneShot(clip, clipVolume);
+            yield return new WaitForSeconds(clipLength);
+            LevelLoadController.Instance.ToScene(whichScene);
         }
     }
 }
