@@ -55,6 +55,12 @@ namespace fi.tamk.game.theone.ui
         /// </summary>
         private Vector2 _onPosition;
 
+        public AudioClip switchSound;
+
+        private AudioSource switchSource;
+
+        private const float switchVolume = 0.8f;
+
         /// <summary>
         /// Disable this this scripts gameObject if slider is not properly set in Unity.
         /// Find positions for the animation.
@@ -66,6 +72,8 @@ namespace fi.tamk.game.theone.ui
                 gameObject.SetActive(false);
                 return;
             }
+
+            switchSource = GetComponent<AudioSource>();
 
             _onPosition = Slider.anchoredPosition;
             _offPosition = -_onPosition;
@@ -95,10 +103,12 @@ namespace fi.tamk.game.theone.ui
             if (_state)
             {
                 OnActivate.Invoke();
+                AudioListener.pause = false;
             }
             else
             {
                 OnDeactivate.Invoke();
+                AudioListener.pause = true;
             }
         }
 
@@ -110,6 +120,9 @@ namespace fi.tamk.game.theone.ui
             if (_inTransition) return;
 
             _inTransition = true;
+
+            switchSource.PlayOneShot(switchSound, switchVolume);
+
             StartCoroutine(TransitionState());
         }
     }
