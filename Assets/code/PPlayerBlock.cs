@@ -9,6 +9,17 @@ namespace fi.tamk.game.theone.phys
     /// <auth>Janne Forsell</auth>
     public class PPlayerBlock : PGameBlock
     {
+        public AudioClip runSound;
+
+        public AudioClip deathSound;
+
+        public AudioSource runSource;
+
+        public AudioSource deathSource;
+
+        public const float runVolume = 0.7f;
+
+        public const float deathVolume = 0.5f;
 
         /// <summary>
         /// Speed of player's advance once clicked.
@@ -38,6 +49,13 @@ namespace fi.tamk.game.theone.phys
         private Checkpoint _activeCheckpoint = null;
 
         private Rigidbody2D _rigidbody = null;
+
+        protected override void OnAwake()
+        {
+            AudioSource[] audios = GetComponents<AudioSource>();
+            runSource = audios[0];
+            deathSource = audios[1];
+        }
 
         /// <summary>
         /// Kills the player on collision. Also hides defautl behaviour (touch list upkeep).
