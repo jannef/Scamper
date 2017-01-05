@@ -4,6 +4,7 @@ using System.Text;
 using fi.tamk.game.theone.menu;
 using UnityEngine.UI;
 using fi.tamk.game.theone.phys;
+using UnityEngine.Events;
 
 namespace fi.tamk.game.theone.ui
 {
@@ -82,6 +83,8 @@ namespace fi.tamk.game.theone.ui
         /// </summary>
         [SerializeField] private GameObject PauseMenu;
 
+        [SerializeField] private UnityEvent PauseMenuClosed;
+
         public AudioClip UIClickSound;
 
         public AudioClip rewindSound;
@@ -105,6 +108,15 @@ namespace fi.tamk.game.theone.ui
         /// <param name="whichState"></param>
         private void ActivateState(GuiState whichState)
         {
+            switch (_guiState)
+            {
+                case GuiState.Paused:
+                    Debug.Log("invoked");
+                    PauseMenuClosed.Invoke();
+                    break;
+                default:
+                    break;
+            }
             _guiState = whichState;
 
             switch (whichState)

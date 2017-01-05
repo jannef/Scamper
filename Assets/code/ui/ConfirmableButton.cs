@@ -35,35 +35,49 @@ namespace fi.tamk.game.theone.ui
 
         public void PointerDown()
         {
-            StartCoroutine(Animate());
+            if (!_confirmUp) StartCoroutine(Animate());
         }
 
         public void PointerUp(BaseEventData eventData)
         {
-            StopAllCoroutines();
-            _confirmUp = true;
-
             var pointer = eventData as PointerEventData;
-            if (pointer.pointerEnter.GetInstanceID() == ConfirmationButton.gameObject.GetInstanceID())
+            if (pointer != null && pointer.pointerEnter.GetInstanceID() == ConfirmationButton.gameObject.GetInstanceID())
             {
                 OnConfirmation.Invoke();
+                ConfirmationButton.localScale = Vector3.one;
+                _confirmUp = false;
             }
-
-            StartCoroutine(Animate());
+            else
+            {
+                StartCoroutine(Animate(2.5f));
+            }
+            
         }
 
-        private IEnumerator Animate()
+        public void ConfirmationClicked()
         {
-            var timer = 0f;
+            OnConfirmation.Invoke();
+        }
 
-            var end = _confirmUp? _originalPosition : _originalPosition + OffsetPosition;
+        public void OnPauseMenuClose()
+        {
+            StopAllCoroutines();
+            ConfirmationButton.localScale = Vector3.zero;
+            _confirmUp = false;
+        }
+
+        private IEnumerator Animate(float delay = 0f)
+        {
+            if (delay > 0 )yield return new WaitForSecondsRealtime(delay);
+            var timer = 0f;
+            //var end = _confirmUp? _originalPosition : _originalPosition + OffsetPosition;
 
             while (timer < AnimationDuration)
             {
                 timer += SceneManager.Instance.MenuDeltaTime;
                 var ratio = Mathf.Min(1f, timer/AnimationDuration);
 
-                ConfirmationButton.anchoredPosition = Vector2.Lerp(ConfirmationButton.anchoredPosition, end, Interpolations.Smootherstep(ratio));
+                //ConfirmationButton.anchoredPosition = Vector2.Lerp(ConfirmationButton.anchoredPosition, end, Interpolations.Smootherstep(ratio));
                 ConfirmationButton.localScale = !_confirmUp ? Vector3.one*ratio : Vector3.one - Vector3.one*ratio;
 
                 yield return new WaitForEndOfFrame();
